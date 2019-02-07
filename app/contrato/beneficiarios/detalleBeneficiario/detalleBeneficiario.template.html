@@ -1,0 +1,204 @@
+<div class="panel panel-success">
+    <div class="panel-body panelDatos">
+        <legend class="info">Información General</legend>
+        <div class="col-lg-12 no-padding">
+            <div class="col-lg-12">
+                <label class="col-lg-2 no-padding">Nombre Completo:</label>
+                <p class="col-lg-6" style="padding-left: 12px !important;font-weight:bold;">{{beneficiario.NombreCompleto}}</p>
+                <label class="col-lg-2 no-padding">{{cedulaPasaporte}}</label>
+                <span class="col-lg-2">{{numeroCedulaPasaporte}}</span>
+            </div>
+            <div class="col-lg-4">
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Número Persona:</label>
+                    <span class="col-lg-5">{{beneficiario.NumeroPersona}}</span>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Género:</label>
+                    <span class="col-lg-5">{{beneficiario.Genero}}</span>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Relación Dependiente:</label>
+                    <span class="col-lg-5">{{beneficiario.RelacionDependiente}}</span>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Maternidad:</label>
+                    <span class="col-lg-5">{{maternidad}}</span>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Fecha de Nacimiento:</label>
+                    <span class="col-lg-5">{{beneficiario.FechaNacimiento}}</span>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Edad:</label>
+                    <span class="col-lg-5">{{beneficiario.Edad}}</span>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Beneficiario Titular:</label>
+                    <span class="col-lg-5">{{beneficiario.EsTitular?'SI':'NO'}}</span>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Comisiona:</label>
+                    <span class="col-lg-5">{{beneficiario.Comisiona? 'SI':'NO'}}</span>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Número de Contrato:</label>
+                    <span class="col-lg-5">{{beneficiario.NumeroContrato}}</span>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Fecha Inclusión:</label>
+                    <span class="col-lg-5">{{beneficiario.FechaInclusion}}</span>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Fecha Exclusión:</label>
+                    <span class="col-lg-5">{{beneficiario.FechaExclusion}}</span>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-7 no-padding">Estado:</label>
+                    <span class="col-lg-5">{{beneficiario.Estado}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12 m-t-sm">
+            <div class="col-lg-4 m-t-sm">
+                <fieldset>
+                    <legend class="info">Precio Beneficiario</legend>
+                    <div class="col-lg-12 no-padding">
+                        <div class="col-lg-12">
+                            <label class="col-lg-6 no-padding">Precio Beneficiario:</label>
+                            <span class="col-lg-5 alignR">&#36;{{beneficiario.PrecioBeneficiario | number : '1.2-2'}}</span>
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="col-lg-6 no-padding">Precio Anterior:</label>
+                            <span class="col-lg-5 alignR">&#36;{{beneficiario.PrecioAnterior | number : '1.2-2'}}</span>
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="col-lg-6 no-padding">Fecha Precio:</label>
+                            <span class="col-lg-5 alignR ">{{beneficiario.FechaServicio}}</span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-lg-4 m-t-sm" style="padding-left: 10px !important; padding-right: 10px !important;">
+                <fieldset>
+                    <legend class="info">Precio Servicios Adicionales</legend>
+                    <div class="col-lg-12 no-padding">
+                        <div class="col-lg-12">
+                            <label class="col-lg-6 no-padding">Precio Servicios:</label>
+                            <span class="col-lg-5 alignR">&#36;{{beneficiario.PrecioServicios | number : '1.2-2'}}</span>
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="col-lg-6 no-padding">Precio Anterior:</label>
+                            <span class="col-lg-5 alignR">&#36;{{beneficiario.PrecioServiciosAnterior | number : '1.2-2'}}</span>
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="col-lg-6 no-padding">Fecha Servicio:</label>
+                            <span class="col-lg-5 alignR">{{beneficiario.FechaServicio}}</span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col-lg-4 m-t-sm ">
+                <fieldset>
+                    <legend class="info">Descuentos y Recargas</legend>
+                    <div class="col-lg-12 no-padding">
+                        <div class="col-lg-12">
+                            <label class="col-lg-7 no-padding">Porcentaje Descuento:</label>
+                            <span class="col-lg-5 alignR">{{beneficiario.PorcentajeDescuento | number : '1.2-2'}}%</span>
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="col-lg-7 no-padding">Descuento:</label>
+                            <span class="col-lg-5 alignR">&#36;{{beneficiario.Descuento | number : '1.2-2'}}</span>
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="col-lg-7 no-padding">Porcentaje Recargo:</label>
+                            <span class="col-lg-5 alignR">{{beneficiario.PorcentajeRecargo | number : '1.2-2'}}%</span>
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="col-lg-7 no-padding">Descuento:</label>
+                            <span class="col-lg-5 alignR">&#36;{{beneficiario.DescuentoRecargo | number : '1.2-2'}}</span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="col-lg-6 m-t-sm " style="padding-right: 10px !important;">
+            <fieldset class="no-padding m-b-sm">
+                <legend class="info">Total Acumulado</legend>
+                <div class="col-lg-6">
+                    <div class="col-lg-12">
+                        <label class="col-lg-6">Total Facturado:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalFacturado | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="col-lg-6 clearInfo">Total Cubierto:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalCubierto | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="col-lg-6 clearInfo">Porcentaje Siniestralidad:</label>
+                        <span class="col-lg-5 alignR">{{beneficiario.PorcentajeSiniestralidad | number : '1.2-2'}}%</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="col-lg-12">
+                        <label class="col-lg-6 clearInfo">Total Copago:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalCopago | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="col-lg-6">Total No Cubierto:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalNoCubierto | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="col-lg-6">Total Bonificado:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalBonificado | number : '1.2-2'}}</span>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-lg-6 m-t-sm" *ngIf="beneficiario.Estado=='Activo'">
+            <fieldset>
+                <legend class="info">Total Período Vigente</legend>
+                <div class="col-lg-12">
+                    <label class="col-lg-6">Periodo:</label>
+                    <span class="col-lg-5">{{beneficiario.FechaInicioVigente}} - {{beneficiario.FechaFinalVigente}}</span>
+                </div>
+                <div class="col-lg-6">
+                    <div class="col-lg-12">
+                        <label class="col-lg-6">Total Facturado:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalFacturadoVigente | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="col-lg-6 clearInfo">Total Cubierto:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalCubiertoVigente | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="col-lg-6 clearInfo">Porcentaje Siniestralidad:</label>
+                        <span class="col-lg-5 alignR">{{beneficiario.PorcentajeSiniestralidadVigente | number : '1.2-2'}}%</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="col-lg-12">
+                        <label class="col-lg-6 clearInfo">Total Copago:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalCopagoVigente | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="col-lg-6">Total No Cubierto:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalNoCubiertoVigente | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="col-lg-6">Total Bonificado:</label>
+                        <span class="col-lg-5 alignR">&#36;{{beneficiario.TotalBonificadoVigente | number : '1.2-2'}}</span>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

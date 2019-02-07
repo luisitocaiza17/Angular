@@ -1,0 +1,44 @@
+<div class="m-t-sm no-padding">
+    <div class="col-lg-12">
+        <form name="envioEmailFtpForm" role="form" #envioEmailFtpForm="ngForm">
+            <h3 class="alignCenter" style="font-size: 20px">Envío de Odas</h3>
+            <h5 class="panel-title alignCenter">Código Cobertura:{{reclamo.NumeroReclamo}} - Beneficiario:{{reclamo.NombreBeneficiario}}</h5>
+            <div class="col-md-12 no-padding">
+                <div class="panel panel-default no-padding m-t-md">
+                    <div class="panel-body no-padding">
+                        <div class="col-lg-12 m-t-sm m-b-sm no-padding">
+
+                            <label class="col-lg-2 control-label clearInfo">Correo domicilio:</label>
+                            <div class="col-lg-4">
+                                <input email type="text" required id="emailDomicilio" name="emailDomicilio" class="heigth25 form-control" [(ngModel)]="reclamo.EmailDomicilio"
+                                    #emailDomicilio="ngModel" maxlength="50" />
+                                <div [hidden]="emailDomicilio.valid || emailDomicilio.pristine" class="error">
+                                    <p *ngIf="emailDomicilio.errors?.required">Campo requerido</p>
+                                    <p *ngIf="emailDomicilio.errors?.email">Formato correo incorrecto</p>
+                                </div>
+                            </div>
+
+                            <label class="col-lg-2 control-label">Correo trabajo:</label>
+                            <div class="col-lg-4">
+                                <input email="false" type="text" id="emailTrabajo" name="emailTrabajo" class="heigth25 form-control" [(ngModel)]="reclamo.EmailTrabajo"
+                                    #emailTrabajo="ngModel" maxlength="50" />
+                                <div [hidden]="emailTrabajo.valid || emailTrabajo.pristine" class="error">
+                                    <p *ngIf="emailTrabajo.errors?.email">Formato correo incorrecto</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 no-padding m-t-md">
+                    <button id="btnGenerar" (click)="view()" [disabled]="!envioEmailFtpForm.valid" class="btn btn-w-m btn-success btn-sm">
+                        <i class="fa fa-refresh"></i> Visualizar
+                    </button>
+                    <button id="btnEmail" (click)="enviarMail()" [disabled]="!envioEmailFtpForm.valid" class="btn btn-w-m btn-success btn-sm"
+                        type="button">
+                        <i class="fa fa-envelope-o" ></i> Email
+                     </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

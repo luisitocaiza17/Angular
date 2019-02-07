@@ -1,0 +1,132 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Facturación</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Facturación</li>
+            <li class="breadcrumb-item active">Configuración</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading" (click)="colapsarTab()">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+                        <div class="row">
+                            <div class="col-md-12 no-padding">
+                                <form name="odaForm" role="form" #odaForm="ngForm">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body no-padding">
+                                                <fieldset>
+                                                    <div class="col-md-12 no-padding">
+                                                        <legend class="info">General</legend>
+
+                                                        <label class="col-md-4 no-padding-left">Url servicio web envío pruebas:</label>
+                                                        <div class="m-b col-md-8">
+                                                            <input type="text" placeholder="Url servicio web envío pruebas" id="idEnvioPruebas" name="idEnvioPruebas" [(ngModel)]="configuracionFacturacion.UrlEnvioPruebas"
+                                                                class="form-control" #idEnvioPruebas="ngModel" />
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Url servicio web autorización pruebas:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="text" placeholder="Url servicio web autorización pruebas" id="idAutorizacionPruebas" name="idAutorizacionPruebas"
+                                                                [(ngModel)]="configuracionFacturacion.UrlAutorizacionPruebas"
+                                                                class="form-control" #idAutorizacionPruebas="ngModel" />
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Url servicio web envío producción:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="text" placeholder="Url servicio web envío producción" id="idEnvioProd" name="idEnvioProd" [(ngModel)]="configuracionFacturacion.UrlEnvioProduccion"
+                                                                class="form-control" #idEnvioProd="ngModel" />
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Url servicio web autorización producción:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="text" placeholder="Url servicio web autorización producción" id="idAutorizacionProd" name="idAutorizacionProd"
+                                                                [(ngModel)]="configuracionFacturacion.UrlAutorizacionProduccion"
+                                                                class="form-control" #idAutorizacionProd="ngModel" />
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Mail de envío para pruebas:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="text" placeholder="Url servicio web envío mail" id="idEnvioMail" name="idEnvioMail" [(ngModel)]="configuracionFacturacion.UrlEnvioMail"
+                                                                class="form-control" #idEnvioMail="ngModel" />
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Id certificado:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="text" placeholder="Id certificado" id="idCertificado" name="idCertificado" [(ngModel)]="configuracionFacturacion.IdCertificado"
+                                                                class="form-control" #idCertificado="ngModel" />
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Emitido para:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="text" placeholder="Emitido para" id="idEmitidoPara" name="idEmitidoPara" [(ngModel)]="configuracionFacturacion.EmitidoPara"
+                                                                class="form-control" #idEmitidoPara="ngModel" />
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Ambiente Activo:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <select class="form-control" [(ngModel)]="configuracionFacturacion.AmbienteActivo" id="IdAmbienteActivo" name="IdAmbienteActivo"
+                                                                #IdAmbienteActivo="ngModel">
+                                                                <option [value]="undefined" selected>Seleccione ambiente</option>
+                                                                <option *ngFor="let c of ambientes" [value]="c.Codigo">{{c.Nombre}}</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Sri Activo:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="checkbox" name="SriInput" id="SriInput" [(ngModel)]="configuracionFacturacion.SriActivo" #SriInput="ngModel">
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Emisor de email:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="text" placeholder="Emisor de email" id="idEmisorEmail" name="idEmisorEmail" [(ngModel)]="configuracionFacturacion.EmisorEmail"
+                                                                class="form-control" #idEmisorEmail="ngModel" />
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Correo electronico:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="text" placeholder="Correo electronico" id="idCorreoElectronico" name="idCorreoElectronico" [(ngModel)]="configuracionFacturacion.CorreoElectronico"
+                                                                class="form-control" #idCorreoElectronico="ngModel" />
+                                                        </div>
+
+                                                        <label class="col-md-4 no-padding-left">Ruta de correo electronico:</label>
+                                                        <div class="m-b  col-md-8">
+                                                            <input type="text" placeholder="Ruta de correo electronico" id="idRutasCorreo" name="idRutasCorreo" [(ngModel)]="configuracionFacturacion.RutaDocumentosElectronicos"
+                                                                class="form-control" #idRutasCorreo="ngModel" />
+                                                        </div>
+
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-lg-12 m-t-md no-padding">
+                                                <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="guardar();">
+                                                    <i class="fa fa-save"></i> Guardar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

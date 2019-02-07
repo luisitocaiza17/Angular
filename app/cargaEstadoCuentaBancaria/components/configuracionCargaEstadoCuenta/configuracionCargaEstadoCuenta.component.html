@@ -1,0 +1,228 @@
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Configuracion Carga Estado Cuenta" data-parent="#accordion" href="#clpConfiguracion"><i
+                            class="fa fa-bookmark"></i> Configuración carga estado de cuenta </a>
+                </h5>
+            </div>
+            <div id="clpConfiguracion" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                        <div class="row">
+                            <form #configForm="ngForm">
+                                <div class="form-group col-lg-12 no-padding">
+
+                                    <div class="col-lg-12 m-t-md">
+                                        <div class="col-lg-2"><label class="control-label" for="banco">Banco:</label></div>
+                                        <div class="col-lg-2"><select (change)="loadConfiguracionCargaCuenta();" class="form-control"
+                                                id="banco" name="banco" [(ngModel)]="configuracionEstadoCuenta.CodigoBanco"
+                                                #banco="ngModel">
+                                                <option *ngFor="let banco of bancos" [value]="banco.CodigoBanco"> {{
+                                                    banco.NombreBanco }} </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="cabeceras">Tiene
+                                                cabeceras ?:</label></div>
+                                        <div class="col-lg-2">
+                                            <select class="form-control" id="cabeceras" name="cabeceras" [(ngModel)]="configuracionEstadoCuenta.TieneCabeceras"
+                                                #cabeceras="ngModel">
+                                                <option [value]="false"> No </option>
+                                                <option [value]="true"> Si </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="formatoAchivo">Formato
+                                                Archivo:</label></div>
+                                        <div class="col-lg-2"><select class="form-control" id="formatoAchivo" name="formatoAchivo"
+                                                [(ngModel)]="configuracionEstadoCuenta.FormatoArchivo" #formatoAchivo="ngModel">
+                                                <option [value]="'csv'"> CSV </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 m-t-md">
+                                        <div class="col-lg-2"><label class="control-label" for="separador">Separador
+                                                Columnas:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Separador" class="form-control"
+                                                id="separador" name="separador" [(ngModel)]="configuracionEstadoCuenta.SeparadorColumnas"
+                                                #separador="ngModel" />
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="caracteres">Caracteres
+                                                a eliminar:</label></div>
+                                        <div class="col-lg-2">
+                                            <button class="btn btn-primary" (click)="openModal('#modalCaracteres')">
+                                                Ver - Agregar </button>
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="separadorDecimales">Separador
+                                                Decimales:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Separador decimales"
+                                                class="form-control" id="separadorDecimales" name="separadorDecimales"
+                                                [(ngModel)]="configuracionEstadoCuenta.SeparadorDecimales"
+                                                #separadorDecimales="ngModel" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 m-t-md">
+                                        <div class="col-lg-2"><label class="control-label" for="separador">Separador
+                                                Miles:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Separador miles" class="form-control"
+                                                id="separadorMiles" name="separadorMiles" [(ngModel)]="configuracionEstadoCuenta.SeparadorMiles"
+                                                #separadorMiles="ngModel" />
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="montoSigno">El monto
+                                                puede tener signo negativo ?: </label></div>
+                                        <div class="col-lg-2">
+                                            <select class="form-control" id="montoSigno" name="montoSigno" [(ngModel)]="signoMonto"
+                                                #montoSigno="ngModel">
+                                                <option [value]="0"> No </option>
+                                                <option [value]="1"> Si </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-2" *ngIf="signoMonto == 0"><label class="control-label" for="idCredito">
+                                                Identificador Credito: </label></div>
+                                        <div class="col-lg-2" *ngIf="signoMonto == 0">
+                                            <input autocomplete="off" type="text" placeholder="Identificador credito"
+                                                class="form-control" id="idCredito" name="idCredito" [(ngModel)]="configuracionEstadoCuenta.IdentificadorCredito"
+                                                #idCredito="ngModel" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 m-t-md">
+                                        <div class="col-lg-2"><label class="control-label" for="formatoFecha"> Formato
+                                                Fecha: </label></div>
+                                        <div class="col-lg-2">
+                                            <select class="form-control" id="formatoFecha" name="formatoFecha"
+                                                [(ngModel)]="configuracionEstadoCuenta.CodigoFormatoFecha"
+                                                #formatoFecha="ngModel">
+                                                <option *ngFor="let formato of formatosFecha" [value]="formato.Codigo">
+                                                    {{ formato.Formato }} </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-12 m-t-md alert alert-warning text-center" style="size: 1rem" role="alert">
+                                    Las columnas enmpiezan en el índice [0] </div>
+
+                                <div class="col-lg-12 m-t-md">
+                                    <div class="col-lg-6 table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th> Nombre Columna en BDD </th>
+                                                    <th> Tipo dato en BDD </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let col of estructuraEstadoCuentaBancaria">
+                                                    <td height="51"> {{col.Nombre}} </td>
+                                                    <td height="51"> {{col.TipoDato}} </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-lg-6 table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th> Número columna en archivo </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Fecha"
+                                                            class="form-control" id="posFecha" name="posFecha"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionFecha"
+                                                            #posFecha="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Documento"
+                                                            class="form-control" id="posDocumento" name="posDocumento"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionDocumento"
+                                                            #posDocumento="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Saldo"
+                                                            class="form-control" id="posSalod" name="posSalod"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionSaldo"
+                                                            #posSalod="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Codigo"
+                                                            class="form-control" id="posCodigo" name="posCodigo"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionCodigo"
+                                                            #posCodigo="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Concepto"
+                                                            class="form-control" id="posConcepto" name="posConcepto"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionConcepto"
+                                                            #posConcepto="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Tipo"
+                                                            class="form-control" id="posTipo" name="posTipo"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionTipo"
+                                                            #posTipo="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Monto"
+                                                            class="form-control" id="posMonto" name="posMonto"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionMonto"
+                                                            #posMonto="ngModel" /> </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 m-t-md text-center">
+                                    <button class="btn btn-primary" (click)="guardarConfiguracion();"> Guardar
+                                        Configuración </button>
+                                    <button class="btn btn-primary" (click)="limpiarConfiguracion();"> Limpiar </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Caracteres Especiales -->
+<div class="modal inmodal fade" id="modalCaracteres" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">Caracteres Especiales</h5>
+            </div>
+            <div class="panel-body text-center">
+                <div class="col-lg-12" *ngFor="let caracter of configuracionEstadoCuenta.CaracteresAEliminar">
+                    <div class="col-lg-6">{{ caracter }}</div>
+                    <div class="col-lg-6"><i class="fa fa-times-circle clickable" aria-hidden="true" (click)="quitarCaracter(caracter);"></i></div>
+                </div>
+                <div class="col-lg-12 m-t-md">
+                    <div class="col-lg-6">
+                        <input autocomplete="off" type="text" class="form-control" id="nuevoCaracter" name="nuevoCaracter"
+                            [(ngModel)]="caracterNuevo" #nuevoCaracter="ngModel" />
+                    </div>
+                    <div class="col-lg-6"><button class="btn btn-primary" (click)="agregarCaracter()" [disabled]="!verificarLongitudUno(caracterNuevo) || existeCaracterEnLista(caracterNuevo)">
+                            Agregar Nuevo </button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

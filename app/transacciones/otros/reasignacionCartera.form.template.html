@@ -1,0 +1,221 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Reasignación Cartera</h5>
+        </div>
+        <div class="panel-body">
+            <form name="reasignacionCarteraForm" role="form" #reasignacionCarteraForm="ngForm" (ngSubmit)="guardarReasignacion()">
+                <div class="panel-body no-padding m-b-md">
+                    <legend class="info">Vendedores</legend>
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Vendedor Principal:</label>
+                            <a title="Click filtro Vendedor" data-toggle="modal" data-target="#modalVendedorPrincipal">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            {{resignacionCarteraEntity.auxCodigoAgenteVenta}}
+                        </div>
+                        <div class="m-b col-lg-2">
+                            {{viewCodVendedor}}
+                        </div>
+                        <div class="m-b col-lg-5">
+                            <select required class="form-control" [(ngModel)]="resignacionCarteraEntity.auxCodigoAgenteVenta"
+                                id="codigoVendedor" name="codigoVendedor" #codigoVendedor="ngModel" (change)="codVendedor(resignacionCarteraEntity.auxCodigoAgenteVenta);">
+                                <option *ngFor="let ven of vendedores" [ngValue]="ven.Codigo">{{ven.Nombre}}</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Vendedor Contacto:</label>
+                            <a title="Click filtro Contacto" data-toggle="modal" data-target="#modalContacto">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </div>
+                        <div class="m-b col-lg-2">
+                            {{resignacionCarteraEntity.auxCodigoAgenteContacto}}
+                        </div>
+                        <div class="m-b col-lg-2">
+                            {{viewCodContacto}}
+                        </div>
+                        <div class="m-b col-lg-5">
+                            <select required class="form-control" [(ngModel)]="resignacionCarteraEntity.auxCodigoAgenteContacto"
+                                id="codigoVendedoresContacto" name="codigoVendedoresContacto" #codigoVendedoresContacto="ngModel"
+                                (change)="codContacto(resignacionCarteraEntity.auxCodigoAgenteContacto);">
+                                <option *ngFor="let venc of vendedoresContacto" [ngValue]="venc.Codigo">{{venc.Nombre}}</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Observaci&oacute;n NC:</label>
+                        </div>
+                        <div class="m-b col-lg-9">
+                            <textarea rows="2" id="comentario" name="comentario" #comentario="ngModel" minlength="1"
+                                maxlength="255" class="form-control" [(ngModel)]="resignacionCarteraEntity.ComentarioNC"
+                                style="resize: none;">
+                            </textarea>
+                            <div [hidden]="comentario.valid" class="error">
+                                <p *ngIf="comentario.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="col-lg-12">
+                        <legend class="info">Comisiones<label class="error" *ngIf="esBroker">No se actualizar&aacute;n
+                                los datos de comisiones</label></legend>
+
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Comisiona:</label>
+                        </div>
+                        <!--         <div class="m-b col-lg-3">
+                            <input [disabled]="esBroker" type="radio" name="checkTarifario" id="checkTarifarioNo"
+                                #checkTarifarioNo="ngModel" [(ngModel)]="resignacionCarteraEntity.PagaComision" value="0">
+                            No
+                            <input [disabled]="esBroker" type="radio" name="checkTarifario" id="checkTarifarioSi"
+                                #checkTarifarioSi="ngModel" [(ngModel)]="resignacionCarteraEntity.PagaComision" value="1">
+                            Si
+                        </div> -->
+                        <div class="m-b col-lg-3">
+                            <input class="control-label radio-button" [disabled]="esBroker" type="radio" [checked]="checked == false"
+                                name="checkTarifario" (click)="oyenteRadio(0)">No
+
+                            <input class="control-label radio-button" [disabled]="esBroker" type="radio" [checked]="checked == true"
+                                name="checkTarifario" (click)="oyenteRadio(1)">Si
+                        </div>
+
+                    </fieldset>
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Venta %:</label>
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <input [disabled]="esBroker" required type="number" name="slcComisionVenta" id="slcComisionVenta"
+                                #slcComisionVenta="ngModel" [(ngModel)]="resignacionCarteraEntity.ComisionVenta" />
+                            <div [hidden]="slcComisionVenta.valid" class="error">
+                                <p *ngIf="slcComisionVenta.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Renovaci&oacute;n %:</label>
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <input [disabled]="esBroker" required type="number" name="slcComisionRenovacion" id="slcComisionRenovacion"
+                                #slcComisionRenovacion="ngModel" [(ngModel)]="resignacionCarteraEntity.ComisionRenovacion" />
+                            <div [hidden]="slcComisionRenovacion.valid" class="error">
+                                <p *ngIf="slcComisionRenovacion.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div *ngIf="!hayError">
+                        <div class="col-lg-12 m-t-md">
+                            <button [disabled]="!reasignacionCarteraForm.form.valid" class="btn btn-w-m btn-success btn-sm"
+                                type="submit">
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal de Vendedor Principal -->
+<div id="consultorModalDiv">
+    <div class="modal inmodal fade" id="modalVendedorPrincipal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Lista Vendedor Principal</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaVendedorPrinciapl" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">C&oacute;digo</th>
+                                            <th class="centerMiddle">C&oacute;digo Vendedor
+                                                <input type="text" (input)="filtrarVendedoresCodigo($event.target.value)"
+                                                    placeholder="Buscar..." id="buscarVendedorCodigo" name="buscarVendedorCodigo"
+                                                    class="form-control heigth25">
+                                            </th>
+                                            <th class="centerMiddle">Nombre
+                                                <input type="text" (input)="filtrarVendedores($event.target.value)"
+                                                    placeholder="Buscar..." id="buscarVendedor" name="buscarVendedor"
+                                                    class="form-control heigth25">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyVendedorPrincipal" class="no-borders selectableBodyTable">
+                                        <tr id="vendedorPrincipal{{i}}" [class.active]="ven.Selected" title="{{!ven.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!ven.Selected ? codVendedorModal(ven.Codigo) : return;" *ngFor="let ven of vendedoresFiltrados; let i = index">
+                                            <td class="centerMiddle">{{ven.Codigo}}</td>
+                                            <td class="centerMiddle">{{ven.CodigoVendedor}}</td>
+                                            <td class="centerMiddle">{{ven.Nombre}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de Contacto -->
+<div id="consultorModalDiv">
+    <div class="modal inmodal fade" id="modalContacto" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Lista Contacto</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaContacto" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">C&oacute;digo</th>
+                                            <th class="centerMiddle">C&oacute;digo Vendedor
+                                                <input type="text" (input)="filtrarContactosCodigo($event.target.value)"
+                                                    placeholder="Buscar..." id="buscarContactoCodigo" name="buscarContactoCodigo"
+                                                    class="form-control heigth25">
+                                            </th>
+                                            <th class="centerMiddle">Nombre
+                                                <input type="text" (input)="filtrarContactos($event.target.value)"
+                                                    placeholder="Buscar..." id="buscarContacto" name="buscarContacto"
+                                                    class="form-control heigth25">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyContacto" class="no-borders selectableBodyTable">
+                                        <tr id="vendedorContacto{{i}}" [class.active]="contact.Selected" title="{{!contact.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!contact.Selected ? codContactoModal(contact.Codigo) : return;"
+                                            *ngFor="let contact of vendedoresContactoFiltrado; let i = index">
+                                            <td class="centerMiddle">{{contact.Codigo}}</td>
+                                            <td class="centerMiddle">{{contact.CodigoVendedor}}</td>
+                                            <td class="centerMiddle">{{contact.Nombre}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,327 @@
+<div class="col-md-12 no-padding">
+    <div class="col-md-12 alignCenter">
+        <label class="col-md-12 no-padding m-t-sm" style="color: #ff0000">{{msgEstadoOda}}</label>
+    </div>
+    <form name="odaForm" role="form" #odaForm="ngForm">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body no-padding">
+                    <fieldset>
+                        <div class="col-md-12 no-padding">
+                            <legend class="info">Datos Contrato</legend>
+                            <label class="col-md-2">Número Contrato:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.NumeroContrato}}</span>
+                            <label class="col-md-2">Código Plan:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.Plan}}</span>
+
+                            <label class="col-md-2 clearInfo">Código Región:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.CodigoRegion}}</span>
+                            <label class="col-md-2">Vigencia:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.FechaVigencia}}</span>
+
+                            <label class="col-md-2 clearInfo">Código Producto:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.CodigoProducto}}</span>
+                            <label class="col-md-2">Nivel Referencia:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.NivelReferencia}}</span>
+
+                            <label class="col-md-2 clearInfo">Nombre Empresa:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.NombreEmpresa}}</span>
+                            <label class="col-md-2">Cliente Impago:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.EsMoroso ? 'Si' : 'No'}}</span>
+
+                            <label class="col-md-2 clearInfo">Número Sucursal:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.NombreSucursalEmpresa}}</span>
+                            <label class="col-md-2">Cero Trámites:</label>
+                            <span class="col-md-4">{{reclamoKey.ContratoKey.CeroTramites}}</span>
+
+                            <label class="m-t-sm col-lg-2 control-label clearInfo" for="slcOficina">Oficina Liquidación:</label>
+                            <div class="m-t-sm col-lg-4">
+                                <select required class="form-select-control heigth25" id="slcOficina" name="slcOficina" [(ngModel)]="oda.OficinaLiquidacion"
+                                    #slcOficina="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let of of oficinasLiquidacion" [ngValue]="of.Codigo">{{of.Nombre}}</option>
+                                </select>
+                                <div class="error">
+                                    <p *ngIf="slcOficina.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+
+                            <label class="padT6 col-lg-2 control-label clearInfo">Correo domicilio:</label>
+                            <div class="padT6 col-lg-4">
+                                <input email type="text" required id="emailDomicilio" name="emailDomicilio" class="heigth25 form-control" [(ngModel)]="reclamoKey.ContratoKey.EmailDomicilio"
+                                    #emailDomicilio="ngModel" maxlength="50" />
+                                <div class="error">
+                                    <p *ngIf="emailDomicilio.errors?.required">Campo requerido</p>
+                                    <p *ngIf="!emailDomicilio.errors?.required && emailDomicilio.errors?.email">Formato correo incorrecto</p>
+                                </div>
+                            </div>
+
+                            <label class="padT6 col-lg-2 control-label">Correo trabajo:</label>
+                            <div class="padT6 col-lg-4">
+                                <input email="false" type="text" id="emailTrabajo" name="emailTrabajo" class="heigth25 form-control" [(ngModel)]="reclamoKey.ContratoKey.EmailTrabajo"
+                                    #emailTrabajo="ngModel" maxlength="50" />
+                                <div class="error">
+                                    <p *ngIf="emailTrabajo.errors?.email">Formato correo incorrecto</p>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="m-t-md">
+                        <legend class="info">Datos Beneficiario</legend>
+                        <div class="col-md-12 no-padding">
+                            <div class="col-md-12 no-padding m-b-xs">
+                                <div class="col-md-6 no-padding">
+                                    <label class="col-lg-4 control-label" for="slcBeneficiario">Beneficiario:</label>
+                                    <div class="col-lg-8" *ngIf="showSelectBeneficiario">
+                                        <select required class="form-select-control heigth25" id="slcBeneficiario" name="slcBeneficiario" [(ngModel)]="oda.NumeroBeneficiario"
+                                            #slcBeneficiario="ngModel" (ngModelChange)="onChangeBeneficiario($event)">
+                                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                                            <option *ngFor="let b of beneficiarios" [value]="b.NumeroPersona">{{b.NombreCompleto}}</option>
+                                        </select>
+                                        <div class="error">
+                                            <p *ngIf="slcBeneficiario.errors?.required">Campo Requerido</p>
+                                        </div>
+                                        <div class="">
+                                            <label class="col-md-12 no-padding " style="color: #ff0000;font-weight: normal;font-size: smaller;">{{msgValidacion}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8" *ngIf="!showSelectBeneficiario">
+                                        <span>{{beneficiarioSeleccionado.NombreCompleto}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <div class="col-md-4 no-padding clearInfo">
+                                        <label class="col-md-7">Estado:</label>
+                                        <span class="col-md-5">{{beneficiarioSeleccionado.Estado}}</span>
+                                    </div>
+                                    <div class="col-md-6 no-padding">
+                                        <label class="col-md-2">Sexo:</label>
+                                        <span class="col-md-5">{{beneficiarioSeleccionado.Genero}}</span>
+                                        <label class="col-md-2">Edad:</label>
+                                        <span class="col-md-3" style="color: #ff0000;">{{beneficiarioSeleccionado.Edad}}</span>
+                                    </div>
+                                    <div class="col-md-4 no-padding clearInfo">
+                                        <label class="col-md-7 clearInfo">Cedula:</label>
+                                        <span class="col-md-5">{{beneficiarioSeleccionado.NumeroCedula}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="m-t-md">
+                        <legend class="info">Datos Prestador</legend>
+                        <div class="col-md-12 no-padding">
+                            <div class="col-md-12 no-padding m-b-xs">
+                                <label class="col-lg-2 control-label">Médico:</label>
+                                <div class="col-lg-4">
+                                    <div class="col-md-12 no-padding" *ngIf="oda.PrestadorNumero!=undefined">
+                                        {{convenioSeleccionado.Nombre}}
+                                    </div>
+                                    <a (click)="initConvenios()" [class.disabled]="(beneficiarioSeleccionado.NumeroPersona ==undefined)?true:false" data-toggle="modal"
+                                        data-target="#prestadorViewModal">
+                                        <i class="fa fa-user-md"></i> {{oda.PrestadorNumero==undefined ? 'Asociar' : 'Cambiar'}}
+                                    </a>
+                                    <div [hidden]="oda.PrestadorNumero!=undefined" class="error">
+                                        <p>Campo Requerido</p>
+                                    </div>
+
+                                    <div [hidden]="!convenioSeleccionado.EsStaff" class="error">
+                                        <p>El prestador pertenece a un centro médico</p>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <div class="col-md-12 no-padding clearInfo">
+                                        <label class="col-md-4">Nivel:</label>
+                                        <span class="col-md-8">
+                                            {{(convenioSeleccionado.NivelPrestadorDesde!=undefined && convenioSeleccionado.NivelPrestadorHasta!=undefined && convenioSeleccionado.NivelPrestadorDesde!=0
+                                            && convenioSeleccionado.NivelPrestadorHasta!=0) ? (convenioSeleccionado.NivelPrestadorDesde+'-'+convenioSeleccionado.NivelPrestadorHasta)
+                                            : ''}}
+                                        </span>
+                                    </div>
+                                    <div class="col-md-12 no-padding clearInfo">
+                                        <label class="col-md-4">Especialidad:</label>
+                                        <span class="col-md-8">{{convenioSeleccionado.Especialidad}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <fieldset>
+                                    <legend style="font-size: 14px;" class="info">Contacto</legend>
+                                    <div class="col-md-12 no-padding">
+                                        <label class="col-md-2 no-padding-left">Email:</label>
+                                        <span class="col-md-4 no-padding-left">{{convenioSeleccionado.Email}}</span>
+                                        <label class="col-md-2">Teléfonos:</label>
+                                        <span class="col-md-4">{{convenioSeleccionado.Telefonos}}</span>
+
+                                        <label class="col-md-2 no-padding-left clearInfo">Dirección:</label>
+                                        <span class="col-md-4 no-padding-left">{{convenioSeleccionado.Direccion}}</span>
+                                        <label class="col-md-2">Horario:</label>
+                                        <span class="col-md-4">{{convenioSeleccionado.Horarios}}</span>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <legend style="font-size: 14px;" class="info">Costo</legend>
+                                    <div class="col-md-12 no-padding">
+                                        <label class="col-md-4 no-padding-left">Costo Consulta Salud:</label>
+                                        <span class="col-md-8 alignR">&#36;{{convenioSeleccionado.CostoConsultaSalud| number : '1.2-2'}}</span>
+                                        <label class="col-md-4 no-padding-left clearInfo">Valor Cubrir Salud:</label>
+                                        <span class="col-md-8 alignR">&#36;{{convenioSeleccionado.ValorCubrirSalud| number : '1.2-2'}}</span>
+                                        <label class="col-md-4 no-padding-left clearInfo">Valor Pagar Cliente:</label>
+                                        <span class="col-md-8 alignR">&#36;{{convenioSeleccionado.ValorPagarCliente| number : '1.2-2'}}</span>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <legend style="font-size: 14px;" class="info">Perfil</legend>
+                                    <div class="col-md-12 no-padding">
+                                        <label class="col-md-4 no-padding-left">Nacionalidad:</label>
+                                        <span class="col-md-8">{{convenioSeleccionado.Nacionalidad}}</span>
+                                        <label class="col-md-4 no-padding-left clearInfo">Calificación:</label>
+                                        <span class="col-md-8">{{convenioSeleccionado.Calificacion}}</span>
+                                        <label class="col-md-4 no-padding-left clearInfo">Cargos Destacados:</label>
+                                        <span class="col-md-8">{{convenioSeleccionado.CargosDestacados}}</span>
+                                        <label class="col-md-4 no-padding-left clearInfo">Títulos:</label>
+                                        <span class="col-md-8">{{convenioSeleccionado.Titulos}}</span>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-lg-12 m-t-md no-padding">
+                    <button class="btn btn-w-m btn-success btn-sm" [disabled]="!odaForm.valid || !habilitarSolicitar  || convenioSeleccionado.EsStaff "
+                        (click)="solicitarOda()" type="button">
+                        <i class="fa fa-save"></i> Solicitar ODA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal de Prestadores -->
+<div id="prestadorModalDiv">
+    <div class="modal inmodal fade" id="prestadorViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="col-lg-12 m-t-sm no-padding">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Buscar Médicos</h5>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12 no-padding m-b-md">
+                            <label class="padT6 col-lg-2 control-label no-padding-left">Nombre:</label>
+                            <div class="padT6 col-lg-4">
+                                <input email type="text" required id="nombreConvenio" name="nombreConvenio" class="heigth25 form-control" [(ngModel)]="convenioFilter.Nombre"
+                                    #nombreConvenio="ngModel" maxlength="100" />
+                            </div>
+                            <label class="padT6 col-lg-2 control-label no-padding-left">Especialidad:</label>
+                            <div class="padT6 col-lg-4 no-padding-right">
+                                <select required class="form-select-control heigth25" id="slcEspecialidad" name="slcEspecialidad" [(ngModel)]="convenioFilter.CodigoEspecialidad"
+                                    #slcEspecialidad="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let e of especialidades" [ngValue]="e.CodigoProgress">{{e.Valor}}</option>
+                                </select>
+                            </div>
+
+                            <label class="padT6 col-lg-2 control-label no-padding-left clearInfo">Ciudad:</label>
+                            <div class="padT6 col-lg-4">
+                                <select required class="form-select-control heigth25" id="slcCiudad" name="slcCiudad" [(ngModel)]="convenioFilter.CodigoCiudad"
+                                    #slcCiudad="ngModel" (ngModelChange)="onChangeCiudad($event)">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let c of ciudades" [ngValue]="c.CodigoProgress">{{c.Valor}}</option>
+                                </select>
+                            </div>
+                            <label class="padT6 col-lg-2 control-label no-padding-left">Sub-Especialidad:</label>
+                            <div class="padT6 col-lg-4 no-padding-right">
+                                <select required class="form-select-control heigth25" id="slcSubEspecialidad" name="slcSubEspecialidad" [(ngModel)]="convenioFilter.CodigoSubespecialidad"
+                                    #slcSubEspecialidad="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let se of subEspecialidades" [ngValue]="se.CodigoProgress">{{se.Valor}}</option>
+                                </select>
+                            </div>
+
+                            <label class="padT6 col-lg-2 control-label no-padding-left clearInfo">Sector:</label>
+                            <div class="padT6 col-lg-4">
+                                <select required class="form-select-control heigth25" id="slcSector" name="slcSector" [(ngModel)]="convenioFilter.Sector"
+                                    #slcSector="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let s of sectoresFiltrados" [ngValue]="s.Codigo">{{s.Valor}}</option>
+                                </select>
+                            </div>
+
+                            <label class="padT6 col-lg-2 control-label no-padding-left">Valor Consulta:</label>
+                            <div class="padT6 col-lg-4 no-padding-right">
+                                <input required type="number" placeholder="000.00" id="valorConsulta" name="valorConsulta" class="heigth25 form-control"
+                                    number [min]="1" [max]="9999999999" [(ngModel)]="convenioFilter.ValorConsulta" #valorConsulta="ngModel"
+                                />
+                            </div>
+                            <label class="padT6 col-lg-2 control-label no-padding-left">Niveles:</label>
+                            <div class="col-lg-4 ">
+                                <input type="text" id="nivelRange" name="nivelRange" value="" />
+                            </div>
+                        </div>
+                        <div class="col-lg-12 no-padding">
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="buscarConvenios()">
+                                <i class="fa fa-search"></i> Buscar</button>
+                            <a (click)="limpiarConvenios()" class="btn btn-w-m btn-success btn-sm">
+                                <i class="fa fa-eraser"></i> Limpiar</a>
+                        </div>
+                        <div class="col-md-12 m-t-sm m-b-sm no-padding">
+                            <div style="border-bottom: 1px solid #d1d5d9;"></div>
+                        </div>
+                        <div class="col-md-14 no-padding">
+                            <div class="dataTables_info">{{convenioService.paginationConstants.EncabezadoTabla}}</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Nombre</th>
+                                            <th class="centerMiddle">Nivel Desde</th>
+                                            <th class="centerMiddle">Nivel Hasta</th>
+                                            <th class="centerMiddle">Ciudad</th>
+                                            <th class="centerMiddle">Especialidad</th>
+                                            <th class="centerMiddle">Dirección</th>
+                                            <th class="centerMiddle">Teléfonos</th>
+                                            <th class="centerMiddle">Costo Consulta</th>
+                                            <th class="centerMiddle">Valor A Pagar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-borders selectableBodyTable">
+                                        <tr id="convenio{{i}}" [class.active]="convenio.Selected" title="{{!convenio.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!convenio.Selected ? seleccionarConvenio(convenio) : return;" *ngFor="let convenio of convenios | paginate: {id : 'conveniosOdaTable', itemsPerPage: convenioService.paginationConstants.pageSize,currentPage: convenioService.paginationConstants.pageNumber, totalItems: convenioService.paginationConstants.total}; let i = index">
+                                            <td>{{convenio.Nombre}}</td>
+                                            <td class="centerMiddle">{{convenio.NivelPrestadorDesde}}</td>
+                                            <td class="centerMiddle">{{convenio.NivelPrestadorHasta}}</td>
+                                            <td class="centerMiddle">{{convenio.Ciudad}}</td>
+                                            <td>{{convenio.Especialidad}}</td>
+                                            <td>{{convenio.Direccion}}</td>
+                                            <td>{{convenio.Telefonos}}</td>
+                                            <td>{{convenio.CostoConsultaSalud| number : '1.2-2'}}</td>
+                                            <td class="alignR">&#36;{{convenio.ValorPagarCliente| number : '1.2-2'}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot *ngIf="convenioService.paginationConstants.total == 0">
+                                        <tr>
+                                            <td colspan="12" style="text-align: center;">No existen resultados</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <pagination-controls id="conveniosOdaTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="convenioService.paginationConstants.pageNumber=$event;pageConvenioChanged();"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

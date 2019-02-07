@@ -1,0 +1,35 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Masivos</h5>
+        </div>
+        <div class="panel-body">
+            <form name="emitirNotasMasivasForm" role="form" #emitirNotasMasivasForm="ngForm">
+
+                <fieldset class="col-lg-12">
+                    <div class="col-lg-6">
+                        <input type="file" valid-file class="form-control m-b" required id="subirArchivo" name="subirArchivo"
+                            (change)="uploadFileToActivity($event.target.files)">
+                    </div>
+
+                    <label class="col-lg-2 control-label" for="accion">Prestador:</label>
+                    <div class="col-lg-4">
+                        <select class="form-select-control m-b" id="slcPrestador" name="slcPrestador" [(ngModel)]="masivos.CodigoPrestador"
+                            #slcPrestador="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="constantesMasivos.ID_PRESTADOR_VERIS" selected>Veris</option>
+
+                        </select>
+                    </div>
+                </fieldset>
+
+
+                <div class="col-lg-4 m-t-md no-padding">
+                    <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="llamar();">
+                        <i class="fa fa-save"></i> Emitir
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,297 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-12">
+        <h2>Retención</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Retención</li>
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/retencion/descuento/list']">Identifica a tu cliente</a>
+            </li>
+            <li class="breadcrumb-item active">Cambio de Producto</li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="row" *ngIf="retencion">
+        <div id="contenido" class="col-xs-12 col-md-8 col-lg-10">
+            <div class="panel panel-default panel-body">
+                <div class="row-flex" style="margin-right: -15px;">
+                    <div class="col-md-6">
+                        <label class="text-muted">Nombres y apellidos</label>
+                        <br>
+                        <span class="text-bold">{{ retencion ? retencion.NombrePersona : '' }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-muted">Contrato</label>
+                        <br>
+                        <b class="text-bold">{{ retencion.NumeroContrato }}</b>
+                    </div>
+                    <div class="col-md-2 retention-blue text-center" style="margin-top: -15px; margin-bottom: -15px;">
+                        <h3 class="no-margin">{{ retencion.categoriaCliente }}</h3>
+                        <hr class="no-margin">
+                        <small class="text-small" style="text-align: center;">SEGMENTO</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox-title">
+                <h5>
+                    Información de Retención
+                    <a>
+                        <i title="La información en este apartado corresponde al estado del contrato en el periodo de incremento, pudo haber sufrido cambios por retención. Revisar en el módulo de consulta el estado actual." class="fa fa-info-circle"></i>
+                    </a>
+                </h5>
+            </div>
+            <div class="panel panel-default panel-body" *ngIf="retencion">
+                <div class="row" class="flex-row">
+                    <div class="col-md-12">
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Región</label>
+                                <br>
+                                <span class="form-control">{{ retencion.CodigoRegion }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Fecha de fin de vigencia</label>
+                                <br>
+                                <span class="form-control">{{ retencion.FechaFin }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Código producto</label>
+                                <br>
+                                <span class="form-control">{{ retencion.CodigoPlan }}</span>
+                            </div>
+                        </div>
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Nombre del producto</label>
+                                <br>
+                                <span class="form-control">{{ retencion.NombrePlan }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Nivel</label>
+                                <br>
+                                <span class="form-control">{{ retencion.Nivel }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Siniestralidad acumulada</label>
+                                <br>
+                                <span class="form-control">{{ retencion.SiniestralidadNumber * 100 | number:
+                                    '1.2-2' }}%</span>
+                            </div>
+                        </div>
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Estado de cobranza</label>
+                                <br>
+                                <span class="form-control">{{ retencion.EsMoroso ? "Moroso" : "Activo" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox-title">
+                <h5>
+                    Información de Producción
+                    <a>
+                        <i title="La información en este apartado es la actual del contrato, por lo que puede ser diferente a la Información de Retención por los cambios realizados para su retención." class="fa fa-info-circle"></i>
+                    </a>
+                </h5>
+            </div>
+            <div class="panel panel-default panel-body" *ngIf="retencion">
+                <div class="row" class="flex-row">
+                    <div class="col-md-12">
+                        <div class="row m-b">
+                            <div>
+                                <div class="panel-success col-md-6 m-t-sm" style="width:50%">
+                                    <div class="panel-heading">
+                                        <h5 class="panel-title">Confirma los Beneficiarios del Contrato</h5>
+                                    </div>
+                                    <div>
+                                        <div id="divResultadoBusquedaBeneficiarios">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered table-hover dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="centerMiddle">Nombre Completo</th>
+                                                            <th class="centerMiddle">Edad</th>
+                                                            <th class="centerMiddle">Genero</th>
+                                                            <th class="centerMiddle">Fecha Inclusión</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="no-borders selectableBodyTable">
+                                                        <tr title="{{!beneficiario.Selected ? 'Click para seleccionar' : ''}}"
+                                                            (click)="!beneficiario.Selected ? seleccionar(beneficiario) : return;"
+                                                            [class.active]="beneficiario.Selected" *ngFor="let beneficiario of beneficiarios | paginate: {id : 'beneficiariosTable', itemsPerPage: beneficiarioService.paginationConstants.pageSize,currentPage: beneficiarioService.paginationConstants.pageNumber, totalItems: beneficiarioService.paginationConstants.total};">
+                                                            <td style="font-size:12px;">{{beneficiario.NombresApellidos}}</td>
+                                                            <td style="font-size:12px;">{{beneficiario.Edad}}</td>
+                                                            <td style="font-size:12px;">{{beneficiario.DescripcionSexo}}</td>
+                                                            <td class="centerMiddle" style="font-size:12px;">{{beneficiario.FechaInclusion
+                                                                | date : "dd/MM/yyyy"}}</td>
+
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot *ngIf="beneficiarios.length == 0">
+                                                        <tr>
+                                                            <td colspan="9" style="text-align: center;">No existen
+                                                                resultados</td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel-success col-md-6 m-t-sm" style="width:50%">
+                                    <div class="panel-body panelDatos">
+                                        <div id="divResultadoBusquedaBeneficiarios">
+                                            <div class="table-responsive">
+                                                <table class="table  table-hover dataTable">
+                                                    <tbody class="fixedBodyHeight300">
+                                                        <tr *ngFor="let p of planes">
+                                                            <td style="font-size:10px;height:10px;width:100%;">{{p.NombrePlan}}</td>
+                                                            <td>
+                                                                <div class="progress-bar progress-bar-success"
+                                                                    [ngStyle]="{'height': getheight(), 'width' : concatenar(p.PrecioBase)  }"></div>&nbsp;{{p.PrecioBase
+                                                                | number:'1.3-3'}}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="panel panel-success">
+                                <div class="panel-body panelDatos">
+                                    <div class="col-md-12 no-padding">
+                                        <div class="col-lg-12 m-t-md no-padding">
+                                            <ul class="nav nav-tabs nestedTabs" role="tablist">
+                                                <li class="nav-item nestedTab active">
+                                                    <a class="nav-link active" id="movimientosTab" data-toggle="tab"
+                                                        href="#movimientos" role="tab">1. Movimientos</a>
+                                                </li>
+                                                <li class="nav-item nestedTab">
+                                                    <a class="nav-link" id="preexistenciasTab" data-toggle="tab" href="#preexistencias"
+                                                        role="tab">2. Preexistencias</a>
+                                                </li>
+                                                <li class="nav-item nestedTab">
+                                                    <a class="nav-link" id="productoTab" data-toggle="tab" href="#producto"
+                                                        role="tab">3. Seleccionar Producto</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content nestedTabs">
+                                                <div class="tab-pane active" id="movimientos" role="tabpanel">
+                                                    <div class="panle panel-default">
+                                                        <div class="panel-body no-padding m-b-md">
+                                                            <fieldset class="col-lg-12">
+                                                                <legend class="info">Movimientos</legend>
+                                                                <movimientos></movimientos>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="preexistencias" role="tabpanel">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body no-padding m-b-md">
+                                                            <fieldset class="col-lg-12">
+                                                                <legend class="info">Preexistencias</legend>
+                                                                <exclusiones [filter]="exclusionFilter"
+                                                                    (onLoadExclusiones)="onLoadExclusiones($event)"></exclusiones>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="producto" role="tabpanel">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body no-padding m-b-md">
+                                                            <fieldset class="col-lg-12">
+                                                                <legend class="info">Seleccione Producto</legend>
+                                                                <planTx [contratoKey]="contratoCambio"></planTx>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="sub-menu" class="col-xs-12 col-md-4 col-lg-2 no-padding">
+            <h4>Modificar Contrato</h4>
+            <hr class="no-margin" style="border-color: black; border-width: 1px;">
+            <ul class="no-padding">
+                <li class="btn col-md-12" [routerLink]="['/retencion/show', contratoCambio.CodigoRegion, contratoCambio.CodigoProducto, contratoCambio.NumeroContrato]"
+                    style="text-align: left;">
+                    <i class="fa fa-circle-o"></i>
+                    <span class="text-primary">Regresar</span>
+                </li>
+            </ul>
+        </div>
+        <div class="modal inmodal fade" id="modalEnviar" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+            data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Solicitar Aprobación</h5>
+                        </div>
+                        <div class="panel-body">
+                            <fieldset class="col-lg-12 m-b">
+                                <label class="col-lg-12 control-label">
+                                    Para aplicar este descuento se necesita autorización
+                                </label>
+                            </fieldset>
+                            <br>
+                            <br>
+                            <div class="col-lg-12 no-padding">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="enviar('#modalEnviar');">
+                                    <i></i>Aceptar</button>
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="esconderModal('#modalEnviar')">
+                                    <i></i>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal inmodal fade" id="modalEnviado" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+            data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Solicitar Aprobación</h5>
+                        </div>
+                        <div class="panel-body">
+                            <fieldset class="col-lg-12 m-b">
+                                <label class="col-lg-12 control-label">
+                                    Tu solicitud de aprobación se enviara a su jefe inmediato superior.
+                                </label>
+                            </fieldset>
+                            <br>
+                            <br>
+                            <div class="col-lg-12 no-padding">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="confirmar()">
+                                    <i></i>Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

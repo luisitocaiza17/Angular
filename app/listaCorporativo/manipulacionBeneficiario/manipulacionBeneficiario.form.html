@@ -1,0 +1,412 @@
+<div class="col-lg-12 m-t-sm no-padding" id="divpanelnuevoplan">
+    <div class="row no-padding">
+        <div class="col-lg-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Beneficios</h5>
+                </div>
+                <div class="panel-body panelDatos">
+                    <form #crearPlanForm="ngForm">
+                        <div class="col-md-12 no-padding" id="clpListaDetalle">
+                            <fieldset class="m-b-sm">
+                                <legend class="info">Manipulacion de Beneficios</legend>
+                                <br>
+                                <div class="col-md-2 col-xs-2"></div>
+                                <div class="table-responsive col-md-8 col-xs-8">
+                                    <span>
+                                        <label class="col-md-2 col-xs-2" for="codigoPlan">Buscar por:</label>
+                                    </span>
+
+                                    <span class="col-md-3 col-xs-3">
+                                        <input type="text" placeholder="AT001" id="codigoPlan" name="codigoPlan" class="heigth25 col-lg-12" />
+                                    </span>
+                                    <table class="table table-striped table-bordered table-hover dataTable">
+                                        <thead>
+                                            <th class="centerMiddle">Codigo</th>
+                                            <th class="centerMiddle">Plan</th>
+                                            <th class="centerMiddle">Cobertura</th>
+                                            <th class="centerMiddle">Codigo</th>
+                                            <th class="centerMiddle">Beneficio</th>
+                                            <th class="centerMiddle">Acciones</th>
+                                        </thead>
+                                    <tbody class="no-borders selectableBodyTable" *ngFor="let beneficio of beneficios | paginate: {id : 'BeneficioTable', itemsPerPage: coberturaService.paginationConstants.pageSize,currentPage: coberturaService.paginationConstants.pageNumber, totalItems: coberturaService.paginationConstants.total};">
+                                            <tr title="{{!beneficio.Selected ? 'Click para seleccionar' : ''}}" (click)="!beneficio.Selected ? seleccionarBeneficio(beneficio) : return;"
+                                                [class.active]="beneficio.Selected">
+                                                <td class="centerMiddle">{{ beneficio.CodigoPlan }}</td>
+                                                <td class="centerMiddle">{{ _coberturaKey.NombrePlan }}</td>
+                                                <td class="centerMiddle">{{ beneficio.NombreCobertura }}</td>
+                                                <td class="centerMiddle">{{ beneficio.CodigoBeneficio }}</td>
+                                                <td class="centerMiddle">{{ beneficio.NombreBeneficio }}</td>
+                                                <td class="centerMiddle">
+                                                    <button class="btn btn-primary" (click)="abrirPlanes(beneficio)"><i class="fa fa-edit"></i>Planes</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot *ngIf="coberturaService.paginationConstants.total == 0">
+                                            <tr>
+                                                <td colspan="12" style="text-align: center;">No existen resultados</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <pagination-controls id="BeneficioTable" maxSize="4" previousLabel="" nextLabel=""
+                                    autoHide="true" (pageChange)="coberturaService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+
+                                </div>
+                            </fieldset>
+                            <br>
+                            <fieldset class="col-lg-12">
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Cobertura:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="text" required placeholder="Seleccione Cobertura" id="nombreCobertura"
+                                        name="nombreCobertura" class="heigth25 col-lg-12" maxlength="255" [(ngModel)]="beneficioData.NombreCobertura">
+                                    <a  class="lupita"><i class="fa fa-search"></i></a>
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Beneficio:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="text" required placeholder="Seleccione Cobertura" id="nombreBeneficio"
+                                        name="nombreBeneficio" class="heigth25 col-lg-12" [(ngModel)]="beneficioData.NombreBeneficio" maxlength="255">
+                                    <a  class="lupita"><i class="fa fa-search"></i></a>
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Arancel:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="text" required placeholder="Seleccione Cobertura" id="Arancel"
+                                        name="nombreArancel" class="heigth25 col-lg-12" [(ngModel)]="beneficioData.NombreArancel" maxlength="255">
+                                    <a  class="lupita"><i class="fa fa-search"></i></a>
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-lg-12">
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Tipo
+                                    Cobertura:</label>
+                                <div class="m-b col-lg-3">
+                                    <select required class="form-select-control" id="seleccionTipoCobertura" [(ngModel)]="beneficioData.TipoCobertura" name="seleccionTipoCobertura">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option [ngValue]="constantesCorporativo.TIPO_AMBULATORIO">Ambulatorio</option>
+                                        <option [ngValue]="constantesCorporativo.TIPO_HOSPITALARIO">Hospitalario</option>
+                                        <option [ngValue]="constantesCorporativo.TIPO_AMBOS">Ambos</option>
+                                    </select>
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Fecha
+                                    Inicio:</label>
+                                <div class="m-b col-lg-3">
+                                    <datetime class="heigth25 col-lg-12 no-padding" name="fechaInicio" [timepicker]="false"
+                                        id="fechaInicio" [(ngModel)]="beneficioData.FechaInicioCobertura" [datepicker]="datepickerOpts"
+                                        required></datetime>
+                                </div>
+                            </fieldset>
+                            <br>
+                            <!--
+                            <fieldset class="col-lg-12">
+                                <legend>Procedimiento</legend>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Topa:</label>
+                                <div class="m-b col-lg-3">
+                                    <select required class="form-select-control heigth25" id="congenitas" name="congenitas">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let maximos of respuestasMaximos" [ngValue]="maximos.codigo">{{maximos.mensaje}}</option>
+                                    </select>
+                                </div>
+
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Valor:</label>
+                                <div class="col-lg-3">
+                                    <input type="number" id="Limite" placeholder="0" min="1" name="Limite" class="heigth25 col-lg-12"
+                                        [(ngModel)]="cobertura.Monto" #Limite="ngModel" />
+                                </div>
+                            </fieldset>
+                            <br>
+                            <fieldset class="col-lg-12">
+                                <legend>Dias</legend>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Carencia:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Periodo
+                                    Enfermedad:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Presentacion:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                            </fieldset>
+                            <br>
+                            <fieldset class="col-lg-12">
+                                <legend>Limite</legend>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Monto:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Cantidad:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Aplica
+                                    Deducible:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-lg-12">
+
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">%Con
+                                    convenio:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">%Sin
+                                    convenio::</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">%red
+                                    especifica:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-lg-12">
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">%Otros no
+                                    afiliados:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                            </fieldset>
+                            <br>
+                            <fieldset class="col-lg-12">
+                                <legend>Exceso</legend>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Monto:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Cantidad</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">Aplica
+                                    Deducible:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-lg-12">
+                                <label class="col-lg-1 control-label" style="padding-left:10px !important">%Exceso:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="number" placeholder="0" id="dias-carencia-hosp" name="dias-carencia-hosp"
+                                        class="heigth25 col-lg-12" [(ngModel)]="cobertura.DiasCarenciaHospitalaria"
+                                        #DiasCarenciaHospitalaria="ngModel" />
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-lg-12 col-xs-12 text-center">
+                                <button class="btn btn-primary" *ngIf="isActualizar" (click)="ActualizarProducto(cobertura)"><i
+                                        class="fa fa-save"></i> Actualizar</button>
+                                <button class="btn btn-primary" *ngIf="isNueva" (click)="NuevaProducto()"><i class="fa fa-save"></i>
+                                    Guardar</button>
+                            </fieldset>-->
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Prestadores -->
+    <div id="prestadorModalDiv">
+        <div class="modal inmodal fade" id="prestadorViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="col-lg-12 m-t-sm no-padding">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">{{popupTitle}}</h5>
+                            </div>
+                            <div class="panel-body panelDatos">
+                                <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                    <table id="tablaPrestadores" class="table table-striped table-bordered table-hover dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="centerMiddle no-left-border">Codigo</th>
+                                                <th class="centerMiddle">Nombre Cobertura</th>
+                                        </thead>
+                                        <tbody id="bodyPrestador" class="no-borders selectableBodyTable">
+                                            <tr id="prestador{{i}}" [class.active]="cobertura.Selected" title="{{!cobertura.Selected ? 'Click para seleccionar' : ''}}"
+                                                (click)="!cobertura.Selected ? seleccionarCobertura(cobertura) : return;"
+                                                *ngFor="let cobertura of coberturas; let i = index">
+                                                <td class="centerMiddle">{{cobertura.CodigoCobertura}}</td>
+                                                <td class="centerMiddle">{{cobertura.NombreCobertura}}</td>
+                                            </tr>
+                                            <tr *ngIf="coberturas!=undefined && coberturas.length == 0">
+                                                <td colspan="9" class="alignCenter">No existen resultados</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Planes -->
+    <div id="planesModalDiv">
+        <div class="modal inmodal fade" id="planesViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="col-lg-12 m-t-sm no-padding">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">{{popupTitle2}}</h5>
+                            </div>
+                            <div class="panel-body panelDatos">
+                                <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                    <table id="tablaPrestadores" class="table table-striped table-bordered table-hover dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="centerMiddle no-left-border">Numero</th>
+                                                <th class="centerMiddle no-left-border">Empresa</th>
+                                                <th class="centerMiddle no-left-border">Deducible</th>
+                                                <th class="centerMiddle no-left-border">%Con convenio</th>
+                                                <th class="centerMiddle no-left-border">%Region</th>
+                                                <th class="centerMiddle no-left-border">%Producto</th>
+                                                <th class="centerMiddle no-left-border">%Producto</th>
+                                                <th class="centerMiddle no-left-border">%Plan</th>
+                                                <th class="centerMiddle no-left-border">%Plan</th>
+
+                                        </thead>
+                                        <tbody id="bodyPrestador" class="no-borders selectableBodyTable">
+                                            <tr id="prestador{{i}}" [class.active]="cobertura.Selected" title="{{!cobertura.Selected ? 'Click para seleccionar' : ''}}"
+                                                (click)="!cobertura.Selected ? seleccionarCobertura(cobertura) : return;"
+                                                *ngFor="let cobertura of coberturas; let i = index">
+                                                <td class="centerMiddle"></td>
+                                                <td class="centerMiddle"></td>
+                                            </tr>
+                                            <tr *ngIf="coberturas!=undefined && coberturas.length == 0">
+                                                <td colspan="9" class="alignCenter">No existen resultados</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <fieldset class="col-lg-12">
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Plan:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" required placeholder="Seleccione Cobertura" id="nombrePrestador"
+                                            name="nombrePrestador" class="heigth25 col-lg-12" maxlength="255">
+                                        <a (click)="listarConvenios()" class="lupita"><i class="fa fa-search"></i></a>
+                                    </div>
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Version:</label>
+                                    <div class="col-lg-3">
+                                        <input type="number" id="Limite" placeholder="0" min="1" name="Limite" class="heigth25 col-lg-12"
+                                            [(ngModel)]="cobertura.Monto" #Limite="ngModel" />
+                                    </div>
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Cobertura:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" required placeholder="Seleccione Cobertura" id="nombrePrestador"
+                                            name="nombrePrestador" class="heigth25 col-lg-12" maxlength="255">
+                                        <a (click)="listarConvenios()" class="lupita"><i class="fa fa-search"></i></a>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="col-lg-12">
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Tipo:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" required placeholder="Seleccione Cobertura" id="nombrePrestador"
+                                            name="nombrePrestador" class="heigth25 col-lg-12" maxlength="255">
+                                        <a (click)="listarConvenios()" class="lupita"><i class="fa fa-search"></i></a>
+                                    </div>
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Beneficio:</label>
+                                    <div class="col-lg-3">
+                                        <input type="number" id="Limite" placeholder="0" min="1" name="Limite" class="heigth25 col-lg-12"
+                                            [(ngModel)]="cobertura.Monto" #Limite="ngModel" />
+                                    </div>
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Prod:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" required placeholder="Seleccione Cobertura" id="nombrePrestador"
+                                            name="nombrePrestador" class="heigth25 col-lg-12" maxlength="255">
+                                        <a (click)="listarConvenios()" class="lupita"><i class="fa fa-search"></i></a>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="col-lg-12">
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Empresa:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" required placeholder="Seleccione Cobertura" id="nombrePrestador"
+                                            name="nombrePrestador" class="heigth25 col-lg-12" maxlength="255">
+                                        <a (click)="listarConvenios()" class="lupita"><i class="fa fa-search"></i></a>
+                                    </div>
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Aplica
+                                        Deducible:</label>
+                                    <div class="col-lg-3">
+                                        <input type="number" id="Limite" placeholder="0" min="1" name="Limite" class="heigth25 col-lg-12"
+                                            [(ngModel)]="cobertura.Monto" #Limite="ngModel" />
+                                    </div>
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">%con
+                                        Convenio:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" required placeholder="Seleccione Cobertura" id="nombrePrestador"
+                                            name="nombrePrestador" class="heigth25 col-lg-12" maxlength="255">
+                                        <a (click)="listarConvenios()" class="lupita"><i class="fa fa-search"></i></a>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="col-lg-12">
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Valor
+                                        FEE:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" required placeholder="Seleccione Cobertura" id="nombrePrestador"
+                                            name="nombrePrestador" class="heigth25 col-lg-12" maxlength="255">
+                                        <a (click)="listarConvenios()" class="lupita"><i class="fa fa-search"></i></a>
+                                    </div>
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Nivel
+                                        Referencia:</label>
+                                    <div class="col-lg-3">
+                                        <input type="number" id="Limite" placeholder="0" min="1" name="Limite" class="heigth25 col-lg-12"
+                                            [(ngModel)]="cobertura.Monto" #Limite="ngModel" />
+                                    </div>
+                                    <label class="col-lg-1 control-label" style="padding-left:10px !important">Fecha:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" required placeholder="Seleccione Cobertura" id="nombrePrestador"
+                                            name="nombrePrestador" class="heigth25 col-lg-12" maxlength="255">
+                                        <a (click)="listarConvenios()" class="lupita"><i class="fa fa-search"></i></a>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="col-lg-12">
+                                    <div class="m-b col-lg-6">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <button class="btn btn-success">Actualizar</button>
+                                        <button class="btn btn-success">Cerrar</button>
+                                        <button class="btn btn-success">Cerrar</button>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,86 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Modificar Beneficiario</h5>
+        </div>
+        <div class="panel-body">
+            <form name="modBeneficiarioForm" role="form" #modBeneficiarioForm="ngForm">
+
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Listado de Beneficiarios</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="dataTables_info">{{transaccionService.paginationConstants.EncabezadoTabla}}</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Persona Número</th>
+                                            <th class="centerMiddle">Nombres</th>
+                                            <th class="centerMiddle">Relación</th>
+                                            <th class="centerMiddle">Edad</th>
+                                            <th class="centerMiddle">Sexo</th>
+                                            <th class="centerMiddle">Maternidad</th>
+                                            <th class="centerMiddle">Titular</th>
+                                            <th class="centerMiddle">Estado</th>
+                                            <th class="centerMiddle">Region</th>
+                                            <th class="centerMiddle">Código Producto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-borders selectableBodyTable" *ngFor="let beneficiario of benficiarios | paginate: {id : 'beneficiariosTable', itemsPerPage: transaccionService.paginationConstants.pageSize,currentPage: transaccionService.paginationConstants.pageNumber, totalItems: transaccionService.paginationConstants.total};">
+                                        <tr title="{{!beneficiario.Selected ? 'Click para seleccionar' : ''}}" (click)="!beneficiario.Selected ? seleccionar(beneficiario, true) : return;"
+                                            [class.active]="beneficiario.Selected">
+                                            <td>{{beneficiario.NumeroPersona}}</td>
+                                            <td>{{beneficiario.NombresApellidos}}</td>
+                                            <td>{{beneficiario.NombreRelacion}}</td>
+                                            <td>{{beneficiario.Edad}}</td>
+                                            <td>{{beneficiario.DescripcionSexo}}</td>
+                                            <td>{{beneficiario.Maternidad}}</td>
+                                            <td>{{beneficiario.DescripcionTitular}}</td>
+                                            <td>{{beneficiario.NombreEstado}}</td>
+                                            <td>{{beneficiario.Region}}</td>
+                                            <td>{{beneficiario.CodigoProducto}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot *ngIf="transaccionService.paginationConstants.total == 0">
+                                        <tr>
+                                            <td colspan="10" style="text-align: center;">No existen resultados</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <pagination-controls id="beneficiariosTable" maxSize="4" previousLabel="" nextLabel=""
+                                autoHide="true" (pageChange)="transaccionService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 m-t-md">
+                    <label class="control-label no-padding-left" for="slcTipoCuenta">Maternidad</label>
+                </div>
+
+                <div class="col-lg-4 m-t-md">
+                    <select required class="form-select-control" [(ngModel)]="_contratoKey.Maternidad" id="slcMaternidad"
+                        name="slcMaternidad" #slcMaternidad="ngModel">
+                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                        <option [ngValue]="1">SI</option>
+                        <option [ngValue]="0">NO</option>
+                    </select>
+                    <div [hidden]="slcMaternidad.valid" class="error">
+                        <p *ngIf="slcMaternidad.errors?.required">Campo requerido</p>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-6 m-t-md">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="aplicarMaternidad();">
+                        <i class="fa fa-save"></i> Ok
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

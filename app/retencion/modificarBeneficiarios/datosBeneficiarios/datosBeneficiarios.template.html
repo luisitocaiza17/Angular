@@ -1,0 +1,288 @@
+<br>
+<div class="panel-body panelDatos m-l-sm m-r-sm">
+	<div class="table-responsive">
+		<table id="pr" class="table table-striped table-bordered table-hover dataTable">
+			<thead>
+				<tr>
+					<th class="centerMiddle">Nombres</th>
+					<th class="centerMiddle">Persona Número</th>
+					<th class="centerMiddle">Relación</th>
+					<th class="centerMiddle">Edad</th>
+					<th class="centerMiddle">Genero</th>
+					<th class="centerMiddle">Maternidad</th>
+					<th class="centerMiddle">Titular</th>
+					<th class="centerMiddle">Estado</th>
+					<th class="centerMiddle">Precio</th>
+				</tr>
+			</thead>
+			<tbody class="no-borders selectableBodyTable" *ngFor="let beneficiario of beneficiarios">
+				<tr title="{{!beneficiario.Selected ? 'Click para seleccionar' : ''}}" (click)="!beneficiario.Selected ? seleccionarBeneficiario(beneficiario) : return"
+					[class.active]="beneficiario.Selected">
+					<td>{{beneficiario.NombresApellidos}}</td>
+					<td>{{beneficiario.NumeroPersona}}</td>
+					<td>{{beneficiario.NombreRelacion}}</td>
+					<td>{{beneficiario.Edad}}</td>
+					<td>{{beneficiario.DescripcionSexo}}</td>
+					<td *ngIf="beneficiario.ModificarMaternidad">
+						<select class="form-control" [(ngModel)]="beneficiario.TajetaBeneficiario" (change)="modificarFactura(beneficiario)">
+							<option value="true">Si</option>
+							<option value="false">No</option>
+						</select>
+					</td>
+					<td *ngIf="!beneficiario.ModificarMaternidad">{{beneficiario.Maternidad}}</td>
+					<td>{{beneficiario.DescripcionTitular}}</td>
+					<td>{{beneficiario.NombreEstado}}</td>
+					<td>{{beneficiario.PrecioBeneficiario | number : '1.2-2'}}</td>
+				</tr>
+			</tbody>
+			<tfoot *ngIf="beneficiarios.length == 0">
+				<tr>
+					<td colspan="8" class="centerMiddle">No existen resultados</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	<div class="col-lg-12">
+		<button class="btn btn-w-m btn-success btn-sm" (click)="incluir()">Incluir</button>
+		<button class="btn btn-w-m btn-success btn-sm" (click)="excluir()">Excluir</button>
+		<button class="btn btn-w-m btn-success btn-sm" (click)="reactivar()" [disabled]="!habiltarExcluir">Reactivar</button>
+	</div>
+</div>
+<div class="modal inmodal fade" id="modalIncluir" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-lg">
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<h5 class="panel-title p-xs">Incluir Beneficiario</h5>
+				</div>
+				<br>
+				<div class="panel-body">
+					<form class="form-horizontal" role="form" name="form" (ngSubmit)="form.form.valid && guardar()" #form="ngForm" novalidate>
+						<div class="form-group col-lg-12 no-padding">
+							<label class="control-label col-lg-2">Tipo Documento:</label>
+							<div class="col-sm-4">
+								<select required class="form-select-control m-b m-l-sm" name="tipoIdentificacion" [(ngModel)]="tipoDocumento" #tipoIdentificacion="ngModel" (change)="seleccionarDocumento()"
+									[ngClass]="{ 'is-invalid': form.submitted && tipoIdentificacion.invalid }">
+									<option [ngValue]="null">Seleccione...</option>
+									<option [ngValue]="1">Cédula</option>
+									<option [ngValue]="2">Pasaporte</option>
+									<option [ngValue]="3">Sin Documento</option>
+								</select>
+								<div *ngIf="form.submitted && tipoIdentificacion.invalid" class="fields-errors">
+									<div *ngIf="tipoIdentificacion.errors.required">Campo requerido</div>
+								</div>
+							</div>
+							<label class="control-label col-lg-2">Documento:</label>
+							<div class="col-sm-4">
+								<input class="heigth25 form-control col-lg-12 m-l-sm" type="text" [(ngModel)]="documento" name="document" #document="ngModel" (blur)="validaDocumento()" 
+									[disabled]="!habilitarCampos" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+							</div>
+						</div>
+						<div class="form-group col-lg-12 no-padding">
+							<label class="control-label col-lg-2">Nombres:</label>
+							<div class="col-sm-4">
+								<input class="form-control heigth25 m-l-sm" type="text" placeholder="Nombres beneficiario" [(ngModel)]="beneficiario.Nombres" name="nombres" #nombres="ngModel" [disabled]="!habilitarCampos" 
+								[ngClass]="{ 'is-invalid': form.submitted && nombres.invalid }" required>
+								<div *ngIf="form.submitted && nombres.invalid" class="fields-errors">
+									<div *ngIf="nombres.errors.required">Campo requerido</div>
+								</div>
+							</div>
+							<label class="control-label col-lg-2">Apellidos:</label>
+							<div class="col-sm-4">
+								<input class="form-control m-l-sm heigth25" type="text" placeholder="Apellidos beneficiario" [(ngModel)]="beneficiario.Apellidos" name="apellidos" #apellidos="ngModel" [disabled]="!habilitarCampos"
+								[ngClass]="{ 'is-invalid': form.submitted && apellidos.invalid }" required>
+								<div *ngIf="form.submitted && apellidos.invalid" class="fields-errors">
+									<div *ngIf="apellidos.errors.required">Campo requerido</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group col-lg-12 no-padding">
+							<label class="control-label col-lg-2">Relación:</label>
+							<div class="col-sm-4">
+								<select class="form-select-control m-b m-l-sm" name="relacion" [(ngModel)]="beneficiario.CodigoRelacion" #relacion="ngModel" 
+									[ngClass]="{ 'is-invalid': form.submitted && relacion.invalid }" [disabled]="!habilitarCampos" (change)="habilitarMaternidad()" required>
+									<option [ngValue]="null">Seleccione...</option>
+									<option *ngFor="let relacion of relaciones" [ngValue]="relacion.CodigoRelacion">{{relacion.NombreRelacion}}</option>
+								</select>
+								<div *ngIf="form.submitted && relacion.invalid" class="fields-errors">
+									<div *ngIf="relacion.errors.required">Campo requerido</div>
+								</div>
+							</div>
+							<label class="control-label col-lg-2">Genero:</label>
+							<div class="col-sm-4">
+								<select class="form-select-control m-b m-l-sm" name="genero" [(ngModel)]="beneficiario.SexoPersona" #genero="ngModel"
+									[ngClass]="{ 'is-invalid': form.submitted && genero.invalid }" [disabled]="!habilitarCampos" (change)="calcularPrecios()" required>
+									<option [ngValue]="null" selected>Seleccione...</option>
+									<option [ngValue]="true" selected>Masculino</option>
+									<option [ngValue]="false" selected>Femenino</option>
+								</select>
+								<div *ngIf="form.submitted && genero.invalid" class="fields-errors">
+									<div *ngIf="genero.errors.required">Campo requerido</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group col-lg-12 no-padding">
+							<label class="control-label col-lg-2">Comisiona:</label>
+							<div class="col-sm-4">
+								<select class="form-select-control m-b m-l-sm" name="comisiona" [(ngModel)]="beneficiario.Comisiona" #comisiona="ngModel" 
+									[ngClass]="{ 'is-invalid': form.submitted && comisiona.invalid }" [disabled]="!habilitarCampos" required>
+									<option [ngValue]="null">Seleccione...</option>
+									<option [ngValue]="true">Si</option>
+									<option [ngValue]="false">No</option>
+								</select>
+								<div *ngIf="form.submitted && comisiona.invalid" class="fields-errors">
+									<div *ngIf="comisiona.errors.required">Campo requerido</div>
+								</div>
+							</div>
+							<label class="control-label col-lg-2">Aplica Maternidad:</label>
+							<div class="col-sm-4">
+								<select class="form-select-control m-b m-l-sm" name="aplicaMaternidad" [(ngModel)]="beneficiario.TajetaBeneficiario" #aplicaMaternidad="ngModel" [disabled]="!esMaternidad" 
+									(change)="calcularPrecios()" required>
+									<option [ngValue]="null">Seleccione...</option>
+									<option [ngValue]="true">Si</option>
+									<option [ngValue]="false">No</option>
+								</select>
+								<div *ngIf="form.submitted && aplicaMaternidad.invalid" class="fields-errors">
+									<div *ngIf="aplicaMaternidad.errors.required">Campo requerido</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group col-lg-12 no-padding">
+							<label class="control-label col-lg-2">Vigencia Desde:</label>
+							<div class="col-sm-4">
+								<datetime name="fechaInclusion" class="heigth25 col-lg-12 m-b" [datepicker]="datepickerOpts"
+									[timepicker]="false" [(ngModel)]="beneficiario.FechaInclusion" [disabled]="!habilitarCampos" required>
+								</datetime>
+							</div>
+							<label class="control-label col-lg-2">Vigencia Hasta:</label>
+							<div class="col-sm-4">
+								<datetime name="fechaExclusion" class="heigth25 col-lg-12 m-b" [datepicker]="datepickerOpts" [readonly]="true"
+									[timepicker]="false" [(ngModel)]="beneficiario.FechaExlusion">
+								</datetime>
+							</div>
+						</div>
+						<div class="form-group col-lg-12 no-padding">
+							<label class="control-label col-lg-2">Fecha Nacimiento:</label>
+							<div class="col-sm-4">
+								<datetime name="fechaNacimiento" required class="heigth25 col-lg-12 m-b" [datepicker]="datepickerOpts"
+									[timepicker]="false" [(ngModel)]="beneficiario.FechaNacimiento" (ngModelChange)="calcularEdad()" [disabled]="!habilitarCampos">
+								</datetime>
+							</div>
+							<label class="control-label col-lg-2">Edad:</label>
+							<div class="col-sm-4">
+								<span class="m-l-sm">{{beneficiario.Edad}}</span>
+							</div>
+						</div>
+						<div class="m-l-sm">
+							<h2>Precios por Beneficiario</h2>
+						</div>
+						<div class="form-group col-lg-12 no-padding">
+							<label class="control-label col-lg-2">Precio sugerido:</label>
+							<div class="col-sm-4">
+								<span class="m-l-sm">{{beneficiario.PrecioSugerido | number : '1.2-2'}}</span>
+							</div>
+							<label class="control-label col-lg-2">Facturado Hasta:</label>
+							<div class="col-sm-4">
+								<datetime class="heigth25 col-lg-12 m-b" name="facturadoHasta" [datepicker]="datepickerOpts" #facturadoHasta="ngModel" [readonly]="true" [timepicker]="false" 
+									[(ngModel)]="beneficiario.FechaExlusion">
+								</datetime>
+							</div>
+						</div>
+						<div class="col-lg-12 no-padding">
+							<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="submit">Guardar</button>
+							<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="button" (click)="cerrarModal('modalIncluir')">Cancelar</button>
+						</div>
+					</form>
+				</div>
+				<div class="modal inmodal fade" id="ActualizaPersona" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+					data-keyboard="false">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-dialog modal-lg">
+							<div class="panel panel-success">
+								<div class="panel-heading">
+									<h5 class="panel-title padding-title">Actualización de Personas</h5>
+								</div>
+								<div class="panel-body">
+									<frmActualizaPersona *ngIf="pantallaClienteUnico.NumeroPersona!= undefined" [tipoPantalla]="pantallaClienteUnico"></frmActualizaPersona>
+									<div class="col-lg-12 m-t-md">
+										<button class="btn btn-w-m btn-success btn-sm" (click)="closeModalClienteUnico()">
+											<i class="fa fa-sign-out"></i>Salir
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal inmodal fade" id="modalTitular" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-lg">
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<h5 class="panel-title p-xs">Seleccione Titular</h5>
+				</div>
+				<br>
+				<div class="panel-body">
+					<form class="form-horizontal" role="form" name="fTitular" (ngSubmit)="fTitular.form.valid && guardarNuevoTitular()" #fTitular="ngForm" novalidate>
+						<div class="form-group col-lg-12 no-padding">
+							<label class="control-label col-lg-2">Beneficiario:</label>
+							<div class="col-sm-4">
+								<select class="form-select-control m-b m-l-sm" name="bene" [(ngModel)]="beneficiario.NumeroPersona" #bene="ngModel" 
+									[ngClass]="{ 'is-invalid': fTitular.submitted && bene.invalid }" (change)="cambiarTitular(beneficiario)" required>
+									<option [ngValue]="null">Seleccione...</option>
+									<option *ngFor="let i of beneficiariosAux" [ngValue]="i.NumeroPersona">{{i.NombresApellidos}}</option>
+								</select>
+								<div *ngIf="fTitular.submitted && bene.invalid" class="fields-errors">
+									<div *ngIf="bene.errors.required">Campo requerido</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-12 no-padding">
+							<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="submit">Guardar</button>
+							<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="button" (click)="cerrarModal('modalTitular')">Cancelar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal inmodal fade" id="modalRelacion" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-lg">
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<h5 class="panel-title p-xs">Seleccione Titular</h5>
+				</div>
+				<br>
+				<div class="panel-body">
+					<form class="form-horizontal" role="form" name="fRelacion" (ngSubmit)="fRelacion.form.valid && actualizarRelacion()" #fRelacion="ngForm" novalidate>
+						<div class="form-group col-lg-12 no-padding">
+							<label class="control-label col-lg-2">Relación:</label>
+							<div class="col-sm-4">
+								<select class="form-select-control m-b m-l-sm" name="codRelacion" [(ngModel)]="codigoRelacion" #codRelacion="ngModel" 
+									[ngClass]="{ 'is-invalid': fRelacion.submitted && codRelacion.invalid }" required>
+									<option [ngValue]="null">Seleccione...</option>
+									<option *ngFor="let relacion of relaciones" [ngValue]="relacion.CodigoRelacion">{{relacion.NombreRelacion}}</option>
+								</select>
+								<div *ngIf="fRelacion.submitted && codRelacion.invalid" class="fields-errors">
+									<div *ngIf="codRelacion.errors.required">Campo requerido</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-12 no-padding">
+							<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="submit">Guardar</button>
+							<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="button" (click)="cerrarModal('modalRelacion')">Cancelar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

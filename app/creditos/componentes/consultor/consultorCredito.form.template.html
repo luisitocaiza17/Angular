@@ -1,0 +1,221 @@
+<div class="col-lg-12 no-padding">
+    <ul class="nav nav-tabs nestedTabs" role="tablist">
+        <li class="nav-item active nestedTab">
+            <a id="datosGeneralesTab" class="nav-link active" data-toggle="tab" href="#datosGenerales" role="tab">Datos
+                Generales</a>
+        </li>
+        <li class="nav-item nestedTab">
+            <a id="pagoInteligenteTab" class="nav-link" data-toggle="tab" href="#pagoInteligente" role="tab">Pago
+                Inteligente</a>
+        </li>
+    </ul>
+    <div class="tab-content nestedTabs">
+        <div class="tab-pane active" id="datosGenerales" role="tabpanel">
+            <div class="panel panel-success">
+                <div class="panel-body panelDatos">
+                    <div class="col-md-12 no-padding">
+                        <div class="col-md-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Region:</label>
+                            <span class="col-lg-2">{{contratoKey.CodigoRegion}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Producto:</label>
+                            <span class="col-lg-2">{{contratoKey.CodigoProducto}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">No Contrato:</label>
+                            <span class="col-lg-2">{{contratoKey.NumeroContrato}}</span>
+                        </div>
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Cédula:</label>
+                            <span class="col-lg-2">{{contratoKey.CedulaTitular}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombres y Apellidos:</label>
+                            <span class="col-lg-2">{{contratoKey.NombreTitular}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Plan:</label>
+                            <span class="col-lg-2">{{contratoKey.Plan}}</span>
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Versión:</label>
+                            <span class="col-lg-2">{{contratoKey.VersionPlan}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Fecha Inicio:</label>
+                            <span class="col-lg-2">{{contratoKey.FechaInicio | date: 'dd/MM/yyyy'}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Fecha Fin:</label>
+                            <span class="col-lg-2">{{contratoKey.FechaFin | date: 'dd/MM/yyyy'}}</span>
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Estado:</label>
+                            <span class="col-lg-2">{{contratoKey.ContratoEstado}}</span>
+
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombre Plan:</label>
+                            <span class="col-lg-2">{{contratoKey.NombrePlan}}</span>
+
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Numero Credito:</label>
+                            <span class="col-lg-2">{{sobre.NumeroSobre}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="pagoInteligente" role="tabpanel">
+            <div class="panel panel-success">
+                <div class="panel-body panelDatos">
+                    <div class="col-md-12 no-padding">
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Numero Cuenta:</label>
+                            <span class="col-lg-3">{{contratoKey.NumeroCuentaCredito}}</span>
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Tipo Cuenta:</label>
+                            <span class="col-lg-3" *ngIf="contratoKey.TipoCuentaCredito ==1">Cuenta Corriente</span>
+                            <span class="col-lg-3" *ngIf="contratoKey.TipoCuentaCredito ==2">Cuenta de Ahorro</span>
+                            <span class="col-lg-3" *ngIf="contratoKey.TipoCuentaCredito ==3">Tarjeta</span>
+                            <span class="col-lg-3" *ngIf="contratoKey.TipoCuentaCredito ==4">Pago Directo</span>
+                        </div>
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Banco:</label>
+                            <span class="col-lg-3">{{contratoKey.NombreBancoPI}}</span>
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Email:</label>
+                            <span class="col-lg-3">{{contratoKey.EmailDomicilio}}</span>
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Celular:</label>
+                            <span class="col-lg-3">{{contratoKey.Celular}}</span>
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Persona Contacto:</label>
+                            <span class="col-lg-3">{{sobre.PersonaContacto}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="min-height: 70px;">
+
+    <div class="col-xs-12 no-padding m-t-xs m-b-sm">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">ACTUALIZACIÓN DEL CREDITO</h5>
+            </div>
+
+            <div class="panel-body">
+                <fieldset class="col-lg-12">
+                    <legend class="info">ACTUALIZACIÓN DE LOS DATOS</legend>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Número de Credito:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="sobre.NumeroSobre" id="numeroSobre" name="numeroSobre" class="heigth25 form-control col-lg-12"
+                            [disabled]="true" />
+                    </div>
+
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Valor Presentado:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="number" [(ngModel)]="sobre.ValorPresentado" id="valorPresentado" name="valorPresentado"
+                            class="heigth25 form-control col-lg-12" [disabled]="true" />
+                    </div>
+                </fieldset>
+                <fieldset class="col-lg-12 m-b">
+                    <legend class="info">DETALLE DEL CREDITO</legend>
+
+                    <div class="col-lg-1" style="padding-left:10px !important">
+                        <label class="control-label">Código:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" id="codigoSobrePersona" name="codigoSobrePersona" class="heigth25 form-control col-lg-12"
+                            [(ngModel)]="detalleSobreSelected.NumeroSolicitudDetalle" [disabled]="true" />
+                    </div>
+
+                    <div class="col-lg-1" style="padding-left:10px !important">
+                        <label class="control-label">Valor:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="number" id="valorBonificado" name="valorBonificado" class="heigth25 form-control col-lg-12"
+                            min="1" step="1" [(ngModel)]="detalleSobreSelected.ValorPresentadoDetalle" #valorBonificado="ngModel" />
+                        <div class="" *ngIf="detalleSobreSelected.ValorPresentadoDetalle <= 0">
+                            <label class="col-md-12 no-padding " style="color: #ff0000;font-weight: normal;font-size: smaller;">
+                                El valor presentado debe se mayor a cero
+                            </label>
+                        </div>
+                        <div [hidden]="valorBonificado.valid" class="error">
+                            <p *ngIf="valorBonificado.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1" style="padding-left:10px !important">
+                        <label class="control-label padding-left">Estado:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <select required class="form-select-control" id="seleccionEstadoSobre" name="seleccionEstadoSobre"
+                            [(ngModel)]="detalleSobreSelected.IdEstado" #seleccionEstadoSobre="ngModel" (change)="ValidarDevolucion();">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let estado of estados" [value]="estado.Id">{{estado.Valor}}</option>
+                        </select>
+                        <div [hidden]="seleccionEstadoSobre.valid" class="error">
+                            <p *ngIf="seleccionEstadoSobre.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-lg-12 m-b">
+                    <div class="col-lg-1" style="padding-left:10px !important">
+                        <label class="control-labe">Cobertura:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <select required class="form-select-control col-lg-12" id="seleccionTipoCobertura" name="seleccionTipoCobertura"
+                            [(ngModel)]="detalleSobreSelected.IdTipoCobertura" #seleccionTipoCobertura="ngModel" [disabled]="true">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let tipoCobertura of tiposCobertura" [value]="tipoCobertura.IdTipoCobertura">{{tipoCobertura.NombreTipoCobertura}}</option>
+                        </select>
+                        <div [hidden]="seleccionTipoCobertura.valid" class="error">
+                            <p *ngIf="seleccionTipoCobertura.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-1" style="padding-left:10px !important">
+                        <label class="control-labe">Beneficiario:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" id="NombreBeneficiario" name="NombreBeneficiario" class="heigth25 form-control col-lg-12"
+                            [(ngModel)]="detalleSobreSelected.NombreBeneficiario" [disabled]="true" />
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-lg-12 m-b">
+                    <div class="col-lg-1" style="padding-left:10px !important">
+                        <label class="control-label ">Observaciones:</label>
+                    </div>
+                    <div class="col-lg-11">
+                        <input type="text" id="observacionesGenerales" name="observacionesGenerales" class="heigth25 form-control col-lg-12"
+                            [(ngModel)]="detalleSobreSelected.ObservacionesConsultor" />
+                    </div>
+                </fieldset>
+
+
+                <fieldset class="col-lg-12" *ngIf="detalleSobreSelected.IdEstado == constantesCreditos.CODIGO_ESTADO_CREDITO_NEGADO || detalleSobreSelected.IdEstado == constantesCreditos.CODIGO_ESTADO_CREDITO_DEVOLUCION">
+                    <div class="col-lg-1" style="padding-left:10px !important">
+                        <label class="control-label ">Número Qpra:</label>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <input required type="text" id="numeroQpra" name="numeroQpra" class="heigth25 form-control col-lg-12"
+                            [(ngModel)]="sobre.NumeroQpra" #QPRA="ngModel" />
+                        <div [hidden]="QPRA.valid" class="error">
+                            <p *ngIf="QPRA.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+                </fieldset>
+              
+
+                <div class="col-lg-12 no-padding">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="guardar();" [disabled]="sobre.DetalleSobre.length == 0">
+                        <i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

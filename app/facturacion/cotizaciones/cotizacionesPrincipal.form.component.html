@@ -1,0 +1,40 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Cotizaciones</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Cotizaciones</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-body no-padding">
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-marg*ins">
+                    <div class="col-lg-12 no-padding">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li id="slcUno" class="nav-item" [ngClass]="{'active':opcion == 'NotasCreditoPCA'}">
+                                <a (click)="activar('NotasCreditoPCA')" id="identifier">TAB 1</a>
+                            </li>
+
+                            <li id="slcDos" class="nav-item" [ngClass]="{'active':opcion == 'NotasCreditoMasivas'}">
+                                <a (click)="activar('NotasCreditoMasivas')" id="identifier">TAB 2</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        <!--     <div style="min-height: 70px;">
+                <notasCreditoPca *ngIf="isActive('NotasCreditoPCA')"></notasCreditoPca>
+                <notasCreditoLote *ngIf="isActive('NotasCreditoMasivas')"></notasCreditoLote>
+            </div> -->
+        </div>
+    </div>
+</div>

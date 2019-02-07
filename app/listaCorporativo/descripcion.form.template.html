@@ -1,0 +1,150 @@
+<div class="col-lg-12 m-t-sm no-padding" id="clpListaPlanes" *ngIf=" !( isDesplegarEditar == true || isDesplegarCrear == true )">
+    <div class="row no-padding">
+        <div class="col-lg-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Detalles Plan Corporativo </h5>
+                </div>
+                <div class="panel-body panelDatos">
+                        <div id="divResultadoDocumentos">
+                            <fieldset class="m-b-sm">
+                                <legend class="info">Planes</legend>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Código:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.CodigoPlan}}</span>
+                                    <label class="col-md-3 col-xs-5">Tarifa:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.PrecioBase | currency}}</span>
+                                    
+                                  
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Edad Facturarción:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.EdadFacturacion}}</span>
+                                    <label class="col-md-3 col-xs-5">Versión:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.VersionPlan}}</span>
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Edad Máxima Beneficiarios Hijos:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.EdadDependientes}}</span>
+
+                                    <label class="col-md-3 col-xs-5">Región:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.Region}}</span>
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Número Beneficiarios:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.NumeroBeneficiarios}}</span>
+                                    <label class="col-md-3 col-xs-5">Descripción:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.NombrePlan}}</span>
+
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    
+                                    <label class="col-md-3 col-xs-5">Nivel:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.NivelReferrencia}}</span>
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Tarifario:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.CodigoTarifario}}</span>
+                                    <div>
+                                        <input type="radio" name="tarifario"  [checked]="listaPlanesKey.CodigoTarifario === 1" disabled/>
+                                        Salud
+                                        <input type="radio" name="tarifario" [checked]="listaPlanesKey.CodigoTarifario === 2"  disabled/>
+                                        Harvard
+                                        <input type="radio" name="tarifario"  [checked]="listaPlanesKey.CodigoTarifario === 3"  disabled/>
+                                        McGrow
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12 no-padding">
+                            <fieldset class="m-b-sm">
+                                <legend class="info">Fechas</legend>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Inicio:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.FechaInicio | date: 'dd-MM-yyyy '}}</span>
+
+                                    <label class="col-md-3 col-xs-5">Fin:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.FechaFin | date: 'dd-MM-yyyy '}}</span>
+                                </div>
+
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Digitación:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.FechaDigitacion | date: 'dd-MM-yyyy '}}</span>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12 no-padding">
+                            <fieldset class="m-b-sm">
+                                <legend class="info">Coparticipación</legend>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Monto:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.MontoCoaseguro | number:'3.2-2'}}</span>
+
+                                    <label class="col-md-3 col-xs-5">Porcentaje:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.PorcentajeCoaseguro}}</span>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12 no-padding">
+                            <fieldset class="m-b-sm">
+                                <legend class="info">Cubre</legend>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Congénitas:</label>
+                                    <span class="col-md-3 col-xs-7"> {{ listaPlanesKey.CubreCongenitas ? 'SI' : 'NO' }} </span>
+
+                                    <label class="col-md-3 col-xs-5">Preexistencia:</label>
+                                    <span class="col-md-3 col-xs-7" >{{listaPlanesKey.CubrePreexistencias ? 'SI' : 'NO' }}</span>
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Aplica nuevos beneficios a Maternidad:</label>
+                                    <span class="col-md-9 col-xs-7" >{{listaPlanesKey.MatNuevosBeneficios ? 'SI' : 'NO'  }}</span>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12 no-padding">
+                            <fieldset class="m-b-sm">
+                                <legend class="info">Edad</legend>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Límite:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.EdadTope}}</span>
+
+                                    <label class="col-md-3 col-xs-5">Porcentaje Bonificación:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.PorcentajeEdadTope }}</span>
+
+                                </div>
+
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12 no-padding">
+                            <fieldset class="m-b-sm">
+                                <legend class="info">Días</legend>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Carencia Ambulatorio:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.DiasCarenciaAmbulatorio}} dias</span>
+
+                                    <label class="col-md-3 col-xs-5">Carencia Hospitalaria:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.DiasCarenciaHospitalario}} dias</span>
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-3 col-xs-5">Prestación:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.DiasReclamo}} dias</span>
+
+                                    <label class="col-md-3 col-xs-5">Periodo Enfermedad:</label>
+                                    <span class="col-md-3 col-xs-7">{{listaPlanesKey.DiasAlcance}} dias</span>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <br>
+                        <div class="col-md-12 col-xs-12 text-center">
+                            <a  *ngIf="accessModifcarPlanesCorporativos" (click)="editar($event)" class="btn btn-w-m btn-success btn-sm">
+                                <i class="fa fa-plus-circle"></i> Editar
+                            </a>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<editarplan-app *ngIf="isDesplegarEditar"></editarplan-app>

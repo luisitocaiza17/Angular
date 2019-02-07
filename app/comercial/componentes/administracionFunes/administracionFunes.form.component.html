@@ -1,0 +1,81 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Prestadores</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Consultas</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-body no-padding">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+
+                    <div class="col-lg-12 no-padding">
+
+                        <ul id="ulMenuAdminstracionFun" class="nav nav-tabs" role="tablist">
+                            <li *ngIf="accessConsultarFun" id="liConsultarFun" class="nav-item" [ngClass]="{'active':opcion == 'ConsultarFun'}">
+                                <a (click)="activar('ConsultarFun')" id="refConsultarFun">Consultar Fun</a>
+                            </li>
+                            <li *ngIf="accessIngresarFun" id="liIngresaFun" class="nav-item" [ngClass]="{'active':opcion == 'IngresarFun'}">
+                                <a (click)="activar('IngresarFun')" id="refIngresarFun">Crear Funes</a>
+                            </li>
+                            <li *ngIf="accessAsignarFun" id="liAsigaFun" class="nav-item" [ngClass]="{'active':opcion == 'AsignaFun'}">
+                                <a (click)="activar('AsignaFun')" id="refAsigaFun">Asignar Fun</a>
+                            </li>
+                            <li *ngIf="accessAnularFun" id="liAnularFun" class="nav-item" [ngClass]="{'active':opcion == 'AnularFun'}">
+                                <a (click)="activar('AnularFun')" id="refAnularFun">Anular Fun</a>
+                            </li>
+                            <li *ngIf="accesReactivarFun" id="liReactivarFun" class="nav-item" [ngClass]="{'active':opcion == 'ReactivarFun'}">
+                                <a (click)="activar('ReactivarFun')" id="refReactivarFun">Reactivar Fun</a>
+                            </li>
+                            <li *ngIf="accesActivarFunFacturaPrevia" id="liActivarFunFacturaPrevia" class="nav-item"
+                                [ngClass]="{'active':opcion == 'ActivarFunFacturaPrevia'}">
+                                <a (click)="activar('ActivarFunFacturaPrevia')" id="refActivarFunFacturaPrevia">Activar
+                                    Fun Factura Previa</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="min-height: 0px;">
+                <consultarFunForm *ngIf="isActive('ConsultarFun')"></consultarFunForm>
+            </div>
+
+            <div style="min-height: 0px;">
+                <ingresarFunForm *ngIf="isActive('IngresarFun')"></ingresarFunForm>
+            </div>
+
+            <div style="min-height: 70px;">
+                <asignaFunForm *ngIf="isActive('AsignaFun')"></asignaFunForm>
+            </div>
+
+            <div style="min-height: 0px;">
+                <anularFunForm *ngIf="isActive('AnularFun')"></anularFunForm>
+            </div>
+
+            <div style="min-height: 0px;">
+                <reactivarFunForm *ngIf="isActive('ReactivarFun')"></reactivarFunForm>
+            </div>
+
+            <div style="min-height: 0px;">
+                <facturaPreviaFunForm *ngIf="isActive('ActivarFunFacturaPrevia')"></facturaPreviaFunForm>
+            </div>
+        </div>
+    </div>
+</div>

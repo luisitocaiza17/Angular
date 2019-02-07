@@ -1,0 +1,163 @@
+<div>
+    <div id="PanelDatosGeneralesCorporativo" class="panel panel-success" style="margin-bottom: 0px;" >
+        <div class="panel-heading">
+            <h5 class="panel-title">Datos Generales Corporativo</h5>
+        </div>
+        <div class="panel-body">
+            <div class="col-lg-12 no-padding">
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Numero Empresa:</label>
+                <span class="col-lg-2">{{corporativokey.Numero}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">RUC:</label>
+                <span class="col-lg-2">{{corporativokey.Ruc}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Razón Social:</label>
+                <span class="col-lg-2">{{corporativokey.RazonSocial}}</span>
+            </div>
+            <div class="col-lg-12 no-padding">
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombre:</label>
+                <span class="col-lg-2">{{corporativokey.Nombre}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Ciudad</label>
+                <span class="col-lg-2">{{corporativokey.Ciudad}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Telefono:</label>
+                <span class="col-lg-2">{{corporativokey.Telefono}}</span>
+            </div>
+
+            <div class="col-lg-12 no-padding">
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombre Representante:</label>
+                <span class="col-lg-2">{{corporativokey.NombresRepresentante}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Cargo Representante:</label>
+                <span class="col-lg-2">{{corporativokey.CargoRepresentante}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombre Financiero:</label>
+                <span class="col-lg-2">{{corporativokey.NombresFinanciero}}</span>
+            </div>
+
+            <div class="col-lg-12 no-padding" >
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Estado:</label>
+                <span class="col-lg-2">{{corporativokey.Estado}}</span>
+
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Grupo:</label>
+                <span class="col-lg-2">{{corporativokey.Grupo}}</span>
+            </div>
+        </div>
+    </div>
+    <div id="divMenu" class="ibox-content divHorizontalMenu" style="padding-top: 0px; border-width:0px;">
+        <div class="collapse navbar-collapse no-padding hoverMenu" id="divCollapseMenu">
+            <ul id="ulMenu" class="nav navbar-nav navbar-left" style="background: #005BBB;border-bottom-left-radius: 1em;border-bottom-right-radius: 1em;width:100%;height: 30px;">
+                <li id="liCambio" class="dropdown">
+                    <a href="#" id="menCambio" class="menuH dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Modificar Corporativo
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a (click)="activar('DatosCorporativo')">Datos Corporativo</a>
+                        </li>
+                        <li>
+                            <a (click)="activar('RepresentanteLegal')">Representante Legal</a>
+                        </li>
+                        <li>
+                            <a (click)="activar('DatosBroker')">Datos Broker</a>
+                        </li>
+
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div  class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div id="panelSucursalCompleto" class="panel panel-success">
+        <div class="panel-heading" (click)="colapsarTabSucursales()">
+            <h5 class="panel-title" data-toggle="collapse" title="Sucursales" data-parent="#accordion" href="#divSucursal" style="cursor: pointer;"><i class="fa fa-eye"></i> Sucursales</h5>
+        </div>
+        <div class="panel-body">
+            <div id="divSucursal" class="panel-collapse collapse in">
+                <div class="ibox-content" id="ResultadoBusquedaSucursal" style="border-width:1px 0px 0px 0px;">
+                    <div class="dataTables_info">{{sucursalservice.paginationConstants.EncabezadoTabla}}</div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="CenterMiddle">sel</th>
+                                    <th class="centerMiddle">Nombre Sucursal</th>
+                                    <th class="centerMiddle">Plan</th>
+                                    <th class="centerMiddle">Fecha Inicio </th>
+                                    <th class="centerMiddle">Fecha Fin</th>
+
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let Sucursal of sucursales | paginate: { itemsPerPage: sucursalservice.paginationConstants.pageSize,currentPage: sucursalservice.paginationConstants.pageNumber, totalItems: sucursalservice.paginationConstants.total} ; let i = index">
+
+
+                                <tr>
+                                    <td rowspan="100%" class="centerMiddle clickableColumn" (click)="inicializarPanelSucursal(Sucursal)">
+                                        <i class="fa fa-file-text"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{Sucursal.Nombre}}</td>
+                                    <td>{{Sucursal.Ciudad}}</td>
+                                    <td class="alignR">{{Sucursal.FechaInicio}}</td>
+                                    <td>{{Sucursal.FechaFin}}</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td colspan="100%">
+                                        <h4>Sucursal</h4>
+                                        <div class="col-lg-12">
+                                            <label class="col-lg-2 no-padding">Nombre Sucursal:</label>
+                                            <span class="col-lg-4">{{Sucursal.Nombre}}</span>
+                                            <label class="col-lg-2 no-padding">Plan:</label>
+                                            <span class="col-lg-4">{{Sucursal.Ciudad}}</span>
+
+                                            <label class="col-lg-2 no-padding clearInfo">Fecha Inicio:</label>
+                                            <span class="col-lg-4">{{Sucursal.FechaInicio}}</span>
+                                            <label class="col-lg-2 no-padding">Fecha Fin :</label>
+                                            <span class="col-lg-4">{{Sucursal.FechaFin}}</span>
+
+
+
+
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                            <tfoot *ngIf="sucursalservice.paginationConstants.total == 0">
+                                <tr>
+                                    <td colspan="100%" style="text-align: center;">No existen resultados</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <pagination-controls maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="sucursalservice.paginationConstants.pageNumber=$event;pageChangedSucursales();"></pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="" *ngIf="isDesplegarSucursal">
+        <div id="divPanelSucursal" class="panel-collapse collapse">
+            <div class="panel-body" style="padding-top:0px">
+                <div id="panelSucursal">
+                    <div class="row">
+                        <div class="col-lg-12 no-padding">
+                            <sucursalForm></sucursalForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div style="min-height: 70px;">
+    <datoscorporativo *ngIf="isActive('DatosCorporativo')"></datoscorporativo>
+    <representantelegal *ngIf="isActive('RepresentanteLegal')"></representantelegal>
+    <datosbroker *ngIf="isActive('DatosBroker')"></datosbroker>
+</div>

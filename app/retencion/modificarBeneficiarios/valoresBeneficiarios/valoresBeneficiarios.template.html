@@ -1,0 +1,170 @@
+<div class="ibox-content">
+	<div style="overflow-x: auto;">
+		<table class="table table-striped table-bordered table-hover dataTable colors">
+			<thead>
+				<tr>
+					<th class="white" colspan="3"></th>
+					<th class="dark" *ngIf="expandidoAnterior" colspan="6">Precio anterior</th>
+					<th class="white"></th>
+					<th class="dark" *ngIf="expandidoIncremento" colspan="6">Precio incremento</th>
+					<th class="white" colspan="7"></th>
+				</tr>
+				<tr>
+					<th>Relación</th>
+					<th>Nombre</th>
+					<th>Edad</th>
+
+					<th class="red" *ngIf="expandidoAnterior">Medicina prepagada</th>
+					<th class="yellow" *ngIf="expandidoAnterior">Servicios adicionales</th>
+					<th class="blue" *ngIf="expandidoAnterior">Descuento</th>
+					<th class="dark-cyan" *ngIf="expandidoAnterior">Subtotal</th>
+					<th class="light-cyan" *ngIf="expandidoAnterior">Gasto Adm</th>
+					<th class="gray" *ngIf="expandidoAnterior">SSC</th>
+					<th>
+						Precio anterior beneficiario
+						<span class="fa icon-blue" [ngClass]="{ 'fa-minus': expandidoAnterior, 'fa-plus': !expandidoAnterior }" (click)="alternarExpandidoAnterior()">
+						</span>
+					</th>
+
+					<th class="red" *ngIf="expandidoIncremento">Medicina prepagada</th>
+					<th class="yellow" *ngIf="expandidoIncremento">Servicios adicionales</th>
+					<th class="blue" *ngIf="expandidoIncremento">Descuento</th>
+					<th class="dark-cyan" *ngIf="expandidoIncremento">Subtotal</th>
+					<th class="light-cyan" *ngIf="expandidoIncremento">Gasto Adm</th>
+					<th class="gray" *ngIf="expandidoIncremento">SSC</th>
+					<th>
+						Precio incremento beneficiario
+						<span class="fa icon-blue" [ngClass]="{ 'fa-minus': expandidoIncremento, 'fa-plus': !expandidoIncremento }" (click)="alternarExpandidoIncremento()">
+						</span>
+					</th>
+
+					<th>Valor incremento ($)</th>
+					<th>Porcentaje incremento (%)</th>
+					<th>Siniestralidad último periódo</th>
+					<th>Log cambios</th>
+					<th>Rango mínimo</th>
+					<th>Rango máximo</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let beneficiario of beneficiarios">
+					<td>{{ beneficiario.NombreRelacion }}</td>
+					<td>{{ beneficiario.Nombres }} {{ beneficiario.Apellidos }}</td>
+					<td>{{ beneficiario.Edad }}</td>
+
+					<td class="red" *ngIf="expandidoAnterior">${{ beneficiario.ValorMedicinaPrepagadaAnterior | number: '1.2-2' }}</td>
+					<td class="yellow" *ngIf="expandidoAnterior">
+						${{ beneficiario.PrecioServiciosAnterior | number: '1.2-2' }}
+						<span class="fa fa-plus icon-blue" (click)="mostrarServicios(beneficiario)"></span>
+					</td>
+					<td class="blue" *ngIf="expandidoAnterior">${{ beneficiario.ValorDescuentoAnterior | number: '1.2-2' }}</td>
+					<td class="dark-cyan" *ngIf="expandidoAnterior">${{ beneficiario.SubtotalPrecioAnterior | number: '1.2-2' }}</td>
+					<td class="light-cyan" *ngIf="expandidoAnterior"></td>
+					<td class="gray" *ngIf="expandidoAnterior"></td>
+					<td>${{ beneficiario.SubtotalPrecioAnterior | number: '1.2-2' }}</td>
+
+					<td class="red" *ngIf="expandidoIncremento">${{ beneficiario.ValorMedicinaPrepagadaActual | number: '1.2-2' }}</td>
+					<td class="yellow" *ngIf="expandidoIncremento">
+						${{ beneficiario.PrecioServicios | number: '1.2-2' }}
+						<span class="fa fa-plus icon-blue" (click)="mostrarServicios(beneficiario)"></span>
+					</td>
+					<td class="blue" *ngIf="expandidoIncremento">${{ beneficiario.ValorDescuento | number: '1.2-2' }}</td>
+					<td class="dark-cyan" *ngIf="expandidoIncremento">${{ beneficiario.SubtotalPrecioIncremento | number: '1.2-2' }}</td>
+					<td class="light-cyan" *ngIf="expandidoIncremento"></td>
+					<td class="gray" *ngIf="expandidoIncremento"></td>
+					<td>${{ beneficiario.SubtotalPrecioIncremento | number: '1.2-2' }}</td>
+
+					<td>${{ beneficiario.IncrementoDolares | number: '1.2-2' }}</td>
+					<td>{{ beneficiario.IncrementoPorcentaje | number: '1.2-2' }}%</td>
+					<td>{{ beneficiario.Siniestralidad * 100 | number: '1.2-2' }}%</td>
+					<td class="log-detail">
+						{{ beneficiario.LogCambios }}
+						<span class="fa icon-blue" [ngClass]="{ 'fa-minus': beneficiario.MostrarLog, 'fa-plus': !beneficiario.MostrarLog }" (click)="alternarLog(beneficiario)">
+						</span>
+						<div *ngIf="beneficiario.MostrarLog" class="detail">
+							<div class="header">
+								DETALLE LOG CAMBIOS
+							</div>
+							<div class="body">
+								{{ beneficiario.DetalleLog }}
+							</div>
+						</div>
+					</td>
+					<td>{{ beneficiario.ValorMinimo | number: '1.2-2' }}</td>
+					<td>{{ beneficiario.ValorMaximo | number: '1.2-2' }}</td>
+				</tr>
+					<tr *ngIf="total">
+						<td colspan="3">TOTAL VALORES CONTRATO</td>
+
+						<td class="red" *ngIf="expandidoAnterior">${{ total.ValorMedicinaPrepagadaAnterior | number: '1.2-2' }}</td>
+						<td class="yellow" *ngIf="expandidoAnterior">${{ total.PrecioServiciosAnterior | number: '1.2-2' }}</td>
+						<td class="blue" *ngIf="expandidoAnterior">${{ total.ValorDescuentoAnterior | number: '1.2-2' }}</td>
+						<td class="dark-cyan" *ngIf="expandidoAnterior">${{ total.SubtotalPrecioAnterior | number: '1.2-2' }}</td>
+						<td class="light-cyan" *ngIf="expandidoAnterior">${{ total.ValorGastoAdministrativo | number: '1.2-2' }}</td>
+						<td class="gray" *ngIf="expandidoAnterior">${{ total.SubtotalPrecioAnterior * 0.005 | number: '1.2-2' }}</td>
+						<td>${{ total.SubtotalPrecioAnterior * 1.005 + total.ValorGastoAdministrativo | number: '1.2-2'}}</td>
+
+						<td class="red" *ngIf="expandidoIncremento">${{ total.ValorMedicinaPrepagadaActual | number: '1.2-2' }}</td>
+						<td class="yellow" *ngIf="expandidoIncremento">${{ total.PrecioServicios | number: '1.2-2' }}</td>
+						<td class="blue" *ngIf="expandidoIncremento">${{ total.ValorDescuento | number: '1.2-2' }}</td>
+						<td class="dark-cyan" *ngIf="expandidoIncremento">${{ total.SubtotalPrecioIncremento | number: '1.2-2' }}</td>
+						<td class="light-cyan" *ngIf="expandidoIncremento">${{ total.ValorGastoAdministrativo | number: '1.2-2' }}</td>
+						<td class="gray" *ngIf="expandidoIncremento">${{ total.SubtotalPrecioIncremento * parametroSSC | number: '1.2-2' }}</td>
+						<td>${{ total.SubtotalPrecioIncremento * parametroSSC + total.ValorGastoAdministrativo | number: '1.2-2'}}</td>
+
+						<td>${{ total.IncrementoDolares | number: '1.2-2' }}</td>
+						<td>{{ total.IncrementoPorcentaje | number: '1.2-2' }}%</td>
+						<td>{{ total.Siniestralidad * 100 | number: '1.2-2' }}%</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="modal inmodal fade" id="myModalServicios" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-lg">
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<h5 class="panel-title p-xs">Detalle de Servicios Adicionales</h5>
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped table-bordered table-hover dataTable">
+						<thead>
+							<tr>
+								<th>Estado</th>
+								<th>Nombre estado</th>
+								<th>Código</th>
+								<th>Descripción</th>
+								<th>Fecha Inicio</th>
+								<th>Fecha Fin</th>
+								<th>Precio Anterior</th>
+								<th>Precio Actual</th>
+							</tr>
+						</thead>
+						<tbody class="no-borders">
+							<tr *ngFor="let servicio of servicios">
+								<td>{{servicio.EstadoServicio}}</td>
+								<td>{{servicio.NombreEstadoServicio}}</td>
+								<td>{{servicio.CodigoServicio}}</td>
+								<td>{{servicio.DescripcionServicio}}</td>
+								<td>{{servicio.FechaInicioServicio | date: 'dd/MM/yyyy'}}</td>
+								<td>{{servicio.FechaFinServicio | date: 'dd/MM/yyyy'}}</td>
+								<td>{{servicio.PrecioAnterior}}</td>
+								<td>{{servicio.PrecioActual}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="col-lg-12 no-padding">
+						<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" (click)="cerrarServicios();">
+							<i class="fa fa-sign-out"></i>Salir
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

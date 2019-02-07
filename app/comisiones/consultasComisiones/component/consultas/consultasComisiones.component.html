@@ -1,0 +1,379 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+	<div class="row wrapper">
+		<div class="col-lg-12">
+			<h2> Consultas Comisiones </h2>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a [routerLink]="['']">Home</a></li>
+				<li class="breadcrumb-item"> Comisiones </li>
+				<li class="breadcrumb-item active"> Consultas Comisiones </li>
+			</ol>
+		</div>
+
+		<div class="col-lg-12">
+			<div class="panel panel-success m-t-lg">
+				<div class="panel-heading">
+					<h5 class="panel-title"> Consultas comisiones </h5>
+				</div>
+				<div class="panel-body">
+					<div class="row ">
+						<form class="form-horizontal" name="filtrosForm" role="form" #filtrosForm="ngForm">		
+							<div class="col-lg-12">
+								<div class="col-lg-6">
+									<div class="col-lg-2">
+										<label class="control-label" for="Anio"> Año: </label>
+									</div>
+									<div class="col-lg-4"> 
+										<select class="form-control" [(ngModel)]="filter.Anio" name="anioFilter" #anioFilter="ngModel">
+											<option [ngValue]="undefined">Seleccione</option>
+											<option *ngFor="let a of anios" [ngValue]="a">{{a}}</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="col-lg-2">
+										<label class="control-label" for="Mes"> Mes: </label>
+									</div>
+									<div class="col-lg-4"> 
+										<select class="form-control" [(ngModel)]="filter.Mes" name="mesFilter" #mesFilter="ngModel">
+											<option [ngValue]="undefined">Seleccione</option>
+											<option *ngFor="let m of meses" [ngValue]="m.Numero">{{m.Nombre}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<br/><br/><br/>
+							<div class="col-lg-12" *ngIf="isAdminComisiones">
+								<div class="col-lg-6">
+									<div class="col-lg-2">
+										<label class="control-label" for="Anio"> Región: </label>
+									</div>
+									<div class="col-lg-4">
+										<select class="form-control" [(ngModel)]="filtroRegion" id="region" name="region" #region="ngModel" (change)="cargarSucursal($event);">
+											<option [ngValue]="undefined">Seleccione</option>
+											<option *ngFor="let r of regiones" [ngValue]="r.Codigo">{{r.Nombre}}</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="col-lg-6">
+									<div class="col-lg-2">
+										<label class="control-label" for="Mes"> Sucursal: </label>
+									</div>
+									<div class="col-lg-4">
+										<select class="form-control" id="Sucursal" name="Sucursal" [(ngModel)]="filter.CodigoSucursal" #Sucursal="ngModel">
+											<option [ngValue]="undefined">Seleccione</option>
+											<option *ngFor="let sucursal of sucursalesDeRegion" [ngValue]="sucursal.CodigoSucursal">{{sucursal.NombreSucursal}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+													
+							<div class="col-lg-12 text-center">
+								<div class="col-lg-12 m-t-sm">
+									<button class="btn btn-primary btn-md" (click)="loadInitialData()" [disabled]="!(filtrosForm.form.valid)"> Buscar </button> 
+									<button class="btn btn-primary btn-md" (click)="limpiarForm()"> Limpiar </button> 
+								</div>
+							</div>	
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12 m-t-sm no-padding" *ngIf="isAdminComisiones">
+			<div class="row no-padding">
+				<div class="col-lg-12">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h5 class="panel-title">Salas </h5>
+						</div>
+						<div class="panel-body panelDatos">
+							<div id="divSalas">
+								<div class="dataTables_info">{{salasService.paginationConstants.EncabezadoTabla}}</div>
+									<div class="table-responsive">
+										<table class="table table-striped table-bordered table-hover dataTable">
+										<thead>
+											<tr>
+												<th class="centerMiddle"> Nombre </th>
+												<th class="centerMiddle"> Abreviación </th>
+												<th class="centerMiddle"> Director </th>
+												<th class="centerMiddle"> Total ventas </th>
+												<th class="centerMiddle"> Total anulaciones </th>
+											</tr>
+										</thead>
+										<tbody class="no-borders selectableBodyTable" *ngFor="let s of salas | paginate: {id : 'tablaResumenSalas', itemsPerPage: salasService.paginationConstants.pageSize,currentPage: salasService.paginationConstants.pageNumber, totalItems: salasService.paginationConstants.total};">
+											<tr (click)="seleccionarSala(s)" [class.active]="s.Selected">
+												<td class="centerMiddle"> {{s.Nombre}} </td>
+												<td class="centerMiddle"> {{s.Abreviacion}} </td>
+												<td class="centerMiddle"> {{s.Director}} </td>
+												<td class="centerMiddle"> {{s.TotalVentas}} </td>
+												<td class="centerMiddle"> {{s.TotalAnulaciones}} </td>
+											</tr>
+										</tbody>
+										<tfoot *ngIf="salasService.paginationConstants.total == 0">
+											<tr>
+												<td colspan="14" style="text-align: center;">No existen resultados</td>
+											</tr>
+										</tfoot> 
+									</table>
+									<pagination-controls id="tablaResumenSalas" maxSize="20" previousLabel="" nextLabel="" autoHide="true" (pageChange)="salasService.paginationConstants.pageNumber=$event;pageChangedSalas();"></pagination-controls>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12 m-t-sm no-padding" *ngIf="mostrarVendedores || isDirector">
+			<div class="row no-padding">
+				<div class="col-lg-12">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h5 class="panel-title">Vendedores</h5>
+						</div>
+						<div class="panel-body panelDatos">
+							<div id="divVendedores">
+								<div class="dataTables_info">{{consultasComisionesService.paginationConstants.EncabezadoTabla}}</div>
+								<div class="table-responsive">
+									<table class="table table-striped table-bordered table-hover dataTable">
+										<thead>
+											<tr>
+												<th class="centerMiddle"> Nombre </th>
+												<th class="centerMiddle"> Código agente venta </th>
+												<th class="centerMiddle"> Tipo </th>
+												<th class="centerMiddle"> Subtipo </th>
+												<th class="centerMiddle"> Rango </th>
+												<th class="centerMiddle"> Porcentaje de comisión </th>
+												<th class="centerMiddle"> Total de comisión </th>
+											</tr>
+										</thead>
+										<tbody class="no-borders selectableBodyTable" *ngFor="let v of vendedores | paginate: {id : 'tablaResumenVendedores', itemsPerPage: consultasComisionesService.paginationConstants.pageSize,currentPage: consultasComisionesService.paginationConstants.pageNumber, totalItems: consultasComisionesService.paginationConstants.total};">
+											<tr (click)="seleccionarVendedor(v)" [class.active]="v.Selected">
+												<td class="centerMiddle"> {{v.Nombre}} </td>
+												<td class="centerMiddle"> {{v.CodigoAgenteVenta}} </td>
+												<td class="centerMiddle"> {{v.Tipo}} </td>
+												<td class="centerMiddle"> {{v.Subtipo}} </td>
+												<td class="centerMiddle"> {{v.Rango}} </td>
+												<td class="centerMiddle"> {{v.PorcentajeComision}}% </td>
+												<td class="centerMiddle"> {{v.TotalComision}} </td>
+											</tr>
+										</tbody>
+										<tfoot *ngIf="consultasComisionesService.paginationConstants.total == 0">
+											<tr>
+												<td colspan="14" style="text-align: center;">No existen resultados</td>
+											</tr>
+										</tfoot>
+									</table>
+									<pagination-controls id="tablaResumenVendedores" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="consultasComisionesService.paginationConstants.pageNumber=$event;pageChangedVendedores();"></pagination-controls>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12 m-t-sm no-padding" *ngIf="mostrarMovimientos || isVendedor">
+			<div class="row no-padding">
+				<div class="col-lg-12">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h5 class="panel-title">Resumen Comisiones</h5>
+						</div>
+						<div class="panel-body panelDatos">
+							<div id="divComisiones">
+								<div class="dataTables_info">{{movimientoComisionService.paginationConstants.EncabezadoTabla}}</div>
+								<div class="table-responsive">
+									<table class="table table-striped table-bordered table-hover dataTable">
+										<thead>
+											<tr>
+												<th class="centerMiddle"> Tipo movimiento </th>
+												<th class="centerMiddle"> Transacción </th>
+												<th class="centerMiddle"> Codigo producto </th>
+												<th class="centerMiddle"> Contrato número </th>
+												<th class="centerMiddle"> Region </th>
+												<th class="centerMiddle"> Fecha Movimiento </th>
+												<th class="centerMiddle"> Empresa </th>
+												<th class="centerMiddle"> Sucursal </th>
+												<th class="centerMiddle"> Fecha inicio contrato </th>
+												<th class="centerMiddle"> Fecha fin contrato </th>
+												<th class="centerMiddle"> Número de beneficiarios </th>
+											</tr>
+										</thead>
+										<tbody class="no-borders selectableBodyTable" *ngFor="let m of movimientos | paginate: {id : 'comisionesTable', itemsPerPage: movimientoComisionService.paginationConstants.pageSize,currentPage: movimientoComisionService.paginationConstants.pageNumber, totalItems: movimientoComisionService.paginationConstants.total};">
+											<tr (click)="seleccionarMovimiento(m)" [class.active]="m.Selected">
+												<td class="centerMiddle"> {{m.TipoMovimiento == 'A' ? 'Automático' : ''}} </td>
+												<td class="centerMiddle"> {{m.NombreTransaccion}} </td>
+												<td class="centerMiddle"> {{m.CodigoProducto}} </td>
+												<td class="centerMiddle"> {{m.ContratoNumero}} </td>
+												<td class="centerMiddle"> {{m.Region}} </td>
+												<td class="centerMiddle"> {{m.FechaMovimiento | date: 'dd/MM/yyyy'}} </td>
+												<td class="centerMiddle"> {{m.EmpresaRazonSocial}} </td>
+												<td class="centerMiddle"> {{m.SucursalNombre}} </td>
+												<td class="centerMiddle"> {{m.FechaInicio | date: 'dd/MM/yyyy'}} </td>
+												<td class="centerMiddle"> {{m.FechaFin | date: 'dd/MM/yyyy'}} </td>
+												<td class="centerMiddle"> {{m.NumeroBeneficiarios}} </td>
+											</tr>
+										</tbody>
+										<tfoot *ngIf="movimientoComisionService.paginationConstants.total == 0">
+											<tr>
+												<td colspan="14" style="text-align: center;">No existen resultados</td>
+											</tr>
+										</tfoot> 
+									</table>
+									<pagination-controls id="comisionesTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="movimientoComisionService.paginationConstants.pageNumber=$event;pageChangedMovimientos();"></pagination-controls>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12 m-t-sm no-padding" *ngIf="mostrarBeneficiarios">
+			<div class="row no-padding">
+				<div class="col-lg-12">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h5 class="panel-title"> Beneficiarios </h5>
+						</div>
+						<div class="panel-body panelDatos">
+							<div id="divBeneficiarios">
+								<div class="dataTables_info">{{beneficiarioComisionService.paginationConstants.EncabezadoTabla}}</div>
+								<div class="table-responsive">
+									<table class="table table-striped table-bordered table-hover dataTable">
+										<thead>
+											<tr>
+												<th class="centerMiddle"> Acciones </th>
+												<th class="centerMiddle"> Apellidos </th>
+												<th class="centerMiddle"> Nombres </th>
+												<th class="centerMiddle"> Discapacidad </th>
+												<th class="centerMiddle"> Edad a comisionar </th>
+												<th class="centerMiddle"> Precio </th>
+												<th class="centerMiddle"> Riesgo alto </th>
+												<th class="centerMiddle"> Comisiona </th>
+											</tr>
+										</thead>
+										<tbody class="no-borders selectableBodyTable" *ngFor="let b of beneficiarios | paginate: {id : 'beneficiariosTable', itemsPerPage: beneficiarioComisionService.paginationConstants.pageSize,currentPage: beneficiarioComisionService.paginationConstants.pageNumber, totalItems: beneficiarioComisionService.paginationConstants.total};">
+											<tr (click)="seleccionarBeneficiario(b)" [class.active]="b.Selected">
+												<td class="centerMiddle">
+													<i class="fa fa-edit" title="Editar" (click)="abrirObservacion(b, true)"></i>
+												</td>
+												<td class="centerMiddle"> {{b.Apellidos}} </td>
+												<td class="centerMiddle"> {{b.Nombres}} </td>
+												<td class="centerMiddle"> {{b.Discapacidad ? "Si" : "No"}} </td>
+												<td class="centerMiddle"> {{b.EdadAdultoMayor}} </td>
+												<td class="centerMiddle"> {{b.PrecioBeneficiario}} </td>
+												<td class="centerMiddle"> {{b.AltoRiesgo ? "Si": "No"}} </td>
+												<td class="centerMiddle"> {{b.Comisiona ? "Si" : "No"}} </td>
+											</tr>
+										</tbody>
+										<tfoot *ngIf="beneficiarioComisionService.paginationConstants.total == 0">
+											<tr>
+												<td colspan="14" style="text-align: center;">No existen resultados</td>
+											</tr>
+										</tfoot> 
+									</table>
+									<pagination-controls id="beneficiariosTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="beneficiarioComisionService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12 m-t-sm no-padding" *ngIf="mostrarServicios">
+			<div class="row no-padding">
+				<div class="col-lg-12">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h5 class="panel-title"> Servicios Adicionales </h5>
+						</div>
+						<div class="panel-body panelDatos">
+							<div id="divServicios">
+								<div class="dataTables_info">{{servicioAdicionalComisionService.paginationConstants.EncabezadoTabla}}</div>
+								<div class="table-responsive">
+									<table class="table table-striped table-bordered table-hover dataTable">
+										<thead>
+											<tr>
+												<th class="centerMiddle"> Acciones </th>
+												<th class="centerMiddle"> Servicio </th>
+												<th class="centerMiddle"> Precio </th>
+												<th class="centerMiddle"> Comisión adicional servicio </th>
+												<th class="centerMiddle"> Comisiona </th>
+											</tr>
+										</thead>
+										<tbody class="no-borders selectableBodyTable" *ngFor="let s of serviciosAdicionales | paginate: {id : 'serviciosTable', itemsPerPage: servicioAdicionalComisionService.paginationConstants.pageSize,currentPage: servicioAdicionalComisionService.paginationConstants.pageNumber, totalItems: servicioAdicionalComisionService.paginationConstants.total};">
+											<tr>
+												<td class="centerMiddle">
+													<i class="fa fa-edit" title="Editar" (click)="abrirObservacion(s, false)"></i>
+												</td>
+												<td class="centerMiddle">{{s.NombreServicio}}</td>
+												<td class="centerMiddle">{{s.PrecioServicio}} </td>
+												<td class="centerMiddle">{{s.ComisionaServicioAdicional ? "Si" : "No"}}</td>
+												<td class="centerMiddle">{{s.Comisiona ? "Si" : "No"}}</td>
+											</tr>
+										</tbody>
+										<tfoot *ngIf="servicioAdicionalComisionService.paginationConstants.total == 0">
+											<tr>
+												<td colspan="14" style="text-align: center;">No existen resultados</td>
+											</tr>
+										</tfoot> 
+									</table>
+									<pagination-controls id="serviciosTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="consultasComisionesService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--Modal Novedad-->
+<div class="modal inmodal fade" id="modalNovedad" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+	<div class="modal-dialog modal-lg">
+		<div class="panel panel-success">
+			<div class="panel-heading">
+				<h5 class="panel-title">{{titleModal}}</h5>
+			</div>
+			<div class="panel-body">
+				<form class="form-horizontal" role="form" name="formNovedad" (ngSubmit)="formNovedad.form.valid && guardarNovedad()" #formNovedad="ngForm" novalidate>
+					<div class="form-group col-lg-12 no-padding">
+						<label class="control-label col-lg-2">Precio:</label>
+						<div class="col-sm-4">
+							<input class="heigth25 form-control col-lg-12 m-l-sm" type="text" placeholder="Precio de cálculo" [(ngModel)]="comisionNovedad.PrecioCalculo" name="precio" #precio="ngModel"
+								onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>
+							<div *ngIf="formNovedad.submitted && precio.invalid" class="fields-errors">
+								<div *ngIf="precio.errors.required">Campo requerido</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group col-lg-12 no-padding">
+						<label class="control-label col-lg-2">Comisiona:</label>
+						<div class="col-lg-4">
+							<input type="checkbox" id="comisiona" name="comisiona" [(ngModel)]="comisionNovedad.Comisiona" name="comisiona" #comisiona="ngModel">
+						</div>
+					</div>
+					<div class="form-group col-lg-12 no-padding">
+						<label class="control-label col-lg-2">Observación:</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" placeholder="Observación novedad" [(ngModel)]="comisionNovedad.Observacion" name="observacion" #observacion="ngModel" 
+								rows="5" required>
+							</textarea>
+							<div *ngIf="formNovedad.submitted && observacion.invalid" class="fields-errors">
+								<div *ngIf="observacion.errors.required">Campo requerido</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-12 no-padding">
+						<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="submit">Guardar</button>
+						<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="button" (click)="cerrarModal('modalNovedad')">Cancelar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,861 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Crear Corporativo</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Corporativos</li>
+            <li class="breadcrumb-item active">Crear Corporativo</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<form id="principal" #InsertEmpresaForm="ngForm">
+    <!-- panel Informacion  -->
+    <div class="wrapper wrapper-content" style="padding-bottom: 15px;">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" (click)="colapsarTab()">
+                    <h5 class="panel-title">
+
+                        <i class="fa fa-bookmark"></i>
+                        <a data-toggle="collapse" title="Consultar Contratos" data-parent="#accordion" href="#clpListaRepresentante">Dato Corporativo</a>
+
+                    </h5>
+                </div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" id="Corporativo" style="border-width:1px 0px 0px 0px;">
+                        <div class="row">
+                            <div>
+                                <div class="form-group col-lg-12 no-padding">
+
+                                    <label class="col-lg-1 control-label" for="Ruc">Ruc:</label>
+                                    <div class="col-lg-3" [ngClass]="{'has-error':Ruc.invalid}">
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Ruc" id="Ruc" [(ngModel)]="corporativo.Empresa.Ruc" name="Ruc"
+                                            class="form-control" #Ruc="ngModel" pattern="\d*" minlength="13" maxlength="13" />
+                                        <div [hidden]="Ruc.valid || Ruc.pristine" class="error">
+                                            <p *ngIf="Ruc.errors?.maxlength">Maximo 13 dígitos</p>
+                                            <p *ngIf="Ruc.errors?.minlength">Mínimo 13 dígitos</p>
+                                        </div>
+                                    </div>
+
+
+                                    <label class="col-lg-1 control-label" for="RazonSocial">Razón Social:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Razón Social" id="RazonSocial" [(ngModel)]="corporativo.Empresa.RazonSocial "
+                                            name="RazonSocial" class="form-control" #RazonSocial="ngModel" minlength="0" maxlength="400"
+                                        />
+                                        <div [hidden]="RazonSocial.valid || RazonSocial.pristine" class="error">
+                                            <p *ngIf="RazonSocial.errors?.maxlength">Maximo 100 carácteres</p>
+                                        </div>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="NumeroGrupo">Grupo:</label>
+                                    <div class="m-b col-lg-3">
+                                        <select class="form-control" [(ngModel)]="corporativo.Empresa.NumeroGrupo" name="NumeroGrupo" class="form-control" #NumeroGrupo="ngModel">
+                                            <option [value]="undefined" selected>Seleccione grupo</option>
+                                            <option *ngFor="let r of grupos" [value]="r.Numero">{{r.Nombre}}</option>
+                                        </select>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="codigoRegion">Región:</label>
+                                    <div class="m-b col-lg-3">
+                                        <select class="form-control" [(ngModel)]="corporativo.Sucursal.Region" name="Región" class="form-control" #Region="ngModel">
+                                            <option [value]="undefined" selected>Seleccione región</option>
+                                            <option *ngFor="let r of regiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                                        </select>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="FechaDesde">Fecha Desde:</label>
+                                    <div class="m-b col-lg-3">
+                                        <datetime required name="FechaDesde" class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaDesde" [(ngModel)]="corporativo.Sucursal.FechaDesde"
+                                            [datepicker]="datepickerOpts">
+                                        </datetime>
+
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="FechaFin">Fecha Fin:</label>
+                                    <div class="m-b col-lg-3" style="margin-bottom: 30px;">
+                                        <datetime required name="FechaFin" class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaFin" [(ngModel)]="corporativo.Sucursal.FechaFin"
+                                            [datepicker]="datepickerOpts">
+                                        </datetime>
+
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="TipoSociedad">Tipo Sociedad:</label>
+                                    <div class="m-b col-lg-3">
+                                        <select class="form-control" [(ngModel)]="corporativo.Empresa.TipoSociedad" name="TipoSociedad" class="form-control" #TipoSociedad="ngModel">
+                                            <option [value]="undefined" selected>Seleccione el tipo de sociedad</option>
+                                            <option *ngFor="let r of sociedades" [value]="r.Codigo">{{r.Nombre}}</option>
+                                        </select>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="CodigoActividad">Actividad:</label>
+                                    <div class="m-b col-lg-3">
+                                        <select class="form-control" [(ngModel)]="corporativo.Empresa.CodigoActividad" name="CodigoActividad" class="form-control"
+                                            #CodigoActividad="ngModel">
+                                            <option [value]="undefined" selected>Seleccione la actividad</option>
+                                            <option *ngFor="let r of actividades" [value]="r.Codigo">{{r.Nombre}}</option>
+                                        </select>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="Unidad">Ejecutivo Responsable:</label>
+                                    <div class="m-b col-lg-3">
+                                        <select class="form-control" [(ngModel)]="corporativo.Sucursal.UnidadResponsable" id="Unidad" name="Unidad" #Unidad="ngModel">
+                                            <option [value]="undefined" selected>Seleccione ejecutivo</option>
+                                            <option *ngFor="let r of unidades" [value]="r.Responsable">{{r.Nombre}}</option>
+                                        </select>
+                                    </div>
+
+                                    <!--<label class="col-lg-1 control-label" for="">Logo:</label>
+                                    <div class="m-b col-lg-3" style="margin-bottom: 30px;">
+                                        <form method="post" action="accion" enctype="multipart/form-data">
+
+                                            <input type="file" (change)="onFileSelected($event)"/>
+                                            <button type ="button"(click)="onUpload()">Upload</button>
+
+                                        </form>
+
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="Mision">Misión:</label>
+                                    <div class="m-b col-lg-3">
+                                        <textarea rows="4" cols="50" placeholder="Misión de la empresa" id="EmpresaMision" (keyup)="onKey($event)" [(ngModel)]="corporativo.EmpresaMision"
+                                            name="EmpresaMision" class="form-control" #EmpresaMision="ngModel" minlength="0"
+                                            maxlength="2000">
+                                        </textarea>
+
+                                        <div [hidden]="EmpresaMision.valid || EmpresaMision.pristine" class="error">
+                                            <p *ngIf="EmpresaMision.errors?.maxlength">Maximo 2000 dígitos</p>
+                                        </div>
+                                        <div class="info">
+                                            <p>{{ Mensaje }}</p>
+                                        </div>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="Vision">Visión:</label>
+                                    <div class="m-b col-lg-3">
+                                        <textarea rows="4" cols="50" placeholder="Visión de la empresa" id="EmpresaVision" (keyup)="onKeyVision($event)" [(ngModel)]="corporativo.EmpresaVision"
+                                            name="EmpresaVision" class="form-control" #EmpresaVision="ngModel" minlength="0"
+                                            maxlength="2000">
+                                        </textarea>
+
+                                        <div [hidden]="EmpresaVision.valid || EmpresaVision.pristine" class="error">
+                                            <p *ngIf="EmpresaVision.errors?.maxlength">Maximo 2000 dígitos</p>
+                                        </div>
+                                        <div class="info">
+                                            <p>{{ MensajeVision }}</p>
+                                        </div>
+                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- panel representante -->
+    <div class="wrapper wrapper-content" style="padding-bottom: 15px; padding-top: 0px;">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" (click)="colapsarTab()">
+                    <h5 class="panel-title">
+                        <i class="fa fa-bookmark"></i>
+                        <a data-toggle="collapse" title="Consultar Contratos" data-parent="#accordion" href="#clpListaRepresentante">Representante Legal</a>
+                    </h5>
+                </div>
+                <div id="clpListaRepresentante" class="panel-collapse collapse in">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                            <div class="row">
+                                <div (ngSubmit)="guardar();"></div>
+                                <div class="form-group col-lg-12 no-padding">
+                                    <label class="col-lg-1 control-label" for="CedulaRepresentante">Cédula:</label>
+                                    <div class="col-lg-3">
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Cédula/pasaporte" id="CedulaRepresentante" [(ngModel)]="corporativo.Empresa.CedulaRepresentante"
+                                            name="CedulaRepresentante" class="form-control" #CedulaRepresentante="ngModel" minlength="3" (keyup) = "onKeyRepresentante($event)"
+                                            maxlength="22" />
+                                        <div [hidden]="CedulaRepresentante.valid || CedulaRepresentante.pristine" class="error">
+                                            <!--<p *ngIf="CedulaRepresentante.errors?.pattern">Solo se admiten dígitos</p>-->
+                                            <p *ngIf="CedulaRepresentante.errors?.maxlength">Maximo 22 carácteres</p>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-1 control-label" for="NombresRepresentante"> Nombre:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Nombre" id="NombresRepresentante" [(ngModel)]="corporativo.Empresa.NombresRepresentante"
+                                            name="NombresRepresentante" class="form-control" #NombresRepresentante="ngModel"
+                                            minlength="0" maxlength="90" />
+                                        <div [hidden]="NombresRepresentante.valid || NombresRepresentante.pristine" class="error">
+                                            <p *ngIf="NombresRepresentante.errors?.maxlength">Maximo 90 carácteres</p>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-1 control-label" for="ApellidosRepresentante"> Apellidos:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Apellidos" id="ApellidosRepresentante" [(ngModel)]="corporativo.Empresa.ApellidosRepresentante"
+                                            name="ApellidosRepresentante" class="form-control" #ApellidosRepresentante="ngModel"
+                                            minlength="0" maxlength="80" />
+                                        <div [hidden]="ApellidosRepresentante.valid || ApellidosRepresentante.pristine" class="error">
+                                            <p *ngIf="ApellidosRepresentante.errors?.maxlength">Maximo 80 carácteres</p>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-1 control-label" for="RepresentanteMail">Email:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="email" placeholder="EMAIL" id="RepresentanteMail" [(ngModel)]="corporativo.Empresa.RepresentanteMail" name="RepresentanteMail"
+                                            class="form-control" #RepresentanteMail="ngModel" minlength="0" maxlength="200" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                                        />
+                                        <div [hidden]="RepresentanteMail.valid || RepresentanteMail.pristine" class="error">
+                                            <p *ngIf="RepresentanteMail.errors?.pattern">Introduzca un formato de email válido</p>
+                                            <p *ngIf="RepresentanteMail.errors?.maxlength">Maximo 200 dígitos</p>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-1 control-label" for="CargoRepresentante">Cargo:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Cargo del Representante" id="CargoRepresentante" [(ngModel)]="corporativo.Empresa.CargoRepresentante"
+                                            name="CargoRepresentante" class="form-control" #CargoRepresentante="ngModel" minlength="0"
+                                            maxlength="60" />
+                                        <div [hidden]="CargoRepresentante.valid || CargoRepresentante.pristine" class="error">
+                                            <p *ngIf="CargoRepresentante.errors?.maxlength">Maximo 60 carácteres</p>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-1 control-label" for="RepresentanteCelular">Teléfono:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Teléfono" id="RepresentanteCelular" [(ngModel)]="corporativo.Empresa.RepresentanteCelular"
+                                            name="RepresentanteCelular" class="form-control" #RepresentanteCelular="ngModel"
+                                            pattern="\d*" minlength="0" maxlength="24" />
+                                        <div [hidden]="RepresentanteCelular.valid || RepresentanteCelular.pristine" class="error">
+                                            <p *ngIf="RepresentanteCelular.errors?.pattern">Solo se admiten dígitos</p>
+                                            <p *ngIf="RepresentanteCelular.errors?.maxlength">Maximo 24 dígitos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- panel datos contacto -->
+    <div class="wrapper wrapper-content" style="padding-bottom: 15px; padding-top: 0px;">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" (click)="colapsarTab()">
+                    <h5 class="panel-title">
+                        <i class="fa fa-bookmark"></i>
+                        <a data-toggle="collapse" title="Datos de Contacto" data-parent="#accordion" href="#clpListaContrato">Datos de Contacto</a>
+                    </h5>
+                </div>
+                <div id="clpListaContacto" class="panel-collapse collapse in">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                            <div class="row">
+                                <div>
+                                    <div class="form-group col-lg-12 no-padding">
+                                        <label class="col-lg-1 control-label" for="Ciudad">Ciudad:</label>
+                                        <div class="m-b col-lg-3">
+                                            <select required class="form-select-control" id="slcCiudad" name="slcCiudad" [(ngModel)]="corporativo.Empresa.CodigoCiudad"
+                                                #slcCiudad="ngModel" (ngModelChange)="onChangeCiudad($event)">
+                                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                                <option *ngFor="let c of ciudades" [ngValue]="c.CodigoProgress">{{c.Valor}}</option>
+                                            </select>
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="Sector">Sector:</label>
+                                        <div class="m-b col-lg-3">
+                                            <select required class="form-select-control" id="slcSector" name="slcSector" [(ngModel)]="corporativo.Empresa.Zona" #slcSector="ngModel">
+                                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                                <option *ngFor="let s of sectoresFiltrados" [ngValue]="s.Codigo">{{s.Valor}}</option>
+                                            </select>
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="Barrio">Barrio:</label>
+                                        <div class="m-b col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Barrio" id="RazonSocial" [(ngModel)]="corporativo.Empresa.Barrio "
+                                                name="Barrio" class="form-control" #Barrio="ngModel" minlength="0" maxlength="60"
+                                            />
+                                            <div [hidden]="RazonSocial.valid || RazonSocial.pristine" class="error">
+                                                <p *ngIf="RazonSocial.errors?.maxlength">Maximo 60 carácteres</p>
+                                            </div>
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="Direccion">Dirección:</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="calle principal" id="calle1" [(ngModel)]="empresaDireccion.calle1"
+                                                name="calle1" class="form-control" #calle1="ngModel" minlength="3" maxlength="22"
+                                                (change)=changeDireccion() />
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="calle secundaria" id="calle2" [(ngModel)]="empresaDireccion.calle2"
+                                                name="calle2" class="form-control" #calle2="ngModel" minlength="3" maxlength="22"
+                                                (change)=changeDireccion() />
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="referencia" id="referencia" [(ngModel)]="empresaDireccion.referencia"
+                                                name="referencia" class="form-control" #referencia="ngModel" minlength="3" maxlength="22"
+                                                (change)=changeDireccion() />
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="ETelefono">Télefono:</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Télefono" id="ETelefono" [(ngModel)]="corporativo.Empresa.Telefono"
+                                                name="ETelefono" class="form-control" #ETelefono="ngModel" pattern="\d*" minlength="0"
+                                                maxlength="120" />
+                                            <div [hidden]="ETelefono.valid || ETelefono.pristine" class="error">
+                                                <p *ngIf="ETelefono.errors?.pattern">Solo se admiten dígitos</p>
+                                                <p *ngIf="ETelefono.errors?.maxlength">Maximo 120 dígitos</p>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="form-group col-lg-12 no-padding">
+                                        <!-- <div class="m-b col-lg-12"> -->
+                                        <label class="col-lg-1 control-label" for="Cedula">Cédula:</label>
+                                        <div class=" col-lg-2">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Cédula/pasaporte" id="CedulaUsuario" (keyup)="onKeyUsuario($event)"
+                                                [(ngModel)]="usuari.Cedula" name="Cedula" class="form-control" #Cedula="ngModel"
+                                                minlength="3" maxlength="22" />
+                                            <div [hidden]="Cedula.valid || Cedula.pristine" class="error">
+                                                <!--<p *ngIf="Cedula.errors?.pattern">Solo se admiten dígitos</p>-->
+                                                <p *ngIf="Cedula.errors?.maxlength">Máximo 22 carácteres</p>
+                                            </div>
+                                        </div>
+                                        <label class="col-lg-2 control-label" for="NombreApellido">Nombres y Apellidos:</label>
+                                        <div class="m-b col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Nombres y Apellidos" id="NombreApellido" [(ngModel)]="usuari.NombreApellido"
+                                                name="Nombre" class="form-control" #NombreApellido="ngModel" minlength="0" maxlength="100"
+                                            />
+                                            <div [hidden]="NombreApellido.valid || NombreApellido.pristine" class="error">
+                                                <p *ngIf="NombreApellido.errors?.maxlength">Máximo 100 dígitos</p>
+                                            </div>
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="RepresentanteMail">Email:</label>
+                                        <div class="m-b col-lg-3">
+                                            <input type="text" placeholder="EMAIL" id="Email" [(ngModel)]="usuari.Email" name="Email" class="form-control" #Email="ngModel"
+                                                minlength="0" maxlength="100" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                                            />
+                                            <div [hidden]="Email.valid || Email.pristine" class="error">
+                                                <p *ngIf="Email.errors?.pattern">Introduzca un formato de email válido</p>
+                                                <p *ngIf="Email.errors?.maxlength">Máximo 100 dígitos</p>
+                                            </div>
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="Telefono">Télefono:</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Télefono" id="Telefono" [(ngModel)]="usuari.Telefono"
+                                                name="Telefono" class="form-control" #Telefono="ngModel" pattern="\d*" minlength="0"
+                                                maxlength="120" />
+                                            <div [hidden]="Telefono.valid || Telefono.pristine" class="error">
+                                                <p *ngIf="Telefono.errors?.pattern">Solo se admiten dígitos</p>
+                                                <p *ngIf="Telefono.errors?.maxlength">Maximo 120 dígitos</p>
+                                            </div>
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="TelefonoFijo">Télefono Fijo:</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Télefono Fijo" id="TelefonoFijo" [(ngModel)]="usuari.TelefonoFijo"
+                                                name="TelefonoFijo" class="form-control" #TelefonoFijo="ngModel" pattern="\d*" minlength="0"
+                                                maxlength="120" />
+                                            <div [hidden]="TelefonoFijo.valid || TelefonoFijo.pristine" class="error">
+                                                <p *ngIf="TelefonoFijo.errors?.pattern">Solo se admiten dígitos</p>
+                                                <p *ngIf="TelefonoFijo.errors?.maxlength">Maximo 120 dígitos</p>
+                                            </div>
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="Extension">Extensión:</label>
+                                        <div class="m-b col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Extensión" id="Extension" [(ngModel)]="usuari.Extension"
+                                                name="Extension" class="form-control" #Extension="ngModel" pattern="\d*" minlength="0"
+                                                maxlength="120" />
+                                            <div [hidden]="Extension.valid || Extension.pristine" class="error">
+                                                <p *ngIf="Extension.errors?.pattern">Solo se admiten dígitos</p>
+                                                <p *ngIf="Extension.errors?.maxlength">Maximo 120 dígitos</p>
+                                            </div>
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="Perfil">Perfil:</label>
+                                        <div class="m-b col-lg-3">
+                                            <select class="form-control" [(ngModel)]="usuari.rol.Id" id="RolId" name="RolId" #RolId="ngModel">
+                                                <option [value]="undefined" selected>Seleccione perfil</option>
+                                                <option *ngFor="let r of roles" [value]="r.Id">{{r.Nombre}}</option>
+                                            </select>
+                                        </div>
+                                        <!-- </div> -->
+
+                                        <button class="col-lg-offset-6 col-lg-1 btn btn-w-m btn-success btn-sm" type="button" (click)="InsertarUsuarioTabla();">
+                                            <i class="fa fa-save"></i> Agregar
+                                        </button>
+
+
+                                        <div id="divResultadoBusquedaContratos" class="ibox-content ">
+                                            <div class="dataTables_info"></div>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered table-hover dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Cédula</th>
+                                                            <th>Nombres y Apellidos</th>
+                                                            <th>Email</th>
+                                                            <th>Teléfono Celular</th>
+                                                            <th>Teléfono Fijo</th>
+                                                            <th>Extensión</th>
+                                                            <th> Perfil </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="no-borders">
+
+                                                        <tr *ngFor="let u of users">
+                                                            <td>{{u.Cedula}}</td>
+                                                            <td>{{u.NombreApellido}}</td>
+                                                            <td>{{u.Email}}</td>
+                                                            <td>{{u.Telefono}}</td>
+                                                            <td>{{u.TelefonoFijo}}</td>
+                                                            <td>{{u.Extension}}</td>
+                                                            <td>{{u.rol.Nombre}}</td>
+
+
+                                                        </tr>
+
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                            <pagination-controls id="tableContratos" maxSize="5" previousLabel="" nextLabel="" autoHide="true" (pageChange)="contratoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- panel broker -->
+    <div class="wrapper wrapper-content" style="padding-bottom: 15px; padding-top: 0px;">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" (click)="colapsarTab()">
+                    <h5 class="panel-title">
+                        <i class="fa fa-bookmark"></i>
+                        <a data-toggle="collapse" title="Consultar Contratos" data-parent="#accordion" href="#clpListaContrato">Datos Broker</a>
+                    </h5>
+                </div>
+                <div id="clpListaContrato" class="panel-collapse collapse in">
+                    <div class="ibox float-e-margins">
+
+                        <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                            <div class="row">
+                                <div (ngSubmit)="guardar();">
+                                    <div class="form-group col-lg-12 no-padding">
+
+                                        <label class="col-lg-1 control-label" for="AgenteVenta"> Nombre:</label>
+                                        <!-- <div class="m-b col-lg-3">
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Nombre" id="AgenteVenta" (keyup)="loadAgentes()"
+                                            [(ngModel)]="corporativo.Empresa.AgenteVenta" name="AgenteVenta"
+                                                class="form-control" #AgenteVenta="ngModel" minlength="0" maxlength="100" />
+                                            <div [hidden]="AgenteVenta.valid || AgenteVenta.pristine" class="error">
+                                                <p *ngIf="AgenteVenta.errors?.maxlength">Máximo 100 carácteres</p>
+                                            </div>
+                                        </div>
+
+                                    
+
+                                            <label class="col-lg-1 control-label" for="Agente">Agente:</label> -->
+                                        <div class="m-b col-lg-3">
+                                            <select class="form-control" [(ngModel)]="corporativo.Empresa.AgenteVenta" id="Agente" name="Agente" autocomplete="on" #Agente="ngModel">
+                                                <option [value]="undefined" selected>Seleccione agente de venta</option>
+                                                <option *ngFor="let r of agentes" [value]="r.Codigo">{{r.Nombre}}</option>
+                                            </select>
+                                        </div>
+
+
+
+                                        <label class="col-lg-1 control-label" for="EmailBroker">Email:</label>
+                                        <div class="m-b col-lg-3">
+                                            <input type="text" placeholder="Email" id="EmailBroker" [(ngModel)]="corporativo.Empresa.EmailBroker" name="EmailBroker"
+                                                class="form-control" #EmailBroker="ngModel" minlength="0" maxlength="100" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                                            />
+                                            <div [hidden]="EmailBroker.valid || EmailBroker.pristine" class="error">
+                                                <p *ngIf="EmailBroker.errors?.pattern">Introduzca un formato de email válido</p>
+                                                <p *ngIf="EmailBroker.errors?.maxlength">Máximo 100 carácteres</p>
+                                            </div>
+                                        </div>
+
+                                        <label class="col-lg-1 control-label" for="PorcentajeComisionBroker">Comisión %:</label>
+                                        <div class="m-b col-lg-3">
+                                            <input type="number" placeholder="% Comisión" id="PorcentajeComisionBroker" [(ngModel)]="corporativo.Empresa.PorcentajeComisionBroker"
+                                                name="PorcentajeComisionBroker" class="form-control" #PorcentajeComisionBroker="ngModel"
+                                                max="100" min="1" minlength="0" maxlength="17" />
+                                            <div [hidden]="PorcentajeComisionBroker.valid || PorcentajeComisionBroker.pristine" class="error">
+                                                <p *ngIf="PorcentajeComisionBroker.errors?.pattern">ingrese un porcentaje válido</p>
+                                                <p *ngIf="PorcentajeComisionBroker.errors?.maxlength">Maximo 17 dígitos</p>
+                                            </div>
+                                        </div>
+
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- panel pago inteligente -->
+    <div class="wrapper wrapper-content" style="padding-bottom: 15px; padding-top: 0px;">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" (click)="colapsarTab()">
+                    <h5 class="panel-title">
+                        <i class="fa fa-bookmark"></i>
+                        <a data-toggle="collapse" title="Consultar Contratos" data-parent="#accordion" href="#clpListaContrato">Datos Pago</a>
+                    </h5>
+                </div>
+                <div id="clpListaContrato" class="panel-collapse collapse in">
+                    <div class="ibox float-e-margins">
+
+                        <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                            <div class="row">
+                                <form (ngSubmit)="buscar();" #consultaContratoForm="ngForm">
+                                    <div class="form-group col-lg-12 no-padding">
+
+
+
+                                        <label class="col-lg-1 control-label" for="razonSocial"> Pago Inteligente:</label>
+                                        <div class="m-b col-lg-1">
+
+                                            <input id="SriInput" name="SriInput" type="checkbox" ng-reflect-name="SriInput" class="ng-pristine ng-valid ng-touched" ng-reflect-model="true">
+                                        </div>
+
+
+
+                                        <div class="m-b col-lg-1">
+                                            <label class="control-label" for="slcPeriodoPago">Periodo de Facturación:</label>
+                                        </div>
+
+                                        <div class="m-b col-lg-4">
+                                            <select required class="form-select-control" [(ngModel)]="corporativo.Sucursal.PeriodoPago" id="slcPeriodoPago" name="slcPeriodoPago"
+                                                    [disabled]="habilitar" #slcPeriodoPago="ngModel" (change)="changePeriodoPago()">
+                                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                                <option [ngValue]="1">Mensual</option>
+                                                <option [ngValue]="2">Bimestral</option>
+                                                <option [ngValue]="3"> Trimestral</option>
+                                                <option [ngValue]="4">Semestral</option>
+                                                <option [ngValue]="5"> Anual</option>
+                                                <option [ngValue]="6">Cuatrimestral</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="m-b col-lg-1">
+                                            <label class="control-label no-padding-left" for="slcformaPago">Forma de Pago:</label>
+                                        </div>
+
+                                        <div class="m-b col-lg-4">
+                                            <select required class="form-select-control" [(ngModel)]="corporativo.Sucursal.FormaPago" id="slcformaPago" name="slcformaPago"
+                                                    #slcformaPago="ngModel" [disabled]="habilitar">
+                                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                                <option [ngValue]="1">Débito</option>
+                                                <option [ngValue]="2">Pago Directo</option>
+                                            </select>
+
+                                        </div>
+
+
+
+
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- panel datos facturacion-->
+    <div class="wrapper wrapper-content" style="padding-bottom: 15px; padding-top: 0px;">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" (click)="colapsarTab()">
+                    <h5 class="panel-title">
+                        <i class="fa fa-bookmark"></i>
+                        <a data-toggle="collapse" title="Consultar Contratos" data-parent="#accordion" href="#clpListaContrato">Datos Facturación y Pago</a>
+                    </h5>
+                </div>
+                <div id="clpListaContrato" class="panel-collapse collapse in">
+                    <div class="ibox float-e-margins">
+
+                        <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                            <div class="row">
+                                <div (ngSubmit)="buscar();">
+                                    <div class="form-group col-lg-12 no-padding">
+
+
+
+                                        <label class="col-lg-12 control-label" for="Email"> Correos de Facturación:</label>
+                                        <div class="m-b col-lg-3">
+                                            <input type="text" placeholder="Contacto Documentos Electrónicos" id="Emailsc" [(ngModel)]="corporativo.Sucursal.ContactoDocumentosElectronicos"
+                                                name="Emailsc" class="form-control" #Emailsc="ngModel" minlength="0" maxlength="100"
+                                                pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$" />
+                                            <div [hidden]="Emailsc.valid || Emailsc.pristine" class="error">
+                                                <p *ngIf="Emailsc.errors?.pattern">Introduzca un formato de email válido</p>
+                                                <p *ngIf="Emailsc.errors?.maxlength">Maximo 100 carácteres</p>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="m-b col-lg-3">
+                                            <input type="text" placeholder="Email Contacto Documentos Electrónicos" id="Emailec" [(ngModel)]="corporativo.Sucursal.EmailContactoDocumentosElectronicos"
+                                                name="Emailec" class="form-control" #Emailec="ngModel" minlength="0" maxlength="100"
+                                                pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$" />
+
+                                            <div [hidden]="Emailec.valid || Emailec.pristine" class="error">
+                                                <p *ngIf="Emailec.errors?.pattern">Introduzca un formato de email válido</p>
+                                                <p *ngIf="Emailec.errors?.maxlength">Maximo 100 carácteres</p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="m-b col-lg-3">
+                                            <input type="text" placeholder="Email Documentos Electrónicos" id="Emailes" [(ngModel)]="corporativo.Sucursal.EmailDocumentosElectronicos"
+                                                name="Emailes" class="form-control" #Emailes="ngModel" minlength="0" maxlength="100"
+                                                pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$" />
+
+                                            <div [hidden]="Emailes.valid || Emailes.pristine" class="error">
+                                                <p *ngIf="Emailes.errors?.pattern">Introduzca un formato de email válido</p>
+                                                <p *ngIf="Emailes.errors?.maxlength">Maximo 100 carácteres</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="m-b col-lg-3">
+                                            <input type="text" placeholder="Email Broker Documentos Electrónicos" id="Emailbc" [(ngModel)]="corporativo.Sucursal.EmailBrokerDocumentosElectronicos"
+                                                name="Emailbc" class="form-control" #Emailbc="ngModel" minlength="0" maxlength="100"
+                                                pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$" />
+
+                                            <div [hidden]="Emailbc.valid || Emailbc.pristine" class="error">
+                                                <p *ngIf="Emailbc.errors?.pattern">Introduzca un formato de email válido</p>
+                                                <p *ngIf="Emailbc.errors?.maxlength">Maximo 100 carácteres</p>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <label class="col-lg-1 control-label" for="FechaBloqueo"> Fecha Bloqueo:</label>
+                                    <div class="col-lg-3">
+                                        <datetime required name="FechaBloqueo" class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="FechaBloqueo" [(ngModel)]="corporativo.Sucursal.FechaBloqueo"
+                                            [datepicker]="datepickerOpts"></datetime>
+
+                                    </div>
+
+
+                                    <label class="col-lg-1 control-label" for="NotificacionCopago">Notificación Cobranza:</label>
+                                    <div class=" col-lg-3" align="right">
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Notificación Cobranza" id="NotificacionCopago" [(ngModel)]="corporativo.Empresa.NotificacionCopago"
+                                            name="NotificacionCopago" class="form-control" #NotificacionCopago="ngModel" pattern="\d*"
+                                            minlength="3" maxlength="10" />
+                                        <div [hidden]="NotificacionCopago.valid || NotificacionCopago.pristine" class="error">
+                                            <p *ngIf="NotificacionCopago.errors?.pattern">Solo se admiten dígitos</p>
+                                            <p *ngIf="NotificacionCopago.errors?.maxlength">Maximo 10 carácteres</p>
+                                        </div>
+                                    </div>
+
+
+                                    <label class="col-lg-1 control-label" for="CoberturaProvisional"> Cobertura Provisional:</label>
+                                    <div class="m-b col-lg-3">
+
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Cobertura Provisional" id="CoberturaProvisional" [(ngModel)]="corporativo.Empresa.CoberturaProvisional"
+                                            name="CoberturaProvisional" class="form-control" #CoberturaProvisional="ngModel"
+                                            pattern="\d*" minlength="0" maxlength="100" />
+                                        <div [hidden]="CoberturaProvisional.valid || CoberturaProvisional.pristine" class="error">
+                                            <p *ngIf="CoberturaProvisional.errors?.maxlength">Maximo 100 carácteres</p>
+                                        </div>
+                                    </div>
+                                    <label class="col-lg-1 control-label" for="FechaBloqueo">Notificación Prefactura:</label>
+                                    <div class="m-b col-lg-3" align="right">
+                                        <input type="text" style="text-transform: uppercase;" placeholder="Notificación Prefactura" id="NotificacionPrefactura" [(ngModel)]="corporativo.Empresa.NotificacionPrefactura"
+                                            name="NotificacionPrefactura" class="form-control" #NotificacionPrefactura="ngModel"
+                                            pattern="\d*" minlength="0" maxlength="10" />
+                                        <div [hidden]="NotificacionPrefactura.valid || NotificacionPrefactura.pristine" class="error">
+                                            <p *ngIf="NotificacionPrefactura.errors?.pattern">Solo se admiten dígitos</p>
+                                            <p *ngIf="NotificacionPrefactura.errors?.maxlength">Maximo 10 carácteres</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content" style="padding-bottom: 15px; padding-top: 0px;">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading" (click)="colapsarTab()">
+                    <h5 class="panel-title">
+                        <i class="fa fa-bookmark"></i>
+                        <a data-toggle="collapse" title="Consultar Contratos" data-parent="#accordion" href="#clpListaContrato">Planes</a>
+                    </h5>
+                </div>
+                <div id="clpListaContrato" class="panel-collapse collapse in">
+                    <div class="ibox float-e-margins">
+
+                        <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                            <div class="row">
+                                <div (ngSubmit)="buscar();">
+                                    <div class="form-group col-lg-12 no-padding">
+
+                                        <label class="col-lg-1 control-label" for="Nivel">Nivel:</label>
+                                        <div class="m-b col-lg-2">
+
+                                            <input type="number" placeholder="Nivel" id="Nivel" onkeyup="Nivel.value = Nivel.value.toUpperCase()" name="numeroEmpresa"
+                                                [(ngModel)]="sucursalNombre.nivel" #Nivel="ngModel" class="form-control" min="3"
+                                                max="7" />
+                                            <div [hidden]="Nivel.valid || Nivel.pristine" class="error">
+                                                <p *ngIf="Nivel.errors?.max">Máximo 7</p>
+                                                <p *ngIf="Nivel.errors?.min">Mínimo 3</p>
+                                            </div>
+                                        </div>
+
+                                        <label class="col-lg-1 control-label" for="Max">Max:</label>
+                                        <div class="m-b col-lg-2">
+
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Máximo" id="Max" onkeyup="Max.value = Max.value.toUpperCase()"
+                                                name="Max" [(ngModel)]="sucursalNombre.max" #Max="ngModel" class="form-control"
+                                                pattern="\d*" minlength="0" maxlength="10" />
+                                            <div [hidden]="Max.valid || Max.pristine" class="error">
+                                                <p *ngIf="Max.errors?.pattern">Solo se admiten dígitos</p>
+                                                <p *ngIf="Max.errors?.maxlength">Maximo 10 dígitos</p>
+                                            </div>
+                                        </div>
+
+                                        <label class="col-lg-1 control-label" for="descripcion">Descripción:</label>
+                                        <div class="m-b col-lg-2">
+
+                                            <input type="text" style="text-transform: uppercase;" placeholder="Descripción" id="descripcion" onkeyup="descripcion.value = descripcion.value.toUpperCase()"
+                                                name="descripcion" [(ngModel)]="sucursalNombre.descripcion" #descripcion="ngModel"
+                                                class="form-control" minlength="0" maxlength="100" />
+                                            <div [hidden]="descripcion.valid || descripcion.pristine" class="error">
+                                                <p *ngIf="descripcion.errors?.maxlength">Maximo 100 dígitos</p>
+                                            </div>
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="slcproducto">Producto:</label>
+                                        <div class="m-b col-lg-2">
+                                            <select required class="form-select-control" [(ngModel)]="sucursalNombre.producto" id="slcproducto" name="slcproducto" #slcproducto="ngModel"
+                                                [disabled]="habilitar">
+                                                <option value="undefined" selected>Seleccione...</option>
+                                                <option value="COR">Corporativo</option>
+                                                <option value="DEN">Dental</option>
+                                                <option value="EXE">Exequial</option>
+                                                <option value="CPO">Oncológico</option>
+                                            </select>
+
+                                        </div>
+                                        <label class="col-lg-1 control-label" for="slccobertura">Cobertura:</label>
+                                        <div class="m-b col-lg-2">
+                                            <select required class="form-select-control" [(ngModel)]="sucursalNombre.coberturas" id="slccobertura" name="slccobertura"
+                                                #slccobertura="ngModel" [disabled]="habilitar">
+                                                <option value="undefined" selected>Seleccione...</option>
+                                                <option value="AT">Titular</option>
+                                                <option value="A1">Titular,Titular+1</option>
+                                                <option value="A2">Titular,Titular+1,Titular+2</option>
+                                                <option value="AF">Titular,Titular+1,Titular+Familia</option>
+                                            </select>
+
+                                        </div>
+                                        <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="InsertarSucursalTabla();">
+                                            <i class="fa fa-save"></i> Agregar
+                                        </button>
+
+
+
+
+                                        <div class="ibox-content" id="divResultadoBusquedaContratosAuth" style="border-width:1px 0px 0px 0px;">
+                                            <div class="dataTables_info">Mostrando de 0 a 0 de 0 registros</div>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered table-hover dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nivel </th>
+                                                            <th>Máximo</th>
+                                                            <th>Descripción</th>
+                                                            <th>Producto</th>
+                                                            <th>Cobertura</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let su of sucursalesNombre">
+                                                            <td>{{su.nivel}}</td>
+                                                            <td>{{su.max}}</td>
+                                                            <td>{{su.descripcion}}</td>
+                                                            <td>{{su.producto}}</td>
+                                                            <td>{{su.coberturas}}</td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="9" style="text-align: center;">No existen resultados</td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                            <!-- <pagination-controls autohide="true" id="contratosAutorizacionTable" maxsize="4" nextlabel="" previouslabel="" ng-reflect-id="contratosAutorizacionTable"
+                                                    ng-reflect-max-size="4" ng-reflect-auto-hide="true" ng-reflect-previous-label=""
+                                                    ng-reflect-next-label="">
+                                                    <pagination-template ng-reflect-id="contratosAutorizacionTable" ng-reflect-max-size="4">
+
+                                                    </pagination-template>
+                                                </pagination-controls> -->
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content" style="padding-bottom: 15px; padding-top: 0px;">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div id="clpListaContrato" class="panel-collapse collapse in">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                            <div class="row">
+                                <div class="col-lg-12 m-t-md " align="right">
+                                    <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="guardar();">
+                                        <i class="fa fa-save"></i> Crear Portal
+                                    </button>
+                                    <button class="btn btn-w-m btn-success btn-sm" type="button">
+                                        <i class="fa fa-arrow-left"></i> Volver
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,222 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-12">
+        <h2>Retención/Anulación</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Retención</li>
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/retencion/descuento/list']">Identifica a tu cliente</a>
+            </li>
+            <li class="breadcrumb-item active">Anular Producto</li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="row" *ngIf="retencion">
+        <div id="contenido" class="col-xs-12 col-md-8 col-lg-10">
+            <div class="panel panel-default panel-body">
+                <div class="row-flex" style="margin-right: -15px;">
+                    <div class="col-md-6">
+                        <label class="text-muted">Nombres y apellidos</label>
+                        <br>
+                        <span class="text-bold">{{ retencion ? retencion.NombrePersona : '' }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-muted">Contrato</label>
+                        <br>
+                        <b class="text-bold">{{ retencion.NumeroContrato }}</b>
+                    </div>
+                    <div class="col-md-2 retention-blue text-center" style="margin-top: -15px; margin-bottom: -15px;">
+                        <h3 class="no-margin">{{ retencion.categoriaCliente }}</h3>
+                        <hr class="no-margin">
+                        <small class="text-small" style="text-align: center;">SEGMENTO</small>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default panel-body" *ngIf="retencion">
+                <div class="row" class="flex-row">
+                    <div class="col-md-12">
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Región</label>
+                                <br>
+                                <span class="form-control">{{ retencion.CodigoRegion }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Fecha de fin de vigencia</label>
+                                <br>
+                                <span class="form-control">{{ retencion.FechaFin }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Código producto</label>
+                                <br>
+                                <span class="form-control">{{ retencion.CodigoPlan }}</span>
+                            </div>
+                        </div>
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Nombre del producto</label>
+                                <br>
+                                <span class="form-control">{{ retencion.NombrePlan }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Nivel</label>
+                                <br>
+                                <span class="form-control">{{ retencion.Nivel }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Siniestralidad acumulada</label>
+                                <br>
+                                <span class="form-control">{{ retencion.SiniestralidadNumber * 100 | number: '1.2-2'
+                                    }}%</span>
+                            </div>
+                        </div>
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Estado de cobranza</label>
+                                <br>
+                                <span class="form-control">{{ retencion.EsMoroso ? "Moroso" : "Activo" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 no-padding m-t-xs m-b-sm">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Anulación de Contratos</h5>
+                    </div>
+                    <div class="panel-body">
+                        <form name="anulacionForm" role="form" #anulacionForm="ngForm">
+                            <fieldset class="col-lg-12">
+                                <legend class="info">ANULACIÓN DE CONTRATO</legend>
+                                <div class="m-b col-lg-3">
+                                    <label class="control-label">Inicio de Vigencia:</label>
+                                </div>
+                                <div class="m-b col-lg-3">
+                                    <label class="control-label">{{_contratoKey.FechaInicio | date: 'dd/MM/yyyy'}}</label>
+                                </div>
+                                <div class="m-b col-lg-3">
+                                    <label class="control-label">Fin de Vigencia:</label>
+                                </div>
+                                <div class="m-b col-lg-3">
+                                    <label class="control-label">{{_contratoKey.FechaFin | date: 'dd/MM/yyyy'}}</label>
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-lg-12">
+                                <div class="m-b col-lg-3">
+                                    <label class="control-label" for="slcFechaAnulacion">Fecha Efecto Anulación:</label>
+                                </div>
+                                <div class="m-b col-lg-3">
+                                    <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaEfectoAnulacion"
+                                        name="fechaEfectoAnulacion" [(ngModel)]="fechaEfectoAnulacion" required
+                                        [datepicker]="datepickerOpts" [disabled]="desabilitar"></datetime>
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-lg-12">
+                                <div class="m-b col-lg-3">
+                                    <label class="control-label" for="slcMotivoCabecera">Motivo Cabecera:</label>
+                                </div>
+                                <div class="m-b col-lg-9">
+                                    <select required class="form-select-control m-b" id="slcMotivoCabecera" name="slcMotivoCabecera"
+                                        [(ngModel)]="codigoCabecera" #slcMotivoCabecera="ngModel" (change)="cargarSelectMotivoAnulacion()"
+                                        [disabled]="desabilitar">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let motivoCabecera of cabeceraMotivoAnulacion" [ngValue]="motivoCabecera.CodigoCabecera">{{motivoCabecera.Descripcion}}</option>
+                                    </select>
+                                    <div [hidden]="slcMotivoCabecera.valid" class="error">
+                                        <p *ngIf="slcMotivoCabecera.errors?.required">Campo Requerido</p>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-lg-12">
+                                <div class="m-b col-lg-3">
+                                    <label class="control-label" for="slcMotivoAnulacion">Motivo Anulación:</label>
+                                </div>
+                                <div class="m-b col-lg-9">
+                                    <select required class="form-select-control m-b" id="slcMotivoAnulacion" name="slcMotivoAnulacion"
+                                        [(ngModel)]="codigoAnulacion" #slcMotivoAnulacion="ngModel" [disabled]="desabilitar"
+                                        (change)="activarBotonCarta()">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let motivoAnulacion of listaDesplegarMotivoAnulacion" [ngValue]="motivoAnulacion.Codigo">{{motivoAnulacion.Descripcion}}</option>
+                                    </select>
+                                    <div [hidden]="slcMotivoAnulacion.valid" class="error">
+                                        <p *ngIf="slcMotivoAnulacion.errors?.required">Campo Requerido</p>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-lg-12">
+                                <div class="col-lg-12 m-t-md text-center">
+                                    <button class="btn btn-w-m btn-success btn-sm" id="cartaAnulacionId" (click)="crearCartaAnulacion();"
+                                        [disabled]="temaSeleccionado">
+                                        <i class="fa fa fa-file-pdf-o"></i> Carta Anulación</button>
+                                </div>
+                            </fieldset>
+                            <div class="col-lg-12 no-padding">
+                                <div class="m-b col-lg-2">
+                                    <label class="control-label">Detalle Motivo:</label>
+                                </div>
+                                <div class="m-b col-lg-10">
+                                    <textarea id="comentario" name="comentario" [(ngModel)]="comentario" [disabled]="desabilitar"
+                                        placeholder="Escriba de 10 a 255 caracteres" class="form-control" rows="3"
+                                        minlength="10" maxlength="255" style="resize: none;" required="required">
+
+                            </textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 no-padding">
+                                <div class="m-b col-lg-2">
+                                    <label class="control-label">Guía para la retención de cliente:</label>
+                                </div>
+                                <div class="m-b col-lg-10">
+                                    <select class="col-lg-12 form-select-control" id="slcGuia" name="slcGuia" (change)="cargarSubGuias()"
+                                        [(ngModel)]="codigoGuias" #slcGuia="ngModel" [disabled]="desabilitar">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let motivoGuia of listaGuias" [ngValue]="motivoGuia.Codigo">{{motivoGuia.Nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 no-padding">
+                                <div class="m-b col-lg-2">
+                                    <label class="control-label">Informativo:</label>
+                                </div>
+                                <div class="m-b col-lg-10">
+                                    <textarea id="slcSubGuias" name="slcSubGuias" [disabled]="true" class="form-control text-justify"
+                                        rows="10" style="resize: none;" placeholder="Campo informativo">{{leerTexto}}
+                                </textarea>
+                                </div>
+                            </div>
+                            <fieldset class="col-lg-12">
+                                <div class="col-lg-3 m-t-md text-center">
+                                    <button class="btn btn-w-m btn-success btn-sm" id="formularioMovimientoId" (click)="CrearPdfFormularioMovimiento();"
+                                        [disabled]="!anulacionForm.form.valid">
+                                        <i class="fa fa fa-file-pdf-o"></i> Formulario Movimiento</button>
+                                </div>
+                                <div class="col-lg-3 m-t-md no-padding">
+                                    <button class="btn btn-w-m btn-success btn-sm" id="guardarId" (click)="guardarAnulacion();"
+                                        [disabled]="activaBotonAnular">
+                                        <i class="fa fa-save"></i> Anular</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="sub-menu" class="col-xs-12 col-md-4 col-lg-2 no-padding">
+            <h4>Modificar Contrato</h4>
+            <hr class="no-margin" style="border-color: black; border-width: 1px;">
+            <ul class="no-padding">
+                <li class="btn col-md-12" [routerLink]="['/retencion/show', _contratoKey.CodigoRegion, _contratoKey.CodigoProducto, _contratoKey.NumeroContrato]"
+                    style="text-align: left;">
+                    <i class="fa fa-circle-o"></i>
+                    <span class="text-primary">Regresar</span>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+</div>

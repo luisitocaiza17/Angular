@@ -1,0 +1,162 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Contabilidad</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Reservas</li>
+            <li class="breadcrumb-item active">Configuración de Reservas</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Configuración Proceso Reservas</h5>
+        </div>
+        <div class="panel-body">
+            <form name="emitirNotasMasivasPCA" role="form" #emitirNotasMasivasPCA="ngForm">
+                <fieldset class="col-lg-6 m-t-md no-padding">
+
+                    <div class="col-lg-6 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="diario" id="diario" [checked]="diario" #diario="ngModel" (change)="dias(true);"
+                            [(ngModel)]="cronTab.Diariamente">
+                        <label class="control-label" for="diario">Diariamente</label>
+                    </div>
+                    <div class="col-lg-6 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="lunes" id="lunes" [checked]="lunes" #lunes="ngModel" (change)="dias(false);"
+                            [(ngModel)]="cronTab.Lunes">
+                        <label class="control-label" for="lunes">Lunes</label>
+                    </div>
+                    <div class="col-lg-6 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="martes" id="martes" [checked]="martes" #martes="ngModel" (change)="dias(false);"
+                            [(ngModel)]="cronTab.Martes">
+                        <label class="control-label" for="martes">Martes</label>
+                    </div>
+                    <div class="col-lg-6 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="miercoles" id="miercoles" [checked]="miercoles" #miercoles="ngModel"
+                            (change)="dias(false);" [(ngModel)]="cronTab.Miercoles">
+                        <label class="control-label" for="miercoles">Miércoles</label>
+                    </div>
+                    <div class="col-lg-6 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="jueves" id="jueves" [checked]="jueves" #jueves="ngModel" (change)="dias(false);"
+                            [(ngModel)]="cronTab.Jueves">
+                        <label class="control-label" for="jueves">Jueves</label>
+                    </div>
+                    <div class="col-lg-6 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="viernes" id="viernes" [checked]="viernes" #viernes="ngModel"
+                            (change)="dias(false);" [(ngModel)]="cronTab.Viernes">
+                        <label class="control-label" for="viernes">Viernes</label>
+                    </div>
+                    <div class="col-lg-6 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="sabado" id="sabado" [checked]="sabado" #sabado="ngModel" (change)="dias(false);"
+                            [(ngModel)]="cronTab.Sabado">
+                        <label class="control-label" for="sabado">Sábado</label>
+                    </div>
+                    <div class="col-lg-6 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="domingo" id="domingo" [checked]="domingo" #domingo="ngModel"
+                            (change)="dias(false);" [(ngModel)]="cronTab.Domingo">
+                        <label class="control-label" for="domingo">Domingo</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <label class="col-lg-2 control-label" for="fechaDesde">Fecha Desde:</label>
+                    <div class="m-b col-lg-4">
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaDesde"
+                            name="fechaDesde" [(ngModel)]="filter.FechaDesde" [datepicker]="datepickerOpts"></datetime>
+                    </div>
+                    <label class="col-lg-2 control-label" for="fechaHasta">Fecha Hasta:</label>
+                    <div class="m-b col-lg-4">
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaHasta"
+                            name="fechaHasta" [(ngModel)]="filter.FechaHasta" [datepicker]="datepickerOpts"></datetime>
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-lg-6 m-t-md no-padding">
+                    <div class="m-b col-lg-4">
+                        <label class="control-label no-padding-left">Hora de Ejecución:</label>
+                    </div>
+                    <div class="m-b col-lg-8">
+                        <input type="number" id="horaEjecucion" name="horaEjecucion" class="heigth25 form-control col-lg-12"
+                            [(ngModel)]="cronTab.Hora" step="1" min="0" max="23" />
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <label class="control-label no-padding-left">Minuto de Ejecución:</label>
+                    </div>
+                    <div class="m-b col-lg-8">
+                        <input type="number" id="minutoEjecucion" name="minutoEjecucion" class="heigth25 form-control col-lg-12"
+                            [(ngModel)]="cronTab.Minutos" step="0" min="0" max="59" />
+                    </div>
+                </fieldset>
+
+                <div class="col-lg-12 m-t-md no-padding">
+                    <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="emitir();">
+                        <i class="fa fa-cogs"></i> Crear Tarea
+                    </button>
+                    <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="eliminarTarea();">
+                        <i class="fa fa-times"></i> Eliminar Tarea
+                    </button>
+
+                    <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="CargarPorcentajes();"
+                        data-toggle="modal" data-target="#porcentajesShowModal">
+                        <i class="fa fa-calendar"></i> Porcentajes
+                    </button>
+                </div>
+                <div class="modal inmodal fade" id="porcentajesShowModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="col-lg-12 m-t-sm no-padding">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <h5 class="panel-title">PORCENTAJES DE RESERVAS </h5>
+                                    </div>
+                                    <div id="divResultadoBusquedaContratos" class="ibox-content" style="border-width:1px 0px 0px 0px;">
+                                        <div class="dataTables_info"></div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>MES</th>
+                                                        <th>PORCENTAJE CORRIENTES</th>
+                                                        <th>PORCENTAJE SUSCRIPCIÓN</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="no-borders" *ngFor="let porcentaje of porcentajes">
+                                                    <tr>
+                                                        <td>{{porcentaje.Id}}</td>
+                                                        <td>{{porcentaje.Mes}}</td>
+                                                        <td>
+                                                            <input type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="porcentaje.PorcentajeCorrientes"
+                                                                id="porcentajeCorriente" name="porcentajeCorriente"
+                                                                class=" form-control col-lg-4"/>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="porcentaje.PorcentajeSuscripcion"
+                                                                id="porcentajeSuscripcion" name="porcentajeSuscripcion"
+                                                                class=" form-control col-lg-4"/>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <button class="btn btn-w-m btn-success btn-sm" type="button" data-toggle="modal"
+                                            data-target="#confirmacionShowModal" data-dismiss="modal" (click)="UpdatePorcentajes()">Aceptar</button>
+
+                                        <button class="btn btn-w-m btn-success btn-sm" type="button" data-dismiss="modal">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

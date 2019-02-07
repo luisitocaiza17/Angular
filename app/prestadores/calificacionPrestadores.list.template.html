@@ -1,0 +1,173 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Prestadores</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Prestadores</li>
+            <li class="breadcrumb-item active">Consulta Calificación</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" id="consPrestadores" style="border-width:1px 0px 0px 0px;">
+                    <div class="row">
+                        <form (ngSubmit)="buscar();" #consultaPrestadoresForm="ngForm">
+                            <div class="form-group">
+
+                                <label class="col-lg-1 control-label" for="especialidad">Especialidad:</label>
+                                <div class="m-b col-lg-3">
+                                    <select class="form-control" [(ngModel)]="filterConvenio.CodigoEspecialidad" id="especialidad" name="especialidad" #especialidad="ngModel">
+                                        <option [ngValue]="undefined" selected>Seleccione</option>
+                                        <option *ngFor="let esp of especialidades" [ngValue]="esp.CodigoProgress">{{esp.Valor}}</option>
+                                    </select>
+                                </div>
+
+                                <label class="col-lg-1 control-label" for="medico">Medico:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="text" maxlength="250" placeholder="Nombres del Medico" id="medico" name="medico" [(ngModel)]="filterConvenio.Nombre"
+                                        class="form-control" #medico="ngModel" />
+                                </div>
+
+                                <label class="col-lg-1 control-label" for="codigoCalificacion">Calificación:</label>
+                                <div class="m-b col-lg-3">
+                                    <select class="form-control" [(ngModel)]="calificacionFilter.Calificacion" id="codigoCalificacion" name="codigoCalificacion"
+                                        #codigoCalificacion="ngModel">
+                                        <option [value]="undefined" selected>Seleccione calificación</option>
+                                        <option *ngFor="let r of calificaciones" [value]="r.Codigo">{{r.Nombre}}</option>
+                                    </select>
+                                </div>
+
+                                <label class="col-lg-1 control-label" for="cedulaCliente">Cédula:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="text" placeholder="Cédula Cliente" id="cedulaCliente" name="cedulaCliente" [(ngModel)]="filterContrato.NumeroCedula"
+                                        #cedulaCliente="ngModel" class="form-control" pattern="\d*" maxlength="10" />
+                                    <div [hidden]="cedulaCliente.valid || cedulaCliente.pristine" class="error">
+                                        <p *ngIf="cedulaCliente.errors?.pattern">Solo se admiten dígitos</p>
+                                        <p *ngIf="cedulaCliente.errors?.maxlength">Maximo 10 dígitos</p>
+                                    </div>
+                                </div>
+
+                                <label class="col-lg-1 control-label" for="nombreCliente">Nombre:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="text" maxlength="250" placeholder="Nombre Cliente" id="nombreCliente" name="nombreCliente" [(ngModel)]="filterContrato.NombrePersona"
+                                        class="form-control" #nombreCliente="ngModel" />
+                                </div>
+
+                                <label class="col-lg-1 control-label" for="apellidoCliente">Apellido:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="text" maxlength="250" placeholder="Apellido Cliente" id="apellidoCliente" name="apellidoCliente" [(ngModel)]="filterContrato.ApellidoPersona"
+                                        class="form-control" #apellidoCliente="ngModel" />
+                                </div>
+
+                                <label class="col-lg-1 control-label" for="codigoRegion">Región:</label>
+                                <div class="m-b col-lg-3">
+                                    <select class="form-control" [(ngModel)]="filterContrato.CodigoRegion" id="codigoRegion" name="codigoRegion" #codigoRegion="ngModel">
+                                        <option [value]="undefined" selected>Seleccione región</option>
+                                        <option *ngFor="let r of regiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!consultaPrestadoresForm.form.valid">
+                                    <i class="fa fa-search"></i> Buscar
+                                </button>
+                                <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">Limpiar</a>
+                                <a class="btn btn-w-m btn-success btn-sm" (click)="generarReporte();">
+                                    <i class="fa fa-file-excel-o"></i> Generar Reporte
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="divResultadoBusquedaPrestadores" class="ibox-content" style="border-width:1px 0px 0px 0px;">
+
+                    <!--  <div class="dataTables_info">{{contratoService.paginationConstants.EncabezadoTabla}}</div> -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>                                
+                                    <th class="centerMiddle col-lg-4">Nombres Médico</th>
+                                    <th class="centerMiddle col-lg-4">Especialidad</th>
+                                    <th class="centerMiddle col-lg-2" >Region</th>
+                                    <th class="centerMiddle col-lg-2">Calificación</th>
+                                </tr>
+                            </thead>
+                            <tbody class="no-borders" *ngFor="let p of contratos | paginate: {id: 'tableContratos', itemsPerPage: contratoService.paginationConstants.pageSize,currentPage: contratoService.paginationConstants.pageNumber, totalItems: contratoService.paginationConstants.total}">
+
+                                <tr [ngClass]="{'encabezadoNested':p.Estado!='Activo'}">                                
+                                    <td class="centerMiddle">{{p.NombreMedico}}</td>
+                                    <td class="centerMiddle">{{p.Especialidad}}</td>
+                                    <td class="centerMiddle">{{p.RegionCliente}}</td>
+                                    <td class="centerMiddle">
+                                        
+                                        <p class="clasificacion">
+                                                {{p.Calificacion}}
+                                            <label *ngIf="p.Calificacion == 1">★☆☆☆☆</label>
+                                            <label *ngIf="p.Calificacion == 2">★★☆☆☆</label>
+                                            <label *ngIf="p.Calificacion == 3">★★★☆☆</label>
+                                            <label *ngIf="p.Calificacion == 4">★★★★☆</label>
+                                            <label *ngIf="p.Calificacion == 5">★★★★★★</label>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="col-lg-12 no-padding">
+                                            <label class="col-lg-2">Nombres Titular:</label>
+                                            <span class="col-lg-4">{{p.NombresApellidosTitular}}</span>
+                                            <label class="col-lg-2">Nombres Paciente:</label>
+                                            <span class="col-lg-4">{{p.NombreBeneficiario}}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="col-lg-12 no-padding">
+
+                                            <label class="col-lg-2">Oda:</label>
+                                            <span class="col-lg-1">{{p.Oda}}</span>
+                                            <label class="col-lg-2">Contrato :</label>
+                                            <span class="col-lg-1">{{p.NumeroContrato}}</span>
+                                            <label class="col-lg-2 ">Nivel Contrato:</label>
+                                            <span class="col-lg-1">{{p.VersionPlan}}</span>
+                                            <label class="col-lg-2">Nivel Desde/Hasta:</label>
+                                            <span class="col-lg-1">{{p.NivelPrestadorDesde +"-" + p.NivelPrestadorHasta}}</span>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="col-lg-12 no-padding">
+                                            <label class="col-lg-2">Fecha calificación:</label>
+                                            <span class="col-lg-1">{{p.FechaCalificacion}}</span>
+                                            <label class="col-lg-2">Comentario :</label>
+                                            <span class="col-lg-7">{{p.Comentario}}</span>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot *ngIf="contratoService.paginationConstants.total == 0">
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">No existen resultados</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <pagination-controls maxSize="5" previousLabel="" nextLabel="" autoHide="true" (pageChange)="paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

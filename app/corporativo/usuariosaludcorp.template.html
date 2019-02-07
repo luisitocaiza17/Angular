@@ -1,0 +1,288 @@
+<!-- NAVEGACIÓN SUPERIOR -->
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Empresa</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Corporativo</li>
+            <li class="breadcrumb-item active">Usuarios SALUD</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<!-- PANEL BUSCADOR -->
+<div class="wrapper wrapper-content" *ngIf="!showEditor">
+    <div class="ibox float-e-margins">
+
+        <!-- CRITERIOS DE BÚSQUEDA -->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+            <fieldset>
+                <legend>Criterios de Búsqueda</legend>
+
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-4">
+                    <input type="text" placeholder="Buscar por Cédula"
+                           [(ngModel)]="filter.Cedula" class="form-control"
+                    />
+                </div>
+
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-4">
+                    <input type="text" placeholder="Buscar por Nombres y Apellidos"
+                           [(ngModel)]="filter.NombreApellido" class="form-control"
+                    />
+
+                </div>
+
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-4">
+                    <input type="text" placeholder="Buscar por Nombre de Usuario"
+                           [(ngModel)]="filter.NombreUsuario" class="form-control"
+                    />
+                </div>
+
+            </fieldset>
+
+
+            <!-- BOTÓN DE BUSCAR -->
+            <div class="form-group col-lg-12 no-padding">
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="nuevo()">
+                    <i class="fa fa-plus"></i> Nuevo
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="limpiarBusqueda()">
+                    <i class="fa fa-eraser"></i> Limpiar
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="traerTodos()">
+                    <i class="fa fa-search"></i> Traer todos
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        [disabled]="!puedeBuscar()" (click)="buscar()">
+                    <i class="fa fa-search"></i> Filtrar
+                </button>
+            </div>
+
+        </div>
+
+        <!-- GRILLA DE RESULTADO DE BÚSQUEDA -->
+        <!-- Tabla de usuarios agregados -->
+        <div class="ibox-content">
+            <div class="dataTables_info">Mostrando {{list.length}} registros</div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover dataTable">
+                    <thead>
+                    <tr>
+                        <th>Identificacion</th>
+                        <th>Nombres y Apellidos</th>
+                        <th> Email </th>
+                        <th>Teléfono Celular</th>
+                        <th>Teléfono Fijo</th>
+                        <th> Editar </th>
+                        <th> Eliminar </th>
+                    </tr>
+                    </thead>
+                    <tbody class="no-borders">
+
+                    <tr *ngFor="let u of list">
+                        <td>{{u.Cedula}}</td>
+                        <td>{{u.NombreApellido}}</td>
+                        <td>{{u.Email}}</td>
+                        <td>{{u.Telefono}}</td>
+                        <td>{{u.TelefonoFijo}}</td>
+                        <td class="centerMiddle general-column">
+                            <a (click)="abrirEdicion(u.Id)" title="Editar" *ngIf="!
+                                    estaEnEdicion">
+                                <i class="fa fa-file-text"></i>
+                            </a>
+                        </td>
+                        <td class="centerMiddle general-column" >
+                            <a (click)="deleteUsuario(u)" title="Eliminar" *ngIf="!
+                                    estaEnEdicion">
+                                <i class="fa fa-eraser"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+            <pagination-controls id="tableContratos" maxSize="5" previousLabel="" nextLabel="" autoHide="true" (pageChange)="contratoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+            <!-- Boton de notificacion masiva-->
+            <button type="button" class = "btn btn-w-m btn-info btn-sm" [disabled]="notificar" (click)="NotificarTodosUsuarios();">
+                <i class="fa fa-envelope"></i> Notificar Todos
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- PANEL EDITOR -->
+<div class="wrapper wrapper-content" *ngIf="showEditor">
+    <div class="ibox float-e-margins">
+        <h3>Formulario de Edición</h3>
+        <div *ngIf="!esNuevo">
+            <h4> Usuario N°. <b>{{item.Id}}</b></h4>
+        </div>
+        <!-- FORMULARIO DE EDICIÓN -->
+        <!-- Creacion de seccion Usuarios -->
+        <br>
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Datos Administrador SALUD</h5>
+            </div>
+            <div class="panel-body">
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label" for="NombreUsuarioAD">Usuario Dominio:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Usuario Dominio SALUD"
+                               id="NombreUsuarioAD" name="NombreUsuario" class="form-control"
+                               minlength="0" maxlength="100" [(ngModel)]="item.NombreUsuario" #NombreUsuario="ngModel" />
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="col-lg-offset-6 col-lg-1 btn btn-w-m btn-success btn-sm" type="button"
+                                (click)="ObtenerUsuarioAD();">
+                            <i class="fa fa-save"></i> Consultar AD
+                        </button>
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label">Tipo de Documento:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" [(ngModel)]="tipoDocumentoUsuario"  (ngModelChange)="verificarPasaporte($event)"  >
+                            <option *ngFor="let r of tiposDocumento" [value]="r" >{{r}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label">Cédula / Pasaporte:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Cédula / Pasaporte" (keyup)="onKeyUsuario($event)"
+                               [(ngModel)]="item.Cedula" name="Cedula" class="form-control" #Cedula="ngModel"
+                               minlength="3" maxlength="22" id="CedulaUsuario" />
+                        <div [hidden]="Cedula.valid || Cedula.pristine" class="error">
+                            <!--<p *ngIf="Cedula.errors?.pattern">Solo se admiten dígitos</p>-->
+                            <p *ngIf="Cedula.errors?.maxlength">Máximo 22 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="NombreApellido">Nombres y Apellidos:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Nombres y Apellidos" id="NombreApellido" [(ngModel)]="item.NombreApellido"
+                               [disabled]="actCedula" name="Nombre" class="form-control" #NombreApellido="ngModel" minlength="0" maxlength="100"
+                        />
+                        <div [hidden]="NombreApellido.valid || NombreApellido.pristine" class="error">
+                            <p *ngIf="NombreApellido.errors?.maxlength">Máximo 100 dígitos</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label" for="Email">Email:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" placeholder="EMAIL" id="Email" [(ngModel)]="item.Email" name="Email" class="form-control" #Email="ngModel"
+                               minlength="0" maxlength="100" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                        />
+                        <div [hidden]="Email.valid || Email.pristine" class="error">
+                            <p *ngIf="Email.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="Email.errors?.maxlength">Máximo 100 dígitos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class=" control-label" for="Telefono">Celular:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Télefono" id="Telefono" [(ngModel)]="item.Telefono"
+                               name="Telefono" class="form-control" #Telefono="ngModel" pattern="\d*" minlength="0"
+                               maxlength="10" />
+                        <div [hidden]="Telefono.valid || Telefono.pristine" class="error">
+                            <p *ngIf="Telefono.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="Telefono.errors?.maxlength">Maximo 120 dígitos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class=" control-label" for="TelefonoFijo">Télefono Fijo:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Télefono Fijo" id="TelefonoFijo" [(ngModel)]="item.TelefonoFijo"
+                               name="TelefonoFijo" class="form-control" #TelefonoFijo="ngModel" pattern="\d*" minlength="0"
+                               maxlength="9" />
+                        <div [hidden]="TelefonoFijo.valid || TelefonoFijo.pristine" class="error">
+                            <p *ngIf="TelefonoFijo.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="TelefonoFijo.errors?.maxlength">Maximo 120 dígitos</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label" for="Extension">Extensión Telf:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" style="text-transform: uppercase;" placeholder="Extensión" id="Extension" [(ngModel)]="item.Extension"
+                               name="Extension" class="form-control" #Extension="ngModel" pattern="\d*" minlength="0"
+                               maxlength="120" />
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                </div>
+                <br>
+            </div>
+
+            <fieldset>
+                <legend>Configuración de Permisos</legend>
+                <table id="adminPermisos"></table>
+                <div *ngFor="let row of permisosGlobal">
+                    <input type="checkbox" [id]="row.IDPermiso" [checked]="row.Activo"> {{row.Nombre}}
+                    <br>
+                </div>
+                <br>
+            </fieldset>
+            <br>
+        </div>
+        <br>
+
+        <!-- Valido todo --->
+        <div  *ngIf="ExisteError" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong>  {{mensajeError}}.
+        </div>
+        <div *ngIf="existeErroresValidacion" class="alert alert-danger" role="alert">
+            <div  *ngFor="let su of mensajeErroresValidacion.split('-')">
+                <p>{{su}}</p>
+            </div>
+        </div>
+        <br>
+
+        <!-- BOTONES -->
+        <div class="form-group col-lg-12 no-padding">
+            <button class="btn btn-w-m btn-success btn-sm" type="button"
+                    (click)="cancelar();">
+                <i class="fa fa-close"></i> Cancelar
+            </button>
+            <button *ngIf="esNuevo" [disabled]="!validarFormulario()" class="btn btn-w-m btn-success btn-sm"
+                    type="button" (click)="guardar();">
+                <i class="fa fa-save"></i> Grabar
+            </button>
+            <button *ngIf="!esNuevo" [disabled]="!validarFormulario()" class="btn btn-w-m btn-success btn-sm"
+                    type="button" (click)="actualizar();">
+                <i class="fa fa-save"></i> Actualizar
+            </button>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,57 @@
+<div class="col-lg-12 m-t-sm no-padding">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Listado de Servicios Adicionales</h5>
+        </div>
+        <div class="panel-body panelDatos">
+            <div class="panel-body panelDatos">
+                <fieldset class="no-padding m-b-sm">
+                    <div class="dataTables_info">{{servicioAdicionalPersonaService.paginationConstants.EncabezadoTabla}}</div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle">Código</th>
+                                    <th class="centerMiddle">Fecha Inicio</th>
+                                    <th class="centerMiddle">Fecha Fin</th>
+                                    <th class="centerMiddle">Precio</th>
+                                    <th class="centerMiddle">Estado</th>
+                                    <th class="centerMiddle">Monto Cobertura</th>
+                                    <th class="centerMiddle">Porcentaje Descuento</th>
+                                    <th class="centerMiddle">Valor Descuento</th>
+                                </tr>
+                            </thead>
+                            <tbody class="no-borders" *ngFor="let servicios of servicioAdicionalPersonas | paginate: {id:'serviciosAdicionalesTable', itemsPerPage: servicioAdicionalPersonaService.paginationConstants.pageSize,currentPage: servicioAdicionalPersonaService.paginationConstants.pageNumber, totalItems: servicioAdicionalPersonaService.paginationConstants.total};">
+                                <tr >
+                                    <td class="centerMiddle nestedColumRowSpan">{{servicios.Codigo}}</td>
+                                    <td class="centerMiddle nestedColumRowSpan">{{servicios.FechaInicio}}</td>
+                                    <td class="centerMiddle nestedColumRowSpan">{{servicios.FechaFin}}</td>
+                                    <td class="alignR nestedColumRowSpan">&#36;{{servicios.PrecioServicios | number : '1.2-2'}}</td>
+                                    <td class="centerMiddle nestedColumRowSpan">{{servicios.EstadoServicio}}</td>
+                                    <td class="alignR nestedColumRowSpan">&#36;{{servicios.MontoCobertura | number : '1.2-2'}}</td>
+                                    <td class="alignR nestedColumRowSpan">{{servicios.PorcentajeDescuento | number : '1.2-2'}}%</td>
+                                    <td class="alignR nestedColumRowSpan">&#36;{{servicios.ValorDescuento | number : '1.2-2'}}</td>
+                                </tr>
+                                <tr colspan="8">
+                                    <td colspan="8">
+                                        <div class="col-lg-12 padL20" style="padding-left: 20px!important;">
+                                           <label class="col-lg-2 no-padding">Descripción Servicio:</label>
+                                           <span class="col-lg-9">{{servicios.Servicio}}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                            </tbody>
+                            <tfoot *ngIf="servicioAdicionalPersonaService.paginationConstants.total == 0">
+                                <tr>
+                                    <td colspan="8" style="text-align: center;">No existen resultados</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <pagination-controls id="serviciosAdicionalesTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="servicioAdicionalPersonaService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>

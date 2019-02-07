@@ -1,0 +1,129 @@
+<!-- NAVEGACIÓN SUPERIOR -->
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Reasignación de Brokers</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Brokers</li>
+            <li class="breadcrumb-item active">Reporte Reasignación</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<!-- PANEL BUSCADOR -->
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <!-- CRITERIOS DE BÚSQUEDA -->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+            <fieldset>
+                <div class="panel panel-success" style="margin-bottom: 0px;" >
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Selección de Broker/Vendedor</h5>
+                        <br>
+                    </div>
+                    <div class="panel-body">
+                        <br>
+                        <div class="row container-fluid">
+                            <div class="col-md-3">
+                                <label class="control-label">Fecha Desde:</label>
+                                <datetime required name="inpFechaSalida" [(ngModel)]="fechaInicio" class="form-control col-lg-12 no-padding" [timepicker]="false" [datepicker]="datepickerOpts"></datetime>
+
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Fecha Hasta:</label>
+                                <datetime required name="inpFechaSalida" [(ngModel)]="fechaFin" class="form-control col-lg-12 no-padding" [timepicker]="false" [datepicker]="datepickerOpts"></datetime>
+
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Nombre:</label>
+                                <input type="text" placeholder="Broker/Vendedor"
+                                       [(ngModel)]="nombreBroker"  class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Código:</label>
+                                <input type="number" placeholder="Código del Broker/Vendedor"
+                                       [(ngModel)]="codigoBroker" class="form-control" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row container-fluid">
+                            <div class="col-md-3">
+                                <label class="control-label">Ruc:</label>
+                                <input type="text" placeholder="Broker/Vendedor"
+                                       [(ngModel)]="rucBroker" class="form-control" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row container-fluid">
+                            <div class="col-md-3">
+                                <button class="btn btn-w-m btn-success btn-sm"
+                                        (click)="traerFiltrosR()">
+                                    <i class="fa fa-search"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="ibox-title" *ngIf="VerTabla"  style="border-width:1px 0px 0px 0px;">
+        <div class="dataTables_info">Mostrando  registros</div>
+        <div class="table-responsive">
+            <table id="tablaListado" class="table table-striped table-bordered table-hover dataTable">
+                <tbody id="bodyListado" class="no-borders">
+                <tr>
+
+                    <th class="centerMiddle">
+                        Agente Venta Actual
+                    </th>
+                    <th class="centerMiddle">
+                        Agente Venta Anterior
+                    </th>
+                    <th class="centerMiddle">
+                        Contrato/lista
+                    </th>
+                    <th class="centerMiddle">
+                        Usuario que reasignó
+                    </th>
+                    <th class="centerMiddle">
+                        Fecha de reasignación
+                    </th>
+                    <th class="centerMiddle">
+                        Detalle de la reasignación
+                    </th>
+                </tr>
+                <tr *ngFor="let mov of listadoMovimientos">
+                    <td class="centerMiddle">
+                        {{mov.NombreAgenteNuevo}}
+                    </td>
+                    <td class="centerMiddle">
+                        {{mov.NombreAgenteAnterior}}
+                    </td>
+                    <td class="centerMiddle">
+                        {{mov.NombreModificado}}
+                    </td>
+                    <td class="centerMiddle">
+                        {{mov.usuario_modificacion}}
+                    </td>
+                    <td class="centerMiddle">
+                        {{mov.fecha_modificacion | date: 'dd/MM/yyyy'}}
+                    </td>
+                    <td class="centerMiddle">
+                        {{mov.dato_anterior}}
+                    </td>
+                </tr>
+
+                <tr *ngIf="listadoMovimientos.length == 0">
+                    <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

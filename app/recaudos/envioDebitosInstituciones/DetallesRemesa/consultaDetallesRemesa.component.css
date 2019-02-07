@@ -1,0 +1,9 @@
+:host /deep/ ng2-smart-table { 
+    font-size: 1.2rem; 
+    text-align: center; 
+}
+
+:host /deep/ ng2-smart-table th.ng2-smart-th { 
+    text-align: center !important; 
+}
+

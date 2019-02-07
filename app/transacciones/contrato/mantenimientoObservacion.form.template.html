@@ -1,0 +1,25 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Mantenimiento Observación de Contratos</h5>
+        </div>
+        <div class="panel-body">
+            <form name="mantenimientoObservacionForm" role="form" #mantenimientoObservacionForm="ngForm">
+                <fieldset class="col-lg-12">
+                    <legend class="info">Mantenimiento de Observaciones</legend>
+
+                    <label class="col-lg-3 control-label no-padding-left">Observación:</label>
+                    <textarea id="observacion" name="observacion" class="form-control m-b" [(ngModel)]="_contratoKey.Observaciones" #observacion="ngModel"
+                        rows="6" minlength="10" maxlength="255" style="resize: none;" (input)="nuevaObservacion($event.target.value)"
+                        [disabled]="desabilitar">
+                    </textarea>
+
+                </fieldset>
+                <div class="col-lg-12 no-padding">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="guardarObservacion();" [disabled]="desabilitar">
+                        <i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

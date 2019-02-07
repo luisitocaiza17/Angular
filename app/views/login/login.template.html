@@ -1,0 +1,28 @@
+<div class="grid-block"  style="background-image: url('./assets/img/background_armonixLogin.png'); width: 100%; height: 100vh;">
+<div class="middle-box text-center loginscreen animated fadeInDown"  >
+    <div style="padding-top: 200px!important;"> 
+        <br/>
+        <div style="margin-bottom:15px">
+            <img width="300px" src="./assets/img/Logo_armonix_loading.png"/>
+        </div>
+        <br/>
+        <!--<h3>SALUDSA CONSULTAS</h3>-->
+        <p class="f-f-arial">Ingresar al Sistema</p>
+        <form name="loginForm" #loginForm="ngForm" (ngSubmit)="loginForm.valid && login()" class="m-t f-f-arial" role="form"  novalidate>
+            <div class="form-group">
+                <input type="text" class="form-control" id="userName" name="userName" placeholder="Usuario" required [(ngModel)]="usuario.NombreUsuario"
+                    #userName="ngModel">
+            </div>
+
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Clave" required [(ngModel)]="usuario.Contrasenia"
+                    #password="ngModel">
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">Ingresar</button>
+            <strong>Copyright</strong> Salud S.A. &copy; 2017
+        </form>
+        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+    </div>
+</div>
+
+</div>

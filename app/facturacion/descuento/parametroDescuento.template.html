@@ -1,0 +1,120 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-12">
+        <h2>Descuentos</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Parametro Descuento</li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-body no-padding">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    Parametro de Descuento
+                </h5>
+            </div>
+
+
+            <div class="ibox-content m-b">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <table class="table table-striped table-bordered table-hover dataTable colors ">
+                            <thead>
+                                <tr>
+                                    <th style="vertical-align: middle; text-align: center; color: #FFFFFF; background-color: #005BBB;">
+                                        Fecha Inicio
+                                    </th>
+                                    <th style="vertical-align: middle; text-align: center; color: #FFFFFF; background-color: #005BBB;">
+                                        Fecha Fin
+                                    </th>
+                                    <th style="vertical-align: middle; text-align: center; color: #FFFFFF; background-color: #005BBB;">
+                                        Porcentaje
+                                    </th>
+                                    <th style="vertical-align: middle; text-align: center; color: #FFFFFF; background-color: #005BBB;">
+                                        Tipo Producto
+                                    </th>
+                                    <th style="vertical-align: middle; text-align: center; color: #FFFFFF; background-color: #005BBB;">
+                                        <button class="btn btn-xs" title="Nuevo" (click)="crearParametroDescuento()">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let parametroDescuento of parametrosDescuentos" class="text-center" style="vertical-align: middle;">
+                                    <td class="col-xs-2">
+                                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaInicio"
+                                            name="fechaInicio" [(ngModel)]="parametroDescuento.FechaInicio"
+                                            #fechaInicio="ngModel" [datepicker]="datepickerOpts"></datetime>
+                                    </td>
+
+                                    <td class="col-xs-2">
+                                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaFin"
+                                            name="fechaFin" [(ngModel)]="parametroDescuento.FechaFin" #fechaFin="ngModel"
+                                            [datepicker]="datepickerOpts"></datetime>
+                                    </td>
+
+                                    <td class="col-xs-2">
+                                        <input type="text" class="form-control" id="porcentaje" name="porcentaje"
+                                            placeholder="Porcentaje" [(ngModel)]="parametroDescuento.Porcentaje"
+                                            #porcentaje="ngModel" maxlength="50" />
+                                    </td>
+
+                                    <td class="col-xs-2">
+                                        <input type="text" class="form-control" id="tipoProducto" name="tipoProducto"
+                                            placeholder="Tipo Producto" [(ngModel)]="parametroDescuento.TipoProducto"
+                                            #tipoProducto="ngModel" maxlength="50" />
+                                    </td>
+
+                                    <td class="col-xs-1">
+                                        <button class="btn btn-xs" title="Guardar" [disabled]="!parametroDescuento.Id && !parametroDescuento.FechaInicio && !parametroDescuento.FechaFin && !parametroDescuento.Porcentaje && !parametroDescuento.TipoProducto"
+                                            (click)="procesarParametroDescuento(parametroDescuento)">
+                                            <i class="fa fa-save"></i>
+                                        </button>
+                                        <button class="btn btn-xs" title="Eliminar" (click)="eliminarParametroDescuento(parametroDescuento)">
+                                            <i class="fa fa-close"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+
+            <div class="ibox-content m-b">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <form name="emitirNotasMasivasForm" role="form" #emitirNotasMasivasForm="ngForm">
+
+                            <fieldset class="col-lg-12">
+                                <div class="col-lg-6">
+                                    <input type="file" valid-file class="form-control m-b" required id="subirArchivo"
+                                        name="subirArchivo" (change)="uploadFileToActivity($event.target.files)">
+                                </div>
+                            </fieldset>
+
+
+                            <div class="col-md-2">
+                                <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="llamar();">
+                                    <i class="fa fa-save"></i> Generar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

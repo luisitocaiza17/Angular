@@ -1,0 +1,118 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">Modificar  Datos Corporativo</h5>
+            </div>
+            <div class="panel-body">
+                <form name="updateDatosCorporativo" role="form" #updateDatosCorporativo="ngForm">
+    
+                    <fieldset class="col-lg-12 m-b">
+                        <legend class="info">DATOS CORPORATIVO</legend>
+    
+                    </fieldset>
+    
+                    <fieldset class="col-lg-12">
+    
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">RUC:</label>
+                            <span class="col-lg-2">{{corporativokey.Ruc}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Razón Social:</label>
+                            <span class="col-lg-2">{{corporativokey.RazonSocial}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Grupo:</label>
+                            <span class="col-lg-2">{{corporativokey.Grupo}}</span>
+                    </fieldset>
+                   
+                    <fieldset class="col-lg-12 m-b">
+                        
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Tipo Sociedad:</label>
+                            <span class="col-lg-2">{{corporativokey.TipoSociedad}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Actividad:</label>
+                            <span class="col-lg-2">{{corporativokey.CodigoActividad}}</span>
+                            
+                     
+                    </fieldset>
+    
+    
+                    <fieldset class="col-lg-12 m-b">
+    
+                        <legend class="info">CAMBIAR DATOS CORPORATIVOS A</legend>
+    
+    
+                    </fieldset>
+    
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">RUC:</label>
+                        </div>
+                        <div class="m-b col-lg-2">
+                            <input type="text" [(ngModel)]="corporativofilter.Ruc" id="ruc" name="ruc" class="heigth25 form-control col-lg-12"/>
+                        </div>
+    
+    
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Razon Social:</label>
+                        </div>
+    
+                        <div class="m-b col-lg-2">
+                            <input type="text" style="text-transform: uppercase;" [(ngModel)]="corporativofilter.RazonSocial" id="RazonSocial" name="razonsocial" class="heigth25 form-control col-lg-12"
+                            #RazonSocial="ngModel" minlength="0" maxlength="100"/>
+                            <div [hidden]="RazonSocial.valid || RazonSocial.pristine" class="error">
+                                    <p *ngIf="RazonSocial.errors?.maxlength">Maximo 100 caracteres</p>
+                                </div>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Grupo:</label>
+                            </div>
+        
+                            <div class="m-b col-lg-2">
+                                    <select class="form-control" [(ngModel)]="corporativofilter.Grupo" name="NumeroGrupo" class="form-control" #NumeroGrupo="ngModel">
+                                            <option [value]="undefined" selected>Seleccione grupo</option>
+                                            <option *ngFor="let r of grupos" [value]="r.Numero">{{r.Nombre}}</option>
+                                        </select>
+                            </div>
+                            
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Tipo Sociedad:</label>
+                            </div>
+                            <div class="m-b col-lg-2">
+                                    <select class="form-control" [(ngModel)]="corporativofilter.TipoSociedad" name="CodigoActividad" class="form-control"
+                                    #CodigoActividad="ngModel">
+                                    <option [value]="undefined" selected>Seleccione el tipo de sociedad</option>
+                                    <option *ngFor="let r of sociedades" [value]="r.Codigo">{{r.Nombre}}</option>
+                                </select>
+                            </div>
+                            
+        
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Actividad:</label>
+                            </div>
+        
+                            <div class="m-b col-lg-2">
+                                    <select class="form-control" [(ngModel)]="corporativofilter.CodigoActividad" name="CodigoActividad" class="form-control"
+                                    #CodigoActividad="ngModel">
+                                    <option [value]="undefined" selected>Seleccione la actividad</option>
+                                    <option *ngFor="let r of actividades" [value]="r.Codigo">{{r.Nombre}}</option>
+                                </select>
+                                
+                            </div>
+                            
+                        </fieldset>
+
+
+    
+                    
+    
+                    <div class="col-lg-12 m-t-md">
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="guardarCambios();">
+                            <i class="fa fa-save"></i>Guardar</button>
+                    </div>
+    
+                </form>
+    
+            </div>
+    
+        </div>
+    </div>

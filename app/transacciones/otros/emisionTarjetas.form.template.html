@@ -1,0 +1,282 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">TARJETA ADICIONAL</h5>
+        </div>
+        <div class="panel-body">
+            <form name="tarjetaAdicionalSinCostoForm" role="form" #tarjetaAdicionalSinCostoForm="ngForm">
+
+                <div class="col-lg-12  m-t-sm m-b-sm" *ngIf="desabilitar">
+                    <button class="btn btn-w-m btn-success btn-sm col-lg-3 m-b">
+                        <i class="fa fa-list-alt"></i> Emisión de Tarjetas</button>
+                    <button class="btn btn-w-m btn-success btn-sm col-lg-3 m-b" (click)="reversoTarjeta();" id="reversoTarjetasTab" data-toggle="tab"
+                        href="#reversoTarjetas" role="tab">
+                                    <i class="fa fa-list-alt"></i> Reverso de Tarjetas</button>
+                </div>
+                <div class="col-lg-12  m-t-sm m-b-sm" *ngIf="!desabilitar">
+                    <button class="btn btn-w-m btn-success btn-sm col-lg-3 m-b" (click)="emisionTarjeta();" id="emisionTarjetasTab" data-toggle="tab"
+                        href="#emisionTarjetas" role="tab">
+                                    <i class="fa fa-list-alt"></i> Emisión de Tarjetas</button>
+                    <button class="btn btn-w-m btn-success btn-sm col-lg-3 m-b">
+                                    <i class="fa fa-list-alt"></i> Reverso de Tarjetas</button>
+                </div>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="emisionTarjetas" role="tabpanel">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Tipo de Tarjeta:</label>
+                        </div>
+
+                        <div class="m-b col-lg-4">
+                            <select required class="form-select-control m-b" name="slcCostoTarjeta" [(ngModel)]="_contratoKey.CostoTarjeta" #slcCostoTarjeta="ngModel"
+                                (change)="costoTarjeta();">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option [ngValue]="0">Sin Costo</option>
+                                <option [ngValue]="1">Con Costo</option>
+                            </select>
+                            <div [hidden]="slcCostoTarjeta.valid" class="error">
+                                <p *ngIf="slcCostoTarjeta.errors?.required">Seleccione un tipo de tarjeta</p>
+                            </div>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Motivo:</label>
+                        </div>
+
+                        <div class="m-b col-lg-4">
+                            <select required class="form-select-control m-b" name="slcMotivo" [(ngModel)]="_contratoKey.Motivo" #slcMotivo="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">Error en la tarjeta por digitación</option>
+                            <option [ngValue]="2">Error en la tarjeta por impresión</option>
+                            <option [ngValue]="3">No recibió el cliente</option>
+                            <option [ngValue]="999">Tarjeta deteriorada</option>
+                            <option [ngValue]="999">Por resarcimiento al cliente</option>
+                        </select>
+                            <div [hidden]="slcMotivo.valid" class="error">
+                                <p *ngIf="slcMotivo.errors?.required">Seleccione un Motivo</p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 m-b">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">Listado de Beneficiarios</h5>
+                                </div>
+                                <div class="panel-body panelDatos">
+                                    <div class="dataTables_info">{{transaccionService.paginationConstants.EncabezadoTabla}}</div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover dataTable">
+                                            <thead>
+                                                <tr>
+                                                    <th class="centerMiddle">Número Persona</th>
+                                                    <th class="centerMiddle">Apellidos</th>
+                                                    <th class="centerMiddle">Nombres</th>
+                                                    <th class="centerMiddle">Titular</th>
+                                                    <th class="centerMiddle">Relación</th>
+                                                    <th class="centerMiddle">Código Relación</th>
+                                                    <th class="centerMiddle">Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="no-borders selectableBodyTable" *ngFor="let beneficiario of benficiarios | paginate: {id : 'maternidadTable', itemsPerPage: transaccionService.paginationConstants.pageSize,currentPage: transaccionService.paginationConstants.pageNumber, totalItems: transaccionService.paginationConstants.total};">
+                                                <tr title="{{!beneficiario.Selected ? 'Click para seleccionar' : ''}}" (click)="!beneficiario.Selected ? seleccionar(beneficiario, true) : return;"
+                                                    [class.active]="beneficiario.Selected">
+                                                    <td>{{beneficiario.NumeroPersona}}</td>
+                                                    <td>{{beneficiario.Apellidos}}</td>
+                                                    <td>{{beneficiario.Nombres}}</td>
+                                                    <td>{{beneficiario.Titular}}</td>
+                                                    <td>{{beneficiario.NombreRelacion}}</td>
+                                                    <td>{{beneficiario.CodigoRelacion}}</td>
+                                                    <td>{{beneficiario.NombreEstado}}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot *ngIf="transaccionService.paginationConstants.total == 0">
+                                                <tr>
+                                                    <td colspan="10" style="text-align: center;">No existen resultados</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <pagination-controls id="maternidadTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="transaccionService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 m-b">
+                            <button class="btn btn-w-m btn-success btn-sm" data-toggle="modal" data-target="#myModal" [disabled]="!tarjetaAdicionalSinCostoForm.valid">
+                                <i class="fa fa-hand-o-down"></i> Agregar
+                            </button>
+                        </div>
+                        <div class="col-lg-6 m-b">
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="quitarBeneficiario();">
+                                <i class="fa fa-hand-o-up"></i> Quitar
+                            </button>
+                        </div>
+
+                        <div class="col-lg-12 m-b">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">Tarjetas Adicionales a Registrar</h5>
+                                </div>
+                                <div class="panel-body panelDatos">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover dataTable">
+                                            <thead>
+                                                <tr>
+                                                    <th class="centerMiddle">Región</th>
+                                                    <th class="centerMiddle">Producto</th>
+                                                    <th class="centerMiddle">Número de Contrato</th>
+                                                    <th class="centerMiddle">Número Persona</th>
+                                                    <th class="centerMiddle">Apellidos</th>
+                                                    <th class="centerMiddle">Nombres</th>
+                                                    <th class="centerMiddle">Titular</th>
+                                                    <th class="centerMiddle">Relación</th>
+                                                    <th class="centerMiddle">Código Relación</th>
+                                                    <th class="centerMiddle">Estado</th>
+                                                    <th class="centerMiddle">Tarjeta Solicitada</th>
+                                                    <th class="centerMiddle">Valor Tarjeta</th>
+                                                    <th class="centerMiddle">Valor Recargo</th>
+                                                    <th class="centerMiddle">Hora Creación</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="no-borders selectableTarjetaBodyTable" *ngFor="let beneficiarioTarjeta of beneficiariosTarjeta">
+                                                <tr title="{{!beneficiarioTarjeta.Selected ? 'Click para seleccionarBeneficiarioTarjeta' : ''}}" (click)="!beneficiarioTarjeta.Selected ? seleccionarBeneficiarioTarjeta(beneficiarioTarjeta, true) : return;"
+                                                    [class.active]="beneficiarioTarjeta.Selected">
+                                                    <td>{{beneficiarioTarjeta.Region}}</td>
+                                                    <td>{{beneficiarioTarjeta.CodigoProducto}}</td>
+                                                    <td>{{beneficiarioTarjeta.NumeroContrato}}</td>
+                                                    <td>{{beneficiarioTarjeta.NumeroPersona}}</td>
+                                                    <td>{{beneficiarioTarjeta.Apellidos}}</td>
+                                                    <td>{{beneficiarioTarjeta.Nombres}}</td>
+                                                    <td>{{beneficiarioTarjeta.Titular}}</td>
+                                                    <td>{{beneficiarioTarjeta.NombreRelacion}}</td>
+                                                    <td>{{beneficiarioTarjeta.CodigoRelacion}}</td>
+                                                    <td>{{beneficiarioTarjeta.NombreEstado}}</td>
+                                                    <td>{{beneficiarioTarjeta.TarjetaSolicitada}}</td>
+                                                    <td>{{beneficiarioTarjeta.ValorTarjeta}}</td>
+                                                    <td>{{beneficiarioTarjeta.ValorRecargo}}</td>
+                                                    <td>{{beneficiarioTarjeta.HoraCreacion}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-lg-6 m-t-md">
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="guardar();">
+                                <i class="fa fa-save"></i> Guardar
+                            </button>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal inmodal fade" id="myModal" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h5 class="panel-title">Desea registrar una nueva tarjeta adicional??</h5>
+                                        </div>
+                                        <div class="panel-body no-padding m-t-sm">
+                                            <div class="col-md-12 no-padding m-b-md">
+
+                                                <div class="m-b col-lg-4">
+                                                    <label class="control-label no-padding-left">Persona Número</label>
+                                                </div>
+
+                                                <div class="m-b col-lg-8">
+                                                    <p> {{this.benficiariosSelected.NumeroPersona}}</p>
+                                                </div>
+
+                                                <div class="m-b col-lg-4">
+                                                    <label class="control-label no-padding-left">Nombres Persona</label>
+                                                </div>
+
+                                                <div class="m-b col-lg-8">
+                                                    <p> {{this.benficiariosSelected.NombresApellidos}}</p>
+                                                </div>
+
+                                                <div class="m-b col-lg-4">
+                                                    <label class="control-label no-padding-left">Seleccione una Tarjeta:</label>
+                                                </div>
+
+                                                <div class="m-b col-lg-8">
+                                                    <select class="form-select-control m-b" name="slcTipoTarjeta" [(ngModel)]="_contratoKey.TipoTarjeta" #slcTipoTarjeta="ngModel"
+                                                        (change)="validar();">
+                                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                                        <option [ngValue]="1">Tarjeta Salud (L:Logicard)</option>
+                                                        <option [ngValue]="2">Tarjeta Fibeca (V:Vitalcard)</option>
+                                                        <option [ngValue]="3">Ambas (Tarjeta Salud y Tarjeta Fibeca)</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-lg-6 m-t-md">
+                                                    <button class="btn btn-w-m btn-success btn-sm" data-dismiss="modal" [disabled]="habilitar" (click)="agregarBeneficiario();">
+                                                        Aceptar
+                                                    </button>
+                                                </div>
+                                                <div class="col-lg-6 m-t-md">
+                                                    <button class="btn btn-w-m btn-success btn-sm" data-dismiss="modal">
+                                                        Cancelar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="reversoTarjetas" role="tabpanel">
+                        <div class="m-b col-lg-12">
+                            <div class="col-lg-12 m-b">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <h5 class="panel-title">Solicitudes de Tarjetas Adicionales para Hoy</h5>
+                                    </div>
+                                    <div class="panel-body panelDatos">
+                                        <div class="dataTables_info">{{transaccionService.paginationConstants.EncabezadoTabla}}</div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="centerMiddle">Tarjeta</th>
+                                                        <th class="centerMiddle">Persona Numero</th>
+                                                        <th class="centerMiddle">Persona</th>
+                                                        <th class="centerMiddle">Fecha Movimiento</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="no-borders selectableBodyTable" *ngFor="let movimiento of movimientos | paginate: {id : 'movimientosTable', itemsPerPage: transaccionService.paginationConstants.pageSize,currentPage: transaccionService.paginationConstants.pageNumber, totalItems: transaccionService.paginationConstants.total};">
+                                                    <tr title="{{!movimiento.Selected ? 'Click para seleccionar' : ''}}" (click)="!movimiento.Selected ? seleccionarMovimiento(movimiento, true) : return;"
+                                                        [class.active]="movimiento.Selected">
+                                                        <td>{{movimiento.DatoAnterior}}</td>
+                                                        <td>{{movimiento.PersonaNumero}}</td>
+                                                        <td>{{movimiento.Persona}}</td>
+                                                        <td>{{movimiento.FechaMovimiento}}</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot *ngIf="transaccionService.paginationConstants.total == 0">
+                                                    <tr>
+                                                        <td colspan="10" style="text-align: center;">No existen resultados</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                        <pagination-controls id="movimientosTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="transaccionService.paginationConstants.pageNumber=$event;pageMovimientosChanged();"></pagination-controls>
+                                        <div class="col-lg-6 m-t-md">
+                                            <button class="btn btn-w-m btn-success btn-sm" (click)="reversarTarjeta();">
+                                                    Aceptar
+                                                </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

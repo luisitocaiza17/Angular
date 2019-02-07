@@ -1,0 +1,126 @@
+<div class="col-md-12 no-padding">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body no-padding">
+                <fieldset>
+                    <legend class="info">Datos Contrato</legend>
+                    <div class="col-md-12 no-padding alignCenter">
+                        <label class="col-md-12 no-padding m-t-sm" style="color: #ff0000">{{msgCambioPlan}}</label>
+                    </div>
+                    <div class="col-md-12 no-padding m-t-sm">
+                        <label class="col-md-2">Número Contrato:</label>
+                        <span class="col-md-4">{{autorizacion.ContratoNumero}}</span>
+                        <label class="col-md-2">Código Plan:</label>
+                        <span class="col-md-4">{{autorizacion.CodigoPlan}}</span>
+
+                        <label class="col-md-2 clearInfo">Código Región:</label>
+                        <span class="col-md-4">{{autorizacion.Region}}</span>
+                        <label class="col-md-2">Vigencia:</label>
+                        <span class="col-md-4">{{autorizacion.FechaVigencia}}</span>
+
+                        <label class="col-md-2 clearInfo">Código Producto:</label>
+                        <span class="col-md-4">{{autorizacion.CodigoProducto}}</span>
+                        <label class="col-md-2">Nivel Referencia:</label>
+                        <span class="col-md-4">{{autorizacion.NivelReferencia}}</span>
+
+                        <label class="col-md-2 clearInfo">Nombre Empresa:</label>
+                        <span class="col-md-4">{{autorizacion.NombreEmpresa}}</span>
+                        <label class="col-md-2">Cliente Impago:</label>
+                        <span class="col-md-4">{{autorizacion.ClienteImpago ? 'Si' : 'No'}}</span>
+
+                        <label class="col-md-2 clearInfo">Número Sucursal:</label>
+                        <span class="col-md-4">{{autorizacion.SucursalEmpresa}}</span>
+                        <label class="col-md-2">Cero Trámites:</label>
+                        <span class="col-md-4">{{autorizacion.CeroTramites}}</span>
+
+                        <label class="col-md-2 clearInfo">Tarjeta:</label>
+                        <span class="col-md-4">{{autorizacion.Garantia ? 'SG' : 'NG'}}</span>
+
+                        <label class="col-md-2 clearInfo">Observaciones:</label>
+                        <div class="col-md-10">{{autorizacion.ObservacionesContrato}}</div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend class="info">Datos Beneficiario</legend>
+                    <div class="col-md-12 no-padding">
+                        <div class="col-md-12 no-padding m-b-xs">
+                            <div class="col-md-6 no-padding">
+                                <label class="col-lg-4 control-label" for="slcBeneficiario">Beneficiario:</label>
+                                <div class="col-lg-8" *ngIf="showSelectBeneficiario">
+                                    <select required class="form-select-control heigth25" id="slcBeneficiario" name="slcBeneficiario" [(ngModel)]="autorizacion.PersonaNumero"
+                                        #slcBeneficiario="ngModel" (ngModelChange)="onChangeSelection($event)">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let beneficiario of beneficiarios" [value]="beneficiario.NumeroPersona">{{beneficiario.NombreCompleto}}</option>
+                                </select>
+                                    <div [hidden]="slcBeneficiario.valid" class="error">
+                                        <p *ngIf="slcBeneficiario.errors?.required">Campo Requerido</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8" *ngIf="!showSelectBeneficiario">
+                                    <span>{{autorizacion.NombreBeneficiario}}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 no-padding">
+                                <div class="col-md-4 no-padding clearInfo">
+                                    <label class="col-md-7">Estado:</label>
+                                    <span class="col-md-5">{{autorizacion.EstadoPersona}}</span>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <label class="col-md-2">Sexo:</label>
+                                    <span class="col-md-5">{{autorizacion.GeneroPersona}}</span>
+                                    <label class="col-md-2">Edad:</label>
+                                    <span class="col-md-3" style="color: #ff0000;">{{autorizacion.EdadPersona}}</span>
+                                </div>
+
+                                <div class="col-md-4 no-padding clearInfo">
+                                    <label class="col-md-7 clearInfo">Cupo:</label>
+                                    <span class="col-md-5">{{autorizacion.CupoPersona}}</span>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <label class="col-md-7">Historia Clínica:</label>
+                                    <span class="col-md-5">{{autorizacion.NumeroHistoriaPersona}}</span>
+                                </div>
+
+                                <div class="col-md-4 no-padding clearInfo">
+                                    <label class="col-md-7 linkText">Exclusiones:</label>
+                                    <span class="col-md-5">{{autorizacion.CantidadExclusiones}} 
+                                    <a data-toggle="modal" data-target="#exclusionesBeneficiarioModal" (click)="createExclusionesFilter()"
+                                        [class.disabled]="(autorizacion.PersonaNumero==undefined || autorizacion.CantidadExclusiones==0) ? true : false">
+                                        <i class="fa fa-binoculars" aria-hidden="true"></i></a>
+                                </span>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <label class="col-md-7 linkText">Autorizaciones:</label>
+                                    <span class="col-md-5">{{autorizacion.CantidadAutorizaciones}}  
+                                    <a data-toggle="modal" data-target="#autorizacionesBeneficiarioModal" (click)="createAutorizacionesFilter()"
+                                        [class.disabled]="(autorizacion.PersonaNumero==undefined || autorizacion.CantidadAutorizaciones==0) ? true : false">
+                                        <i class="fa fa-binoculars" aria-hidden="true"></i></a>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Exclusiones -->
+<div class="modal inmodal fade" id="exclusionesBeneficiarioModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <exclusiones [filter]="exclusionFilter"></exclusiones>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Autorizaciones -->
+<div class="modal inmodal fade" id="autorizacionesBeneficiarioModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <autorizaciones [filter]="autorizacionFilter"></autorizaciones>
+        </div>
+    </div>
+</div>

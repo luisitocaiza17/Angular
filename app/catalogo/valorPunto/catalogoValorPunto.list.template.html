@@ -1,0 +1,351 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Catálogos</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Catálogos</li>
+            <li class="breadcrumb-item active">Valores de Punto Por Procedimiento</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-body no-padding">
+            <div class="panel-heading" (click)="colapsarTab()">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+
+                    <div id="divResultadoBusquedaPuntosValor" class="ibox-content" style="border-width:1px 0px 0px 0px;">
+                        <form #catalogoValorPuntoForm="ngForm">
+                            <div class="form-group">
+                                <label class="col-lg-1 control-label" for="codigo">Código:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="text" placeholder="Código Procedimiento" id="codigo" name="codigo" [(ngModel)]="filter.CodigoHarvard" class="form-control"
+                                        #codigo="ngModel" />
+                                </div>
+
+                                <label class="col-lg-1 control-label" for="nombre">Nombre:</label>
+                                <div class="m-b col-lg-3">
+                                    <input type="text" placeholder="Nombre Procedimiento" id="nombre" name="nombre" [(ngModel)]="filter.Nombre" class="form-control"
+                                        #nombre="ngModel" />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="buscar();">
+                                    <i class="fa fa-search"></i> Buscar
+                                </button>
+                                <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">Limpiar</a>
+                                <button *ngIf="accessEditValorPunto" class="btn btn-w-m btn-success btn-sm" type="button" (click)="inicializarPanelNuevoPuntoValor();">
+                                    <i class="fa fa-plus"></i> Nuevo
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="ibox-content" id="resultadosBusqProcValordePuntos" style="border-width:1px 0px 0px 0px;">
+                    <div id="divListaProcedimientos" class="no-padding">
+                        <div class="dataTables_info">{{paginationConstants.EncabezadoTabla}}</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th class="centerMiddle">Código Harvard</th>
+                                        <th class="centerMiddle">Beneficio</th>
+                                        <th class="centerMiddle">Nombre</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="no-borders selectableBodyTable">
+                                    <tr title="{{!p.Selected ? 'Click para seleccionar' : ''}}" (click)="!p.Selected ? seleccionar(p) : return;" [class.active]="p.Selected"
+                                        *ngFor="let p of procedimientos | paginate: { itemsPerPage: paginationConstants.pageSize,currentPage: paginationConstants.pageNumber, totalItems: paginationConstants.total} ; let i = index">
+                                        <td class="centerMiddle">{{p.CodigoHarvard}}</td>
+                                        <td>{{p.Beneficio}}</td>
+                                        <td>{{p.NombreProcedimiento}}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot *ngIf="paginationConstants.total == 0">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center;">No existen resultados</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <pagination-controls maxSize="5" previousLabel="" nextLabel="" autoHide="true" (pageChange)="paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 m-t-md no-padding">
+                    <ul class="nav nav-tabs nestedTabs" role="tablist">
+                        <li class="nav-item nestedTab active">
+                            <a class="nav-link active" id="individualTab" data-toggle="tab" href="#individual" role="tab">Individual</a>
+                        </li>
+                        <li class="nav-item nestedTab">
+                            <a class="nav-link" id="corporativoTab" data-toggle="tab" href="#corporativo" role="tab">Corporativo</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content nestedTabs">
+                        <div class="tab-pane active" id="individual" role="tabpanel">
+                            <div class="panel panel-default">
+                                <div class="ibox-content" id="valoresPunto" style="border-width:1px 0px 0px 0px;">
+
+                                    <div id="divValoresPuntoIndividual">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body no-padding">
+                                                <div class="col-lg-12 no-padding m-t-sm">
+                                                    <div class="col-lg-12 no-padding m-b-sm">
+                                                        <label class="col-lg-2 control-label">Procedimiento:</label>
+                                                        <p class="col-lg-4">{{procedimientoSelected.NombreProcedimiento}}</p>
+                                                        <label class="col-lg-1 control-label">Código:</label>
+                                                        <span class="col-lg-1">{{procedimientoSelected.CodigoHarvard}}</span>
+                                                        <label class="col-lg-1 control-label">Beneficio:</label>
+                                                        <span class="col-lg-3">{{procedimientoSelected.Beneficio}}</span>
+                                                    </div>
+
+                                                    <label class="col-lg-2 clearInfo control-label">Grupo Arancel:</label>
+                                                    <p class="col-lg-4">{{procedimientoSelected.DescripcionGrupoArancel}}</p>
+                                                    <label class="col-lg-3 control-label">Fecha de Incurrencia:</label>
+                                                    <datetime required class="heigth25 col-lg-3" name="fechaIncurrencia" [timepicker]="false" id="fechaIncurrencia" [(ngModel)]="valorPuntoFilter.FechaIncurrencia"
+                                                        [datepicker]="datepickerOpts" (ngModelChange)="cargarValoresPunto()"></datetime>
+                                                </div>
+                                                <div class="col-lg-12 m-t-sm">
+                                                    <div class="panel panel-success">
+                                                        <div class="panel-heading">
+                                                            <h5 style="margin-top:0!important" class="panel-title centerMiddle">VALORES POR PUNTO INDIVIDUAL</h5>
+                                                        </div>
+                                                        <div class="panel-body panelDatos no-padding">
+                                                            <div class="table-responsive">
+                                                                <table style="margin-bottom: 0px" class="table table-striped table-bordered table-hover dataTable">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="centerMiddle" *ngIf="accessEditValorPunto">Sel</th>
+                                                                            <th class="centerMiddle">Nivel</th>
+                                                                            <th class="centerMiddle">Valor Punto</th>
+                                                                            <th class="centerMiddle">Puntos Harvard</th>
+                                                                            <th class="centerMiddle">Valor Harvard</th>
+                                                                            <th class="centerMiddle">Puntos McGraw</th>
+                                                                            <th class="centerMiddle">Valor McGraw</th>
+                                                                            <th class="centerMiddle">Puntos Salud</th>
+                                                                            <th class="centerMiddle">Valor Salud</th>
+                                                                            <th class="centerMiddle">Inicio Vigencia</th>
+                                                                            <th class="centerMiddle">Fin Vigencia</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="no-borders">
+                                                                        <tr *ngFor="let vp of valoresPunto">
+                                                                            <td *ngIf="accessEditValorPunto" class="centerMiddle clickableColumn">
+                                                                                <i class="fa fa-pencil-square-o" (click)="abrirModalEditar(vp, 1)"></i>
+                                                                            </td>
+                                                                            <td class="tableTdPadding4 centerMiddle">{{vp.Nivel}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{vp.Valor}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{procedimientoSelected.PuntosHarvard | number
+                                                                                : '1.2-2'}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{(vp.Valor * procedimientoSelected.PuntosHarvard)
+                                                                                | number : '1.2-2'}}
+                                                                            </td>
+                                                                            <td class="tableTdPadding4 alignR">{{procedimientoSelected.PuntosMcGraw | number
+                                                                                : '1.2-2'}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{(vp.Valor * procedimientoSelected.PuntosMcGraw)
+                                                                                | number : '1.2-2'}}
+                                                                            </td>
+                                                                            <td class="tableTdPadding4 alignR">{{procedimientoSelected.Puntaje | number : '1.2-2'}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{(vp.Valor * procedimientoSelected.Puntaje)
+                                                                                | number : '1.2-2'}}</td>
+                                                                            <td class="tableTdPadding4 align">{{vp.FechaDesde | date: 'dd/MM/yyyy'}}</td>
+                                                                            <td class="tableTdPadding4 align">{{vp.FechaHasta | date: 'dd/MM/yyyy'}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane" id="corporativo" role="tabpanel">
+                            <div class="panel panel-default">
+                                <div class="ibox-content" id="valoresPuntoCoorpoativo" style="border-width:1px 0px 0px 0px;">
+
+                                    <div id="divValoresPuntoCorporativo">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body no-padding">
+                                                <div class="col-lg-12 no-padding m-t-sm">
+                                                    <div class="col-lg-12 no-padding m-b-sm">
+                                                        <label class="col-lg-2 control-label">Procedimiento:</label>
+                                                        <p class="col-lg-4">{{procedimientoSelected.NombreProcedimiento}}</p>
+                                                        <label class="col-lg-1 control-label">Código:</label>
+                                                        <span class="col-lg-1">{{procedimientoSelected.CodigoHarvard}}</span>
+                                                        <label class="col-lg-1 control-label">Beneficio:</label>
+                                                        <span class="col-lg-3">{{procedimientoSelected.Beneficio}}</span>
+                                                    </div>
+
+                                                    <label class="col-lg-2 clearInfo control-label">Grupo Arancel:</label>
+                                                    <p class="col-lg-4">{{procedimientoSelected.DescripcionGrupoArancel}}</p>
+                                                    <label class="col-lg-3 control-label">Fecha de Incurrencia:</label>
+                                                    <datetime required class="heigth25 col-lg-3" name="fechaIncurrencia" [timepicker]="false" id="fechaIncurrencia" [(ngModel)]="valorPuntoFilter.FechaIncurrencia"
+                                                        [datepicker]="datepickerOpts" (ngModelChange)="cargarValoresPunto()"></datetime>
+                                                </div>
+                                                <div class="col-lg-12 m-t-sm">
+                                                    <div class="panel panel-success">
+                                                        <div class="panel-heading">
+                                                            <h5 style="margin-top:0!important" class="panel-title centerMiddle">VALORES POR PUNTO CORPORATIVO</h5>
+                                                        </div>
+                                                        <div class="panel-body panelDatos no-padding">
+                                                            <div class="table-responsive">
+                                                                <table style="margin-bottom: 0px" class="table table-striped table-bordered table-hover dataTable">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="centerMiddle" *ngIf="accessEditValorPunto">Sel</th>
+                                                                            <th class="centerMiddle">Nivel</th>
+                                                                            <th class="centerMiddle">Valor Punto</th>
+                                                                            <th class="centerMiddle">Puntos Harvard</th>
+                                                                            <th class="centerMiddle">Valor Harvard</th>
+                                                                            <th class="centerMiddle">Puntos McGraw</th>
+                                                                            <th class="centerMiddle">Valor McGraw</th>
+                                                                            <th class="centerMiddle">Puntos Salud</th>
+                                                                            <th class="centerMiddle">Valor Salud</th>
+                                                                            <th class="centerMiddle">Inicio Vigencia</th>
+                                                                            <th class="centerMiddle">Fin Vigencia</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="no-borders">
+                                                                        <tr *ngFor="let vpc of valoresPuntoCorporativo">
+                                                                            <td *ngIf="accessEditValorPunto" class="centerMiddle clickableColumn">
+                                                                                <i class="fa fa-pencil-square-o" (click)="abrirModalEditar(vpc, 2)"></i>
+                                                                            </td>
+                                                                            <td class="tableTdPadding4 centerMiddle">{{vpc.Nivel}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{vpc.Valor}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{procedimientoSelected.PuntosHarvard | number
+                                                                                : '1.2-2'}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{(vpc.Valor * procedimientoSelected.PuntosHarvard)
+                                                                                | number : '1.2-2'}}
+                                                                            </td>
+                                                                            <td class="tableTdPadding4 alignR">{{procedimientoSelected.PuntosMcGraw | number
+                                                                                : '1.2-2'}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{(vpc.Valor * procedimientoSelected.PuntosMcGraw)
+                                                                                | number : '1.2-2'}}
+                                                                            </td>
+                                                                            <td class="tableTdPadding4 alignR">{{procedimientoSelected.Puntaje | number : '1.2-2'}}</td>
+                                                                            <td class="tableTdPadding4 alignR">{{(vpc.Valor * procedimientoSelected.Puntaje)
+                                                                                | number : '1.2-2'}}</td>
+                                                                            <td class="tableTdPadding4 align">{{vpc.FechaDesde | date: 'dd/MM/yyyy'}}</td>
+                                                                            <td class="tableTdPadding4 align">{{vpc.FechaHasta | date: 'dd/MM/yyyy'}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="" *ngIf="isNuevoPuntoValor">
+                <div id="divPanelAgregarPV" class="panel-collapse collapse">
+                    <div class="panel-body" style="padding-top:0px">
+                        <div id="panelSobres">
+                            <div class="row">
+                                <div class="col-lg-12 no-padding">
+                                    <agregarPuntoValorForm></agregarPuntoValorForm>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal fade" id="myModadEditValorPunto" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 *ngIf="tipoValor ==1" class="panel-title">Actualizar Individual</h5>
+                    <h5 *ngIf="tipoValor ==2" class="panel-title">Actualizar Corporativo</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="col-lg-12 no-padding">
+                        <legend class="info">DATOS GENERALES</legend>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label">Nivel:</label>
+                        </div>
+
+                        <div class="m-b col-lg-4">
+                            <input type="number" placeholder="Nivel" id="nivel" name="nivel" [(ngModel)]="valorPuntoSeleccionado.Nivel" class="form-control"
+                                #nombre="ngModel" [disabled]="true" />
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label">Valor:</label>
+                        </div>
+
+                        <div class="m-b col-lg-4">
+                            <input type="number" placeholder="Valor" id="valor" name="valor" [(ngModel)]="valorPuntoSeleccionado.Valor" class="form-control"
+                                #nombre="ngModel" />
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label">Fecha Inicio Vigencia:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <datetime class="heigth25 col-lg-12 no-padding" [readonly]="true" enableOnReadonly="false" [timepicker]="false" id="fechaInicio"
+                                name="fechaInicio" [(ngModel)]="valorPuntoSeleccionado.FechaDesde" [datepicker]="datepickerOpts"></datetime>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label">Fecha Fin Vigencia:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaFin" name="fechaFin" [(ngModel)]="valorPuntoSeleccionado.FechaHasta"
+                                [datepicker]="datepickerOpts"></datetime>
+                        </div>
+
+
+                        <div class="col-lg-12 no-padding">
+                            <button *ngIf="tipoValor ==1" class="btn btn-w-m btn-success btn-sm" (click)="actualizarValorPuntoIndividual();">
+                                <i class="fa fa-sign-out"></i>Actualizar</button>
+                            <button *ngIf="tipoValor ==2" class="btn btn-w-m btn-success btn-sm" (click)="actualizarValorPuntoCorporativo();">
+                                <i class="fa fa-sign-out"></i>Actualizar</button>
+
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="salirModalEditar();">
+                                <i class="fa fa-sign-out"></i>Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,326 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-12">
+        <h2>Retención</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Retención</li>
+            <li class="breadcrumb-item">
+                <a>Califica la gestión</a>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title" (click)="regresar()">
+                    <a>
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+                    <form class="ibox-content" name="calificacionForm" role="form" #calificacionForm="ngForm">
+                        <fieldset class="col-lg-12">
+                            <legend class="info">Calificación</legend>
+
+                            <div class="col-md-6  m-b">
+                                <label class="text-primary">Califica la gestión:</label>
+                                <br>
+                                <select required class="form-control form-select-control" name="idDesicionCliente" id="idDesicionCliente" [(ngModel)]="setComentario.IdDesicionCliente"
+                                    #IdDesicionCliente="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let item of ListaDesicionCliente" [value]="item.Id">{{ item.Detalle}}</option>
+                                </select>
+                                <div [hidden]="IdDesicionCliente.valid" class="error">
+                                    <p *ngIf="IdDesicionCliente.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6  m-b">
+                                <label class="text-primary">Califica la contactibilidad:</label>
+                                <br>
+                                <select required class="form-control form-select-control" name="idContactabilidad" id="idContactabilidad" [(ngModel)]="setComentario.IdContactabilidad"
+                                    #IdContactabilidad="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let item of ListaContactabilidad" [value]="item.Id">{{ item.Detalle}}</option>
+                                </select>
+                                <div [hidden]="IdContactabilidad.valid" class="error">
+                                    <p *ngIf="IdContactabilidad.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- <fieldset class="col-lg-12">
+                            <div class="col-md-6 m-b">
+                                <label class="text-primary">% Descuento:</label>
+                                <br>
+                                <div class="m-b col-xs-12">
+                                    <div class="col-md-12 no-padding" *ngIf="setComentario.DetalleExpecion!=undefined">
+                                        {{setComentario.DetalleExpecion}}
+                                    </div>
+                                    <a data-toggle="modal" data-target="#myModalExcepciones" *ngIf="descuentoPendiente.length == 0">
+                                        <i class="fa fa-search">{{setComentario.DetalleExpecion==undefined ? 'Seleccionar' : 'Cambiar'}}</i>
+                                    </a>                                
+                                    <a data-toggle="modal" data-target="#myModalDescuentos" *ngIf="descuentoPendiente.length > 0">
+                                            <i class="fa fa-search">Ver detalle...</i>
+                                        </a>  
+                                    <div [hidden]="setComentario.DetalleExpecion!=undefined" class="error">
+                                        <p>Seleccione</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 m-b">
+                                <label class="text-primary">Valor de Excepción:</label>
+                                <br>
+                                <input type="number" id="valorExcepcion" 
+                                    name="valorExcepcion" class="form-control" 
+                                    [(ngModel)]="setComentario.ValorExcepcion"/>
+                            </div>
+                        </fieldset> -->
+
+                        <fieldset class="col-lg-12">
+                            <div class="col-md-6 m-b">
+                                <label class="text-primary">Oficina:</label>
+                                <br>
+                                <select required class="form-control form-select-control m-b" name="idOficina" id="idOficina" 
+                                    [(ngModel)]="setComentario.IdOficina" #IdOficina="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let item of listaOficinas" [value]="item.Id">{{ item.Valor}}</option>
+                                </select>
+                                <div [hidden]="IdOficina.valid" class="error">
+                                    <p *ngIf="IdOficina.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="col-lg-12 m-b">
+                            <legend class="info">Agregue un Comentario</legend>
+                            <textarea rows="5" placeholder="Ingrese un comentario" id="comentario" name="comentario" class="form-control"
+                                    [(ngModel)]="txtComentario"
+                                style="resize: none;">
+                                </textarea>
+                        </fieldset>
+
+                        <div class="row">
+                            <div class="col-lg-12 m-t-md">
+                                <button class="btn btn-w-m btn-success btn-sm"  (click)="enviar()" [disabled]="!calificacionForm.form.valid">
+                                    <i class="fa fa-save"></i> Guardar Cambios
+                                </button>
+                            </div>                            
+                        </div>     
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal fade" id="myModalDescuentos" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Descuentos a aplicar</h5>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-responsive table-hover dataTable">
+                        <thead>    
+                            <tr>
+                                <th style="vertical-align: middle; text-align: center; color: #FFFFFF; background-color: #005BBB;" colspan="9">
+                                    Detalle beneficiarios
+                                </th>
+                            </tr>
+                            <tr >
+                                <th class="text-center" style="vertical-align: middle;">
+                                    Beneficiarios
+                                </th>
+                                <th class="text-center" style="vertical-align: middle;">
+                                    Edad
+                                </th>
+                                <th class="text-center" style="vertical-align: middle;">
+                                    Descuento 2017
+                                </th>   
+                                <th class="text-center" style="vertical-align: middle;">
+                                    Descuento 2018
+                                </th>
+                                <th class="text-center" style="vertical-align: middle;">
+                                    Descuento disponible
+                                </th>
+                                <th class="text-center" style="vertical-align: middle;">
+                                    Descuento %
+                                </th>
+                                <th class="text-center" style="vertical-align: middle;"> 
+                                    Descuento $
+                                </th>
+                                <th class="text-center" style="vertical-align: middle;">
+                                    SubTotal 2 &Uacute;ltima Factura
+                                </th>
+                                <th class="text-center" style="vertical-align: middle;">
+                                    SubTotal 2 &Uacute;ltima Factura con Descuento
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="no-borders">
+                            <tr *ngFor="let beneficiario of descuentoPendiente">
+                                <td>{{ beneficiario.NombrePersona }}</td>
+                                <td>{{ beneficiario.Edad }}</td>
+                                <td class="text-center">{{ beneficiario.PorcentajeDescAnterior + ' % - $ '}} {{ beneficiario.ValorDescuentoAnterior | number:'1.2-2' }}</td>
+                                <td class="text-center">{{ beneficiario.PorcentajeDesc + ' % - $ '}} {{ beneficiario.ValorDescuento | number:'1.2-2'}}</td>
+                                <td class="text-right">{{ getTotalDescuentoDisponible(beneficiario) | number:'1.0'}} %</td>
+                                <td class="text-right">{{ beneficiario.PorcentajeDescNuevo | number:'1.2-2'}} </td>
+                                <td class="text-right">{{ getTotalValorDescuentoNuevo(beneficiario) | number:'1.2-2'}}</td>
+                                <td class="text-right">{{ getSubTotal1(beneficiario) | number:'1.2-2' }}</td>
+                                <td class="text-right">{{ getSubTotal2ConDescuento(beneficiario)  | number:'1.2-2'}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-right">
+                                <td class="text-left"><strong>Total</strong></td>
+                                <td></td>
+                                <td class="text-center">
+                                    
+                                </td>
+                                <td class="text-center">
+                                    
+                                </td>
+                                <td>{{getTotalDescuentoDisponible(null) | number:'1.0'}} %</td>
+                                <td>{{getTotalPorcentajeDescNuevo(null) | number:'1.2-2'}} %</td>
+                                <td>{{getTotalValorDescuentoNuevo(null) | number:'1.2-2'}}</td>
+                                <td>{{getSubTotal1(null) | number:'1.2-2'}}</td>
+                                <td>{{getSubTotal2ConDescuento(null) | number:'1.2-2'}}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div class="col-lg-12 no-padding">
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="cerrarDescuento();">
+                            <i class="fa fa-sign-out"></i>Salir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="myModalExcepciones" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Catálogo de Excepciones</h5>
+                </div>
+                <div class="panel-body">
+                    <fieldset class="col-lg-12 m-b">
+                        <legend class="info">Seleccione una Excepción</legend>
+
+                        <div class="col-lg-4 checkbox icheck-primary" style="padding-left: 15px!important;">
+                            <input type="checkbox" name="excepcion1" id="excepcion1" [checked]="setComentario.Expecion1" [(ngModel)]="setComentario.Expecion1"
+                                #excepcion1="ngModel">
+                            <label class="control-label" for="excepcion1">Exoneración Diferencial Cuotas</label>
+                        </div>
+
+                        <div class="col-lg-4 checkbox icheck-primary" style="padding-left: 15px!important;">
+                            <input type="checkbox" name="excepcion2" id="excepcion2" [checked]="setComentario.Expecion2" [(ngModel)]="setComentario.Expecion2"
+                                #excepcion2="ngModel">
+                            <label class="control-label" for="excepcion2">Mantener Precio</label>
+                        </div>
+
+                        <div class="col-lg-4 checkbox icheck-primary" style="padding-left: 15px!important;">
+                            <input type="checkbox" name="excepcion3" id="excepcion3" [checked]="setComentario.Expecion3" [(ngModel)]="setComentario.Expecion3"
+                                #excepcion3="ngModel">
+                            <label class="control-label" for="excepcion3">Increnento Odas</label>
+                        </div>
+
+                    </fieldset>
+
+                    <fieldset class="col-lg-12 m-b">
+                        <legend class="info">Escoja un Porcentaje de Descuento</legend>
+                    </fieldset>
+
+                    <table class="table table-responsive table-hover dataTable">
+                        <tbody class="no-borders">
+                            <tr>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(1)"> 1% de Descuento
+                                </td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(6)"> 6% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(11)">11% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(16)">16% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(21)">21% de Descuento</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(2)">2% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(7)">7% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(12)">12% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(17)">17% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(22)">22% de Descuento</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(3)">3% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(8)">8% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(13)">13% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(18)">18% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(23)">23% de Descuento</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(4)">4% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(9)">9% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(14)">14% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(19)">19% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(24)">24% de Descuento</td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(5)">5% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(10)">10% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(15)">15% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(20)">20% de Descuento</td>
+                                <td>
+                                    <input class="form-check-input" type="radio" name="radiogroup" (change)="onSelectionChange(25)">25% de Descuento</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-lg-12 no-padding">
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="cerrarExcepciones();">
+                            <i class="fa fa-sign-out"></i>Salir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

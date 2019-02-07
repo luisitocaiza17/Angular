@@ -1,0 +1,216 @@
+<!-- cobertura -->
+<label class="col-lg-2 control-label padT6 clearInfo" for="estadoCoberturaSlc">Estado Cobertura:</label>
+<div class="col-lg-4 padT6">
+    <select required class="form-select-control" (change)="onChangeEstadoCobertura($event.target.value)" id="estadoCoberturaSlc"
+        name="estadoCoberturaSlc" [(ngModel)]="autorizacion.EstadoCobertura" #estadoCoberturaSlc="ngModel" [disabled]="!autorizacion.isEditable">
+        <option [ngValue]="undefined" selected>Seleccione...</option>
+        <option *ngFor="let est of estadosCobertura" [value]="est">{{est}}</option>
+    </select>
+    <div [hidden]="estadoCoberturaSlc.valid" class="error">
+        <p *ngIf="estadoCoberturaSlc.errors?.required">Campo Requerido</p>
+    </div>
+</div>
+<label class="col-lg-2 control-label padT6" for="montoAutorizado">Monto Autorizado:</label>
+<div class="col-lg-4 padT6">
+    <input required type="number" placeholder="000.00" id="montoAutorizado" name="montoAutorizado" class="heigth25 form-control"
+        number [min]="1" [max]="9999999999" [(ngModel)]="autorizacion.MontoAutorizado" #montoAutorizado="ngModel" disabled="{{autorizacion.EstadoCobertura != estadoCobertura.Cubierto || !autorizacion.isEditable}}"
+    />
+    <div [hidden]="montoAutorizado.valid" class="error">
+        <p *ngIf="montoAutorizado.errors?.required">Campo Requerido</p>
+        <p *ngIf="montoAutorizado.errors?.number">Solo se admiten números</p>
+        <p *ngIf="montoAutorizado.errors?.min">Valor mínimo 1</p>
+        <p *ngIf="montoAutorizado.errors?.max">Valor maximo 9999999999</p>
+    </div>
+</div>
+
+<label class="col-lg-2 control-label padT6 clearInfo" for="slcMotivoNoCubierto">Motivo No Cubierto:</label>
+<div class="col-lg-4 padT6">
+    <select required class="form-select-control  heigth25" id="slcMotivoNoCubierto" name="slcMotivoNoCubierto" [(ngModel)]="autorizacion.MotivoNoCubierto.Id"
+        #slcMotivoNoCubierto="ngModel" disabled="{{autorizacion.EstadoCobertura != estadoCobertura.NoCubierto && autorizacion.isEditable && autorizacion.isHabilitarMotivo}}">
+        <option [ngValue]="undefined" selected>Seleccione...</option>
+        <option *ngFor="let diagNo of diagnosticoNoCubiertos" [value]="diagNo.Id">{{diagNo.Descripcion}}</option>
+    </select>
+    <div [hidden]="slcMotivoNoCubierto.valid" class="error">
+        <p *ngIf="slcMotivoNoCubierto.errors?.required">Campo Requerido</p>
+    </div>
+</div>
+
+<div class="col-lg-2 checkbox icheck-primary" style="padding-left: 15px!important;">
+    <input type="checkbox" name="excepcion" id="excepcion" [checked]="autorizacion.Excepcion" [(ngModel)]="autorizacion.Excepcion"
+        #excepcion="ngModel"(change)="onSelectionChange();">
+    <label class="control-label" for="excepcion">Excepción</label>
+</div>
+
+<label class="col-lg-2 control-label padT6 clearInfo" for="inpDetalleMotivo">Detalle Motivo:</label>
+<div class="col-lg-10 padT6 m-b-md">
+    <textarea id="inpDetalleMotivo" name="inpDetalleMotivo" placeholder="Detalles del Motivo No Cubierto" class="col-lg12 form-control"
+        [(ngModel)]="autorizacion.DetalleMotivoNoCubierto" #inpDetalleMotivo="ngModel" rows="3" minlength="10" maxlength="1000"
+        style="resize: none;" disabled="{{autorizacion.EstadoCobertura != estadoCobertura.NoCubierto || !autorizacion.isEditable}}">
+    </textarea>
+    <div [hidden]="inpDetalleMotivo.valid" class="error">
+        <p *ngIf="inpDetalleMotivo.errors?.minlength">Mínimo 10 caracteres</p>
+        <p *ngIf="inpDetalleMotivo.errors?.maxlength">Máximo 1000 caracteres</p>
+    </div>
+</div>
+
+<label class="col-lg-2 control-label padT6 clearInfo" for="inpDetalleExcepcion">Detalle Excepción:</label>
+<div class="col-lg-10 padT6 m-b-md">
+    <textarea id="inpDetalleExcepcion" name="inpDetalleExcepcion" placeholder="Detalles de Excepción" class="col-lg12 form-control"
+        [(ngModel)]="autorizacion.DetalleExcepcion" #inpDetalleExcepcion="ngModel" rows="3" minlength="10" maxlength="1000" style="resize: none;"
+        disabled="{{!autorizacion.Excepcion}}">
+    </textarea>
+    <div [hidden]="inpDetalleExcepcion.valid" class="error">
+        <p *ngIf="inpDetalleExcepcion.errors?.minlength">Mínimo 10 caracteres</p>
+        <p *ngIf="inpDetalleExcepcion.errors?.maxlength">Máximo 1000 caracteres</p>
+    </div>
+</div>
+
+<!-- diaagnosticos -->
+<fieldset class="clearInfo">
+    <legend class="info">Diagnósticos</legend>
+    <div id="msgCoberturaRequerida" class="col-md-12">
+        <div [hidden]="msgMostrar==undefined || msgMostrar == ''" class="error alignCenter">
+            <p>{{msgMostrar}}</p>
+        </div>
+    </div>
+    <div class="col-md-12 no-padding clearInfo">
+        <div class="col-md-12 no-padding clearInfo">
+            <div class="col-lg-2 checkbox icheck-primary" style="padding-left: 15px!important;" *ngIf="autorizacion.isEditable">
+                <input type="checkbox" (click)="listarTipoDiagnostico($event.target.checked)" name="preexistenciaInput" id="preexistenciaInput"
+                    [(ngModel)]="diagnostico.Preexistencia" #preexistenciaInput="ngModel">
+                <label class="col-lg-2 control-label" for="preexistenciaInput">Preexistencia</label>
+            </div>
+
+            <div class="padT10 " *ngIf="autorizacion.isEditable">
+                <label class="col-lg-2 control-label" for="tipoDiagnosticoSlc">Tipo Diagnóstico:</label>
+                <div class="col-lg-2" id="divTipoDiagnosticoSlc" *ngIf="!verLblTipoDiagnostico">
+                    <select class="form-select-control" required id="tipoDiagnosticoSlc" name="tipoDiagnosticoSlc" [(ngModel)]="diagnostico.Tipo"
+                        #tipoDiagnosticoSlc="ngModel">
+                        <option *ngFor="let est of estadosCobertura" [value]="est">{{est}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-2" id="divTipoDiagnosticoSpn" *ngIf="verLblTipoDiagnostico">
+                    <span>{{diagnostico.Tipo}}</span>
+                </div>
+
+                <div class="col-lg-2 checkbox icheck-primary no-margin" style=" padding-left: 15px!important;" *ngIf="autorizacion.isEditable">
+                    <input type="checkbox" name="principalInput" id="principalInput" [(ngModel)]="diagnostico.Principal" #principalInput="ngModel"
+                        [disabled]="existePrincipal">
+                    <label class="col-lg-2 control-label" for="principalInput">Principal</label>
+                </div>
+
+                <label class="col-lg-1 control-label" for="diagnostico">Diagnóstico:</label>
+                <div class="col-lg-3">
+                    <input type="text" required placeholder="Iniciales Diagnóstico" id="incialDiagnostico" name="incialDiagnostico" class="heigth25 form-control"
+                        minlength="3" maxlength="50" [(ngModel)]="diagnostico.Diagnostico" #incialDiagnostico="ngModel" />
+                    <a (click)="listarDiagnosticos()" [class.disabled]="(diagnostico.Diagnostico==undefined || diagnostico.Diagnostico.length==0 ||diagnostico.Tipo==undefined|| diagnostico.Tipo.length==0)?true:false"
+                        class="lupita" data-toggle="modal" data-target="#diagnosticoViewModal" style="right: 20px;top: 4px;">
+                        <i class="fa fa-search"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="table-responsive col-md-12 padT6">
+            <table id="tablaDiagnosticosSeleccionados" class="table table-bordered dataTable ">
+                <thead>
+                    <tr>
+                        <th class="centerMiddle">
+                            <p>Preexistencia</p>
+                        </th>
+                        <th class="centerMiddle">
+                            <p>Principal</p>
+                        </th>
+                        <th class="centerMiddle">
+                            <p class="fixedTableCell">Tipo</p>
+                        </th>
+                        <th class="centerMiddle no-left-border">
+                            <p class="fixedTableCell">Cod Diagnóstico</p>
+                        </th>
+                        <th class="centerMiddle">
+                            <p class="fixedTableCell">Diagnóstico</p>
+                        </th>
+                        <th class="centerMiddle" *ngIf="autorizacion.isEditable">
+                            <p>Opc</p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="bodyDiagnosticosSeleccionados" class="no-borders">
+                    <tr id="d{{i}}" *ngFor="let d of autorizacion.Diagnosticos; let i = index">
+                        <td class="centerMiddle">
+                            <p class="general-column">{{d.Preexistencia?'SI':'NO'}}</p>
+                        </td>
+                        <td class="centerMiddle">
+                            <p class="general-column">{{d.Principal?'SI':'NO'}}</p>
+                        </td>
+                        <td class="centerMiddle">
+                            <p class="fixedTableCell">{{d.Tipo}}</p>
+                        </td>
+                        <td class="centerMiddle no-left-border">
+                            <p class="column-value-xs fixedTableCell">{{d.CodigoDiagnostico}}</p>
+                        </td>
+                        <td class="centerMiddle">
+                            <p class="fixedTableCell">{{d.Diagnostico}}</p>
+                        </td>
+                        <td class="centerMiddle" *ngIf="autorizacion.isEditable">
+                            <button [disabled]="d.Basico && d.Id!=undefined && d.Id!=0" (click)="eliminarDiagnostico(d)" class="btn btn-link confirm btn-sm no-margin-bottom"
+                                title="Eliminar" type="button">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="autorizacion.Diagnosticos.length == 0">
+                        <td colspan="6" style="text-align: center;">No existen resultados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</fieldset>
+
+<!-- Modal de Diagnosticos -->
+<div id="diagnosticoModalDiv">
+    <div class="modal inmodal fade" id="diagnosticoViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Diagnósticos</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaDiagnosticos" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle no-left-border">Código</th>
+                                            <th class="centerMiddle">Diagnóstico
+                                                <input type="text" (input)="filtrarDiagnostico($event.target.value)" placeholder="Buscar..." id="buscarDiagnostico" name="buscarDiagnostico"
+                                                    class="form-control heigth25">
+                                            </th>
+                                            <th class="centerMiddle">Es Congénito</th>
+                                            <th class="centerMiddle">Grupo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyDiagnostico" class="no-borders selectableBodyTable" style="max-height: 400px!important;">
+                                        <tr id="diagnostico{{i}}" title="{{!diagnostico.Selected ? 'Click para seleccionar' : ''}}" (click)="!diagnostico.Selected ? seleccionarDiagnostico(diagnostico) : return;"
+                                            [class.active]="diagnostico.Selected" *ngFor="let diagnostico of diagnosticos; let i = index">
+                                            <td class="centerMiddle no-left-border">{{diagnostico.CodigoDiagnostico}}</td>
+                                            <td class="centerMiddle">{{diagnostico.Diagnostico}}</td>
+                                            <td class="centerMiddle">{{diagnostico.EsCongenito?'SI':'NO'}}</td>
+                                            <td class="centerMiddle">{{diagnostico.GrupoDiagnostico}}</td>
+                                        </tr>
+                                        <tr *ngIf="diagnosticos.length == 0">
+                                            <td colspan="4">No existen resultados</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

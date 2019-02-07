@@ -1,0 +1,30 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+	<div class="col-lg-12">
+		<h2>Contratos PCA</h2>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a [routerLink]="['']">Home</a>
+			</li>
+			<li class="breadcrumb-item">Contratos PCA</li>
+			<li class="breadcrumb-item active">Cargar archivo</li>
+		</ol>
+	</div>
+</div>
+<br>
+<div class="panel panel-success">
+	<div class="panel-body">
+		<div class="row text-center">
+			<form class="form-horizontal" role="form" name="form" #form="ngForm" novalidate>
+				<div class="col-md-4">
+					<input type="file" valid-file class="form-control m-b" id="subirArchivo" name="subirArchivo"
+						(change)="uploadFileToActivity($event.target.files)">
+				</div>
+				<div class="col-lg-4 m-t-md no-padding">
+					<button class="btn btn-w-m btn-success btn-sm" type="button" (click)="cargarArchivo();">
+						<i class="fa fa-save"></i> Cargar
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

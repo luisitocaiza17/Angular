@@ -1,0 +1,133 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>{{ (poliza !== null && poliza.Id === null) ? 'Agregar' : 'Modificar' }} Poliza</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/srvAdicAdmin/polizas']">Polizas</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+
+        <div id="polizaData" class="ibox-title" *ngIf="poliza !== null">
+            <div class="row">
+                <div class="col-lg-6 form-group">
+                    <label class="control-label" for="proveedorSelect">Proveedor:</label>
+                    <select id="proveedorSelect" name="proveedorSelect" class="form-control"
+                            [(ngModel)]="poliza.ProveedorId"
+                            [disabled]="poliza.Id !== null">
+                        <option [ngValue]="null">Seleccione un proveedor</option>
+                        <option *ngFor="let prov of proveedores" [ngValue]="prov.Id">{{prov.Nombre}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label class="control-label" for="polizaInput">P&oacute;liza:</label>
+                    <input id="polizaInput" name="polizaInput" type="text" class="form-control"
+                           [(ngModel)]="poliza.NumeroPoliza"
+                           [disabled]="poliza.Id !== null"/>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label class="control-label" for="servicioSelect">Servicio adicional:</label>
+                    <select id="servicioSelect" name="servicioSelect" class="form-control"
+                            [(ngModel)]="poliza.ServicioCatalogoId"
+                            [disabled]="poliza.Id !== null">
+                        <option [ngValue]="null">Seleccione un servicio</option>
+                        <option *ngFor="let srv of servicios" [ngValue]="srv.Id">{{srv.Descripcion}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="control-label" for="versionInput">Versi&oacute;n:</label>
+                    <input id="versionInput" name="versionInput" type="text" class="form-control"
+                           [(ngModel)]="poliza.Version"/>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="control-label">Fecha versi&oacute;n:</label>
+                    <datetime [(ngModel)]="poliza.VersionFecha" [datepicker]="datePickerOpts"
+                              [timepicker]="false"></datetime>
+                </div>
+                <div class="col-lg-6 form-group">&nbsp;</div>
+                <div class="col-lg-3 form-group">
+                    <label class="control-label" for="diaCorteInput">D&iacute;a corte:</label>
+                    <input id="diaCorteInput" name="diaCorteInput" type="text" class="form-control"
+                           [(ngModel)]="poliza.DiaCorte"/>
+                </div>
+                <div class="col-lg-3 form-group">
+                    <label class="control-label" for="diaProcesoInput">D&iacute;a proceso:</label>
+                    <input id="diaProcesoInput" name="diaProcesoInput" type="text" class="form-control"
+                           [(ngModel)]="poliza.DiaProcesamiento"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <button id="guardarPolizaBtn" class="btn btn-primary" (click)="guardarPoliza();"><i
+                            class="fa fa-save"></i>&nbsp;Guardar p&oacute;liza
+                    </button>
+                    <a id="cancerlarBtn" class="btn btn-primary" [routerLink]="['/srvAdicAdmin/polizas']"><i
+                            class="fa fa-backward"></i>&nbsp;Regresar a proveedores</a>
+                    <button id="agregarCondicionBtn" class="btn btn-primary"
+                            (click)="criteriosModal.show(poliza,null,catalogo);"
+                            [disabled]="poliza.Id === null"><i
+                            class="fa fa-plus"></i>&nbsp;Agregar condici&oacute;n
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="criteriosList" class="ibox-title" *ngIf="criterios !== undefined && criterios !== null">
+            <div class="table-responsive">
+                <table id="criteriosTable" class="table table-striped table-bordered table-hover dataTable">
+                    <thead class="no-borders">
+                    <tr>
+                        <th class="centerMiddle">Edad</th>
+                        <th class="centerMiddle">Cobertura</th>
+                        <th class="centerMiddle">Regi&oacute;n</th>
+                        <th class="centerMiddle">G&eacute;nero</th>
+                        <th class="centerMiddle">Relaci&oacute;n</th>
+                        <th class="centerMiddle">Producto</th>
+                        <th class="centerMiddle">Titular</th>
+                        <th class="centerMiddle">Contrato/Beneficiario</th>
+                        <th class="centerMiddle">Tasa</th>
+                        <th class="centerMiddle">Prima</th>
+                        <th class="centerMiddle">&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody id="bodyListado" class="no-borders">
+                    <tr *ngFor="let crt of criterios">
+                        <td class="centerMiddle">{{(crt.EdadMin === null || crt.EdadMax === null) ? 'No aplica' :
+                            crt.EdadMin.toString().concat(' - ').concat(crt.EdadMax.toString())}}
+                        </td>
+                        <td class="centerMiddle">{{(crt.CoberturaMin === null || crt.CoberturaMax === null) ? 'No
+                            aplica' :
+                            crt.CoberturaMin.toString().concat(' - ').concat(crt.CoberturaMax.toString())}}
+                        </td>
+                        <td class="centerMiddle">{{crt.Region}}</td>
+                        <td class="centerMiddle">{{crt.Genero}}</td>
+                        <td class="centerMiddle">{{crt.Relacion}}</td>
+                        <td class="centerMiddle">{{crt.Producto}}</td>
+                        <td class="centerMiddle">{{crt.Titular}}</td>
+                        <td class="centerMiddle">{{crt.TarifaPorContrato ? 'Contrato' : 'Beneficiario'}}</td>
+                        <td class="centerMiddle">
+                            <span *ngFor="let t of crt.Tasas" style="display: block">{{t}}</span>
+                        </td>
+                        <td class="centerMiddle">
+                            <span *ngFor="let p of crt.Primas" style="display: block">{{p}}</span>
+                        </td>
+                        <td class="centerMiddle"><a (click)="criteriosModal.show(poliza,crt,catalogo)"><i
+                                class="fa fa-edit fa-lg"></i></a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<app-criterios-modal #criteriosModal (saved)="actualizarCriterios($event)"></app-criterios-modal>

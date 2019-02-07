@@ -1,0 +1,306 @@
+<div class="col-lg-12 m-t-sm no-padding" id="divpanelnuevoplan">
+        <div class="row no-padding">
+            <div class="col-lg-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title"> Nuevo Plan Corporativo </h5>
+                    </div>
+                    <div class="panel-body panelDatos">
+                        <form #crearPlanForm="ngForm" (ngSubmit)="crear();">
+                                <div class="col-md-12 no-padding" id="clpListaDetalle">
+                                    <fieldset class="m-b-sm">
+                                        <legend class="info">Planes</legend>
+                                        <div class="col-md-12 col-xs-12">
+                                            <label class="col-md-1 col-xs-1" for="codigoPlan">Código Plan:</label>
+                                            <span class="col-md-3 col-xs-3">
+                                                <input type="text" placeholder="AT001" id="codigoPlan" name="codigoPlan" [(ngModel)]="datoInsertPlan.CodigoPlan" #codigoPlan="ngModel"
+                                                    class="form-control" />
+                                            </span>
+                                            <label class="col-md-1 col-xs-1">Versión:</label>
+                                            <span class="col-md-3 col-xs-3">
+                                                <input type="number" placeholder="000" id="version" name="version" [(ngModel)]="datoInsertPlan.VersionPlan" #version="ngModel"
+                                                    class="form-control" max="999" pattern="\d*" disabled/>
+                                                <div [hidden]="version.valid || version.pristine" class="error">
+                                                    <p *ngIf="version.errors?.pattern">Sólo se admiten dígitos</p>
+                                                    <p *ngIf="version.errors?.pattern">Sólo dígitos</p>
+                                                </div>
+                                            </span>
+                                            <label class="col-md-1 col-xs-1">Descripción:</label>
+                                            <span class="col-md-3 col-xs-3">
+                                                <input type="text" placeholder="descripcion" id="descripcion" name="descripcion" [(ngModel)]="datoInsertPlan.NombrePlan" #descripcion="ngModel"
+                                                    class="form-control"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-12 col-xs-12"><p>&nbsp;</p></div>
+
+                                        <div class="col-md-12 col-xs-12">
+                                            <label class="col-md-1 col-xs-1">Tarifa:</label>
+                                            <span class="col-md-1 col-xs-1">
+                                                <input required type="number" placeholder="000.00" id="precioBase" name="precioBase" class="form-control"
+                                                    number [min]="1" [max]="999999" [(ngModel)]="datoInsertPlan.PrecioBase"
+                                                    #precioBase="ngModel" />
+                                                <div [hidden]="precioBase.valid || precioBase.pristine" class="error">
+                                                    <p *ngIf="precioBase.errors?.max">Precio  máximo 999999</p>
+                                                </div>
+                                            </span>
+                                            <label class="col-md-1 col-xs-1">Edad Facturarción:</label>
+                                            <span class="col-md-1 col-xs-1">
+                                                <input type="number" placeholder="000" id="edadFacturacion" name="edadFacturacion" [(ngModel)]="datoInsertPlan.EdadFacturacion"
+                                                    #edadFacturacion="ngModel" class="form-control" max="120" pattern="\d*"/>
+                                                <div [hidden]="edadFacturacion.valid || edadFacturacion.pristine" class="error">
+                                                    <p *ngIf="edadFacturacion.errors?.max">Edad máxima 120</p>
+                                                    <p *ngIf="edadFacturacion.errors?.pattern">Sólo dígitos</p>
+                                                </div>
+                                            </span>
+                                            <label class="col-md-2 col-xs-2">Número Beneficiarios:</label>
+                                            <span class="col-md-1 col-xs-1">
+                                                <input type="number" placeholder="" id="numeroBeneficiarios" name="numeroBeneficiarios" [(ngModel)]="datoInsertPlan.NumeroBeneficiarios"
+                                                    #numeroBeneficiarios="ngModel" class="form-control" max="999" pattern="\d*"/>
+                                                <div [hidden]="numeroBeneficiarios.valid || numeroBeneficiarios.pristine" class="error">
+                                                    <p *ngIf="numeroBeneficiarios.errors?.max">Número máximo Beneficiarios 999</p>
+                                                    <p *ngIf="numeroBeneficiarios.errors?.pattern">Sólo dígitos</p>
+                                                </div>
+                                            </span>
+                                            <label class="col-md-2 col-xs-2">Edad Máxima Beneficiarios Hijos:</label>
+                                            <span class="col-md-1 col-xs-1">
+                                                <input type="number" placeholder="000" id="edadBeneficiarios" name="edadBeneficiarios" [(ngModel)]="datoInsertPlan.EdadDependientes"
+                                                    #edadDependientes="ngModel" class="form-control" max="999" pattern="\d*"/>
+                                                <div [hidden]="edadDependientes.valid || edadDependientes.pristine" class="error">
+                                                    <p *ngIf="edadDependientes.errors?.max">Edad máxima 999</p>
+                                                    <p *ngIf="edadDependientes.errors?.pattern">Sólo dígitos</p>
+                                                </div>
+                                            </span>
+                                            <label class="col-md-1 col-xs-1" for="codigoRegiones">Región:</label>
+                                            <span class="col-md-1 col-xs-1">
+                                                <select class="form-control" [(ngModel)]="datoInsertPlan.Region" id="codigoRegion" name="codigoRegion"
+                                                    #codigoRegion="ngModel" disabled>
+                                                    <option [value]="undefined" selected>Seleccione región</option>
+                                                    <option *ngFor="let r of regiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                                                </select>
+                                            </span>         
+                                        </div>
+                                        <div class="col-md-12 col-xs-12"><p>&nbsp;</p></div>
+
+                                        <div class="col-md-12 col-xs-12">
+                                            <label class="col-md-3 col-xs-5">Tarifario:</label>
+                                            <span class="col-md-3 col-xs-7">
+                                                <input type="number" placeholder="000" id="codigoTarifario" name="codigoTarifario" [(ngModel)]="datoInsertPlan.CodigoTarifario"
+                                                    #codigoTarifario="ngModel" class="form-control" minlength="1" pattern="\d*" max="999" disabled/>
+                                                <div [hidden]="codigoTarifario.valid || codigoTarifario.pristine" class="error">
+                                                    <p *ngIf="codigoTarifario.errors?.minlength">Ingresar al menos un número</p>
+                                                    <p *ngIf="codigoTarifario.errors?.max">Valor Máximo 999</p>
+                                                    <p *ngIf="codigoTarifario.errors?.pattern">Sólo dígitos</p>
+                                                </div>
+                                            </span>       
+                                            
+                                            <label class="col-md-3 col-xs-5">Nivel:</label>
+                                            <span class="col-md-3 col-xs-7">
+                                                <input type="number" placeholder="000" id="nivelReferencia" name="nivelReferencia" [(ngModel)]="datoInsertPlan.NivelReferrencia"
+                                                    #nivelReferencia="ngModel" class="form-control" max="10" min="1" pattern="\d*"/>
+                                                <div [hidden]="nivelReferencia.valid || nivelReferencia.pristine" class="error">
+                                                    <p *ngIf="nivelReferencia.errors?.max">Nivel máximo 10</p>
+                                                    <p *ngIf="nivelReferencia.errors?.pattern">Sólo dígitos</p>
+                                                    <p *ngIf="nivelReferencia.errors?.min">Nivel mínimo 1</p> 
+                                                </div>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-12 col-xs-12"><p>&nbsp;</p></div>
+                                      
+                                        <div class="col-md-12 col-xs-12">
+                                            <label class="col-md-1 col-xs-1">Código Tarifario:</label>
+                                            <span class="col-md-5 col-xs-5">
+                                                    <input disabled type="radio" name="checkTarifario" id="checkTarifario" [(ngModel)]="datoInsertPlan.CodigoTarifario" [value]="1">
+                                                    Salud
+                                                    <input disabled type="radio" name="checkTarifario" id="checkTarifario" [(ngModel)]="datoInsertPlan.CodigoTarifario" [value]="2">
+                                                    Harvard
+                                                    <input disabled type="radio" name="checkTarifario" id="checkTarifario" [(ngModel)]="datoInsertPlan.CodigoTarifario" [value]="3">
+                                                    McGraw      
+                                            </span>               
+                                        </div>
+                                        <div class="col-md-12 col-xs-12"><p>&nbsp;</p></div>
+
+                                        <div class="col-md-12 no-padding">
+                                            <fieldset class="m-b-sm">
+                                                <legend class="info">Fechas</legend>
+                                                <div class="col-md-12 col-xs-12">
+                                                    <label class="col-md-3 col-xs-5">Inicio:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <datetime class="heigth25 col-lg-12 no-padding" name="fechaInicio" [timepicker]="false" id="fechaInicio" [(ngModel)]="datoInsertPlan.FechaInicio"
+                                                            [datepicker]="datepickerOpts" required></datetime>
+                                                    </span>
+                
+                                                    <label class="col-md-3 col-xs-5">Fin:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <datetime class="heigth25 col-lg-12 no-padding" name="fechaFin" [timepicker]="false" id="fechafin" [(ngModel)]="datoInsertPlan.FechaFin"
+                                                            [datepicker]="datepickerOpts" required></datetime>
+                                                    </span>
+                                                </div>
+                
+                                                <div class="col-md-12 col-xs-12">
+                                                    <label class="col-md-3 col-xs-5">Digitación:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <datetime class="heigth25 col-lg-12 no-padding" name="fechaDigitacion" [timepicker]="false" id="fechaDigitacion" [(ngModel)]="datoInsertPlan.FechaDigitacion"
+                                                            [datepicker]="datepickerOpts" required></datetime>
+                                                    </span>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-12 no-padding">
+                                            <fieldset class="m-b-sm">
+                                                <legend class="info">Coparticipación</legend>
+                                                <div class="col-md-12 col-xs-12">
+                                                    <label class="col-md-3 col-xs-5">Monto:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <input required type="number" placeholder="000.00" id="montoCoparticipacion" name="montoCoparticipacion" class="heigth25 form-control"
+                                                            number [min]="1" [max]="999999" [(ngModel)]="datoInsertPlan.MontoCoaseguro"
+                                                            #montoCoparticipacion="ngModel" required />
+                                                            <div [hidden]="montoCoparticipacion.valid || porcentajeCoparticipacion.pristine" class="error">
+                                                                <p *ngIf="montoCoparticipacion.errors?.required">Campo requerido</p> 
+                                                                <p *ngIf="montoCoparticipacion.errors?.min">Ingresar un número</p>
+                                                                <p *ngIf="montoCoparticipacion.errors?.max">máximo 100%</p>
+                                                            </div>
+                                                    </span>
+                
+                                                    <label class="col-md-3 col-xs-5">Porcentaje:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <input required type="number" placeholder="000.00" id="porcentajeCoparticipacion" name="porcentajeCoparticipacion" class="heigth25 form-control"
+                                                            number [min]="1" [max]="100" [(ngModel)]="datoInsertPlan.PorcentajeCoaseguro" required
+                                                            #porcentajeCoparticipacion="ngModel" />
+                                                        <div [hidden]="porcentajeCoparticipacion.valid || porcentajeCoparticipacion.pristine" class="error">
+                                                            <p *ngIf="porcentajeCoparticipacion.errors?.required">Campo requerido</p> 
+                                                            <p *ngIf="porcentajeCoparticipacion.errors?.min">Ingresar un número</p>
+                                                            <p *ngIf="porcentajeCoparticipacion.errors?.max">máximo 100%</p>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-12 no-padding">
+                                            <fieldset class="m-b-sm">
+                                                <legend class="info">Cubre</legend>
+                                                <div class="col-md-12 col-xs-12">
+                                                    <label class="col-md-3 col-xs-5">Congénitas:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <select required class="form-select-control heigth25" id="congenitas" name="congenitas" [(ngModel)]="datoInsertPlan.CubreCongenitas">
+                                                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                                                            <option *ngFor="let res of respuestas" [ngValue]="res.codigo">{{res.mensaje}}</option>
+                                                        </select>
+                                                    </span>
+                                                    <label class="col-md-3 col-xs-5">Preexistencia:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <select required class="form-select-control heigth25" id="preexistencias" name="preexistencias" [(ngModel)]="datoInsertPlan.CubrePreexistencias">
+                                                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                                                            <option *ngFor="let res of respuestas" [ngValue]="res.codigo">{{res.mensaje}}</option>
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-12 col-xs-12">
+                                                    <label class="col-md-3 col-xs-5">Aplica nuevos beneficios a Maternidad:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <select required class="form-select-control heigth25" id="maternidad" name="maternidad" [(ngModel)]="datoInsertPlan.MatNuevosBeneficios">
+                                                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                                                            <option *ngFor="let res of respuestas" [ngValue]="res.codigo">{{res.mensaje}}</option>
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-12 no-padding">
+                                            <fieldset class="m-b-sm">
+                                                <legend class="info">Edad</legend>
+                                                <div class="col-md-12 col-xs-12">
+                                                    <label class="col-md-3 col-xs-5">Límite:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <input type="number" placeholder="000" id="edadTope" name="edadTope" [(ngModel)]="datoInsertPlan.EdadTope"
+                                                            #edadTope="ngModel" class="form-control" min="0" max="999" required pattern="\d*" />
+                                                            <div [hidden]="edadTope.valid || edadTope.pristine" class="error">
+                                                                <p *ngIf="edadTope.errors?.required">Campo requerido</p> 
+                                                                <p *ngIf="edadTope.errors?.min">Ingresar un número</p>
+                                                                <p *ngIf="edadTope.errors?.max">máximo 999</p>
+                                                                <p *ngIf="edadTope.errors?.pattern">Sólo dígitos</p>
+                                                            </div>
+                                                    </span>
+                
+                                                    <label class="col-md-3 col-xs-5">Porcentaje Bonificación:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <input type="number" placeholder="000.00" id="porcentajeEdadTope" name="porcentajeEdadTope" [(ngModel)]="datoInsertPlan.PorcentajeEdadTope"
+                                                            #porcentajeEdadTope="ngModel" class="form-control" min="0" max="100" required/>
+                                                            <div [hidden]="porcentajeEdadTope.valid || porcentajeEdadTope.pristine" class="error">
+                                                                <p *ngIf="porcentajeEdadTope.errors?.required">Campo requerido</p>
+                                                                <p *ngIf="porcentajeEdadTope.errors?.min">Ingresar un número</p>
+                                                                <p *ngIf="porcentajeEdadTope.errors?.max">máximo 100%</p>
+                                                            </div>
+                                                    </span>
+                                                </div>
+                
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-12 no-padding">
+                                            <fieldset class="m-b-sm">
+                                                <legend class="info">Días</legend>
+                                                <div class="col-md-12 col-xs-12">
+                                                    <label class="col-md-3 col-xs-5">Carencia Ambulatorio:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <input type="number" placeholder="000" id="diasCarenciaAmbulatorio" name="diasCarenciaAmbulatorio" [(ngModel)]="datoInsertPlan.DiasCarenciaAmbulatorio"
+                                                            #diasCarenciaAmbulatorio="ngModel" class="form-control"  min="0" max="999" required/>
+                                                            <div [hidden]="diasCarenciaAmbulatorio.valid || diasCarenciaAmbulatorio.pristine" class="error" pattern="\d*">
+                                                                <p *ngIf="diasCarenciaAmbulatorio.errors?.required">Campo requerido</p>
+                                                                <p *ngIf="diasCarenciaAmbulatorio.errors?.min">Ingresar un número</p>
+                                                                <p *ngIf="diasCarenciaAmbulatorio.errors?.max">máximo 999</p>
+                                                                <p *ngIf="diasCarenciaAmbulatorio.errors?.pattern">Sólo dígitos</p>
+                                                            </div>
+                                                    </span>
+                
+                                                    <label class="col-md-3 col-xs-5">Carencia Hospitalaria:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <input type="number" placeholder="000" id="diasCarenciaHospitalario" name="diasCarenciaHospitalario" [(ngModel)]="datoInsertPlan.DiasCarenciaHospitalario"
+                                                            #diasCarenciaHospitalario="ngModel" class="form-control" min="0" max="999" required pattern="\d*"/>
+                                                            <div [hidden]="diasCarenciaHospitalario.valid || diasCarenciaHospitalario.pristine" class="error" >
+                                                                <p *ngIf="diasCarenciaHospitalario.errors?.required">Campo requerido</p>
+                                                                <p *ngIf="diasCarenciaHospitalario.errors?.min">Ingresar un número</p>
+                                                                <p *ngIf="diasCarenciaHospitalario.errors?.max">máximo 999</p>
+                                                                <p *ngIf="diasCarenciaHospitalario.errors?.pattern">Sólo dígitos</p>
+                                                            </div>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-12 col-xs-12">
+                                                    <label class="col-md-3 col-xs-5">Prestación:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <input type="number" placeholder="000" id="prestacion" name="prestacion" [(ngModel)]="datoInsertPlan.DiasReclamo"
+                                                            #prestacion="ngModel" class="form-control" min="0" max="999" required pattern="\d*"/>
+                                                        <div [hidden]="prestacion.valid || prestacion.pristine" class="error">
+                                                            <p *ngIf="prestacion.errors?.required">Campo requerido</p>
+                                                            <p *ngIf="prestacion.errors?.min">Ingresar un número</p>
+                                                            <p *ngIf="prestacion.errors?.max">máximo 999</p>
+                                                            <p *ngIf="prestacion.errors?.pattern">Sólo dígitos</p>
+                                                        </div>
+                                                    </span>
+                
+                                                    <label class="col-md-3 col-xs-5">Periodo Enfermedad:</label>
+                                                    <span class="col-md-3 col-xs-7">
+                                                        <input type="number" placeholder="000" id="periodoEnfermedad" name="periodoEnfermedad" [(ngModel)]="datoInsertPlan.DiasAlcance"
+                                                            #periodoEnfermedad="ngModel" class="form-control" min="0" max="999" required pattern="\d*" />
+                                                            <div [hidden]="periodoEnfermedad.valid || periodoEnfermedad.pristine" class="error">
+                                                                <p *ngIf="periodoEnfermedad.errors?.required">Campo requerido</p>
+                                                                <p *ngIf="periodoEnfermedad.errors?.min">Ingresar un número</p>
+                                                                <p *ngIf="periodoEnfermedad.errors?.pattern">Sólo dígitos</p>
+                                                            </div>
+                                                    </span>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-lg-12 text-center">
+                                    <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!crearPlanForm.form.valid">
+                                        <i class="fa fa-search"></i> Crear
+                                    </button>
+                                </div>
+                            </form>
+                           
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        

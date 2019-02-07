@@ -1,0 +1,215 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Ingreso de Creditos</h5>
+        </div>
+        <div class="panel-body">
+            <form name="ingresarSobresForm" role="form" #ingresarSobresForm="ngForm">
+                <fieldset class="col-lg-12">
+                    <legend class="info">INGRESO DE CREDITOS</legend>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Número de Credito:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="sobre.NumeroSolicitud" id="numeroSobre" name="numeroSobre"
+                            class="heigth25 form-control col-lg-12" disabled />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Fecha Recepción:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        {{sobre.FechaRecepcion | date: 'dd/MM/yyyy' }}
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Beneficiarios:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control m-b" id="slcEstablecimiento" name="slcEstablecimiento"
+                            [(ngModel)]="detalles.NumeroPersona" #slcEstablecimiento="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let beneficiario of beneficiarios" [ngValue]="beneficiario.NumeroPersona">{{beneficiario.NombreCompleto}}</option>
+                        </select>
+                        <div [hidden]="slcEstablecimiento.valid" class="error">
+                            <p *ngIf="slcEstablecimiento.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2" style="padding-left:10px !important">
+                        <label class="control-labe">Cobertura:</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <select required class="form-select-control col-lg-12" id="seleccionTipoCobertura" name="seleccionTipoCobertura"
+                            [(ngModel)]="detalles.IdTipoCobertura" #seleccionTipoCobertura="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let tipoCobertura of tiposCobertura" [value]="tipoCobertura.IdTipoCobertura">{{tipoCobertura.NombreTipoCobertura}}</option>
+                        </select>
+                        <div [hidden]="seleccionTipoCobertura.valid" class="error">
+                            <p *ngIf="seleccionTipoCobertura.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Clinica:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" required placeholder="Iniciales Clinica" id="nombrePrestador" name="nombrePrestador"
+                            class="heigth25 form-control col-lg-12" rows="2" minlength="4" maxlength="255" [(ngModel)]="sobre.Clinica"
+                            #nombrePrestador="ngModel">
+                        <a (click)="listarConvenios()" [class.disabled]="(sobre.Clinica==undefined || sobre.Clinica.length<4)?true:false"
+                            class="lupita" data-toggle="modal" data-target="#prestadorViewModal"><i class="fa fa-search"></i></a>
+                        <div [hidden]="nombrePrestador.valid" class="error">
+                            <p *ngIf="(nombrePrestador.errors?.required || sobre.Clinica==undefined)">Campo
+                                Requerido</p>
+                            <p *ngIf="nombrePrestador.errors?.minlength">Mínimo 4 caracteres</p>
+                            <p *ngIf="nombrePrestador.errors?.maxlength">Máximo 255 caracteres</p>
+                        </div>
+                    </div>
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Valor Presentado:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="number" [(ngModel)]="sobre.ValorPresentado" id="valorPresentado" name="valorPresentado"
+                            class="heigth25 form-control col-lg-12" min="0" />
+                        <div class="" *ngIf="sobre.ValorPresentado <= 0">
+                            <label class="col-md-12 no-padding " style="color: #ff0000;font-weight: normal;font-size: smaller;">
+                                El valor presentado debe se mayor a cero
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-2">
+                        <label class="control-label">Observaciones:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" id="codigoSobrePersona" name="codigoSobrePersona" class="heigth25 form-control col-lg-12"
+                            [(ngModel)]="detalles.ObservacionesConsultor" />
+                    </div>
+                </fieldset>
+
+
+                <div *ngIf="nuevo" class="col-lg-12 m-t-md">
+                    <button class="btn btn-w-m btn-success btn-sm col-lg-2 m-b" (click)="guardarSobre();" [disabled]="!ingresarSobresForm.form.valid">
+                        <i class="fa fa-save"></i> Guardar</button>
+                </div>
+
+                <div *ngIf="!nuevo" class="col-lg-12 m-t-md">
+                    <button class="btn btn-w-m btn-success btn-sm col-lg-2 m-b" (click)="actualizarSobre();" [disabled]="sobre.idEstadoSobre == 17 || !ingresarSobresForm.form.valid">
+                        Guardar
+                    </button>
+                    <button class="btn btn-w-m btn-success btn-sm col-lg-2 m-b" (click)="cancelar();">
+                        Cancelar
+                    </button>
+                </div>
+
+
+                <div class="dataTables_info">{{sobreReembolsoService.paginationConstants.EncabezadoTabla}}</div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable">
+                        <thead>
+                            <tr>
+                                <th class="centerMiddle">Número Credito</th>
+                                <th class="centerMiddle">Número Solicitud</th>
+                                
+                                <th class="centerMiddle">Beneficiarios</th>
+                                <th class="centerMiddle">Valor Presentado</th>
+                                <th class="centerMiddle">Estado Credito</th>
+                                <th class="centerMiddle">Establecimiento</th>
+                                <th class="centerMiddle">Fecha de Recepción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="no-borders selectableBodyTable" *ngFor="let sobre of listadoSobres | paginate: {id : 'sobresTable', itemsPerPage: sobreReembolsoService.paginationConstants.pageSize,currentPage: sobreReembolsoService.paginationConstants.pageNumber, totalItems: sobreReembolsoService.paginationConstants.total};">
+                            <tr title="{{!sobre.Selected ? 'Click para seleccionar' : ''}}" (click)="!sobre.Selected ? seleccionar(sobre, true) : return;"
+                                [class.active]="sobre.Selected">
+
+                                <td>{{sobre.NumeroSobre}}</td>
+                                <td>{{sobre.DetalleSobre[0].NumeroSolicitudDetalle}}</td>
+                              
+                                <td>{{sobre.DetalleSobre[0].NombreBeneficiario}}</td>
+                                <td>{{sobre.ValorPresentado}}</td>
+                                <td>{{sobre.NombreEstadoSobre}}</td>
+                                <td>{{sobre.Clinica}}</td>
+                                <td>{{sobre.FechaRecepcion | date: 'dd/MM/yyyy'}}</td>
+
+                            </tr>
+                        </tbody>
+                        <tfoot *ngIf="sobreReembolsoService.paginationConstants.total == 0">
+                            <tr>
+                                <td colspan="12" style="text-align: center;">No existen resultados</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <pagination-controls id="sobresTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true"
+                        (pageChange)="sobreReembolsoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal de Prestadores -->
+<div id="prestadorModalDiv">
+    <div class="modal inmodal fade" id="prestadorViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">{{popupTitle}}</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaPrestadores" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle no-left-border">Número</th>
+                                            <th class="centerMiddle">Nombre
+                                            </th>
+                                            <th class="centerMiddle">Estado</th>
+                                            <th class="centerMiddle">Tipo Prestador</th>
+                                            <th class="centerMiddle">Nivel Desde</th>
+                                            <th class="centerMiddle">Nivel Hasta</th>
+                                            <th class="centerMiddle">Fecha Suspensión</th>
+                                            <th class="centerMiddle">Codigo Ciudad</th>
+                                            <th class="centerMiddle">Tipo Convenio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyPrestador" class="no-borders selectableBodyTable">
+                                        <tr id="prestador{{i}}" [class.active]="convenio.Selected" title="{{!convenio.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!convenio.Selected ? seleccionarConvenio(convenio) : return;"
+                                            *ngFor="let convenio of convenios; let i = index">
+                                            <td class="centerMiddle">{{convenio.Numero}}</td>
+                                            <td class="centerMiddle">{{convenio.Nombre}}</td>
+                                            <td class="centerMiddle">{{convenio.Estado}}</td>
+                                            <td class="centerMiddle">{{convenio.TipoPrestador}}</td>
+                                            <td class="centerMiddle">{{convenio.NivelPrestadorDesde}}</td>
+                                            <td class="centerMiddle">{{convenio.NivelPrestadorHasta}}</td>
+                                            <td class="centerMiddle">{{convenio.FechaSuspension}}</td>
+                                            <td class="centerMiddle">{{convenio.CodigoCiudad}}</td>
+                                            <td class="centerMiddle">{{convenio.TipoConvenio}}</td>
+                                        </tr>
+                                        <tr *ngIf="convenios!=undefined && convenios.length == 0">
+                                            <td colspan="9" class="alignCenter">No existen resultados</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

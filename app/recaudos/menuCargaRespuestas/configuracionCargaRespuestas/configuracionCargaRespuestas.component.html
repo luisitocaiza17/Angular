@@ -1,0 +1,223 @@
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Configuracion Carga Respuestas" data-parent="#accordion" href="#clpConfiguracion"><i
+                            class="fa fa-bookmark"></i> Configuración carga respuestas </a>
+                </h5>
+            </div>
+            <div id="clpConfiguracion" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                        <div class="row">
+                            <form #configForm="ngForm">
+                                <div class="form-group col-lg-12 no-padding">
+
+                                    <div class="col-lg-12 m-t-md">
+                                        <div class="col-lg-2"><label class="control-label" for="banco">Banco:</label></div>
+                                        <div class="col-lg-2"><select (change)="loadConfiguracionCargaCuenta();" class="form-control"
+                                                id="banco" name="banco" [(ngModel)]="configuracionEstadoCuenta.CodigoBanco"
+                                                #banco="ngModel">
+                                                <option *ngFor="let banco of bancos" [value]="banco.CodigoBanco"> {{
+                                                    banco.NombreBanco }} </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="lugarPago">Lugar Pago:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Lugar Pago" class="form-control"
+                                                id="lugarPago" name="lugarPago" [(ngModel)]="configuracionEstadoCuenta.LugarPago"
+                                                #lugarPago="ngModel" />
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="tipoPago">Tipo Pago:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Tipo Pago" class="form-control"
+                                                id="tipoPago" name="tipoPago" [(ngModel)]="configuracionEstadoCuenta.TipoPago"
+                                                #tipoPago="ngModel" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 m-t-md">
+                                        <div class="col-lg-2"><label class="control-label" for="bancoCaja">Banco Caja:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Banco Caja" class="form-control"
+                                                id="bancoCaja" name="bancoCaja" [(ngModel)]="configuracionEstadoCuenta.BancoCaja"
+                                                #bancoCaja="ngModel" />
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="tarjetaCodigoBanco">Tarjeta
+                                                Código:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Tarjeta Código" class="form-control"
+                                                id="tarjetaCodigoBanco" name="tarjetaCodigoBanco" [(ngModel)]="configuracionEstadoCuenta.TarjetaCodigoBanco"
+                                                #tarjetaCodigoBanco="ngModel" />
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="procesoRecaudacion">Proceso
+                                                Recaudación:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Proceso Recaudación"
+                                                class="form-control" id="procesoRecaudacion" name="procesoRecaudacion"
+                                                [(ngModel)]="configuracionEstadoCuenta.ProcesoRecaudacion"
+                                                #procesoRecaudacion="ngModel" />
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-lg-12 m-t-md">
+                                        <div class="col-lg-2"><label class="control-label" for="prefijoIdRecaudacion">Prefijo
+                                                Id Recaudación:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Prefijo Id Recaudación"
+                                                class="form-control" id="prefijoIdRecaudacion" name="prefijoIdRecaudacion"
+                                                [(ngModel)]="configuracionEstadoCuenta.PrefijoIdRecaudacion"
+                                                #prefijoIdRecaudacion="ngModel" />
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="palabraConfirmacion">Palabra
+                                                Confirmación:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Palabra Confirmación"
+                                                class="form-control" id="palabraConfirmacion" name="palabraConfirmacion"
+                                                [(ngModel)]="configuracionEstadoCuenta.PalabraConfirmacion"
+                                                #palabraConfirmacion="ngModel" />
+                                        </div>
+
+                                        <div class="col-lg-2"><label class="control-label" for="separadorDecimal">Separador
+                                                Decimal:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Separador Decimal" class="form-control"
+                                                id="separadorDecimal" name="separadorDecimal" [(ngModel)]="configuracionEstadoCuenta.SeparadorDecimal"
+                                                #palabraConfirmacion="ngModel" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 m-t-md">
+                                        <div class="col-lg-2"><label class="control-label" for="nroColumnasArchivo">Número
+                                                Columnas Archivo:</label></div>
+                                        <div class="col-lg-2">
+                                            <input autocomplete="off" type="text" placeholder="Número Columnas Archivo"
+                                                class="form-control" id="nroColumnasArchivo" name="nroColumnasArchivo"
+                                                [(ngModel)]="configuracionEstadoCuenta.NroColumnasArchivo"
+                                                #prefijoIdRecaudacion="ngModel" />
+                                        </div>
+                                    </div>
+
+                                </div>                         
+
+                                <div class="col-lg-12 m-t-md alert alert-warning text-center" style="size: 1rem" role="alert">
+                                    Las columnas enmpiezan en el índice [0] </div>
+
+                                <div class="col-lg-12 m-t-md">
+                                    
+                                    <div class="col-lg-6 table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th> Nombre Columna en BDD </th>
+                                                    <th> Tipo dato en BDD </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let col of estructuraCargaRespuestasBanco">
+                                                    <td height="51"> {{col.Nombre}} </td>
+                                                    <td height="51"> {{col.TipoDato}} </td>                                              
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-lg-6 table-responsive">
+                                        
+
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th> Número columna en archivo </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Contrato"
+                                                            class="form-control" id="posContrato" name="posContrato"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionContrato"
+                                                            #posContrato="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Producto"
+                                                            class="form-control" id="posProducto" name="posProducto"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionProducto"
+                                                            #posProducto="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Region"
+                                                            class="form-control" id="posRegion" name="posRegion"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionRegion"
+                                                            #posRegion="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Número Cuota"
+                                                            class="form-control" id="posNroCuota" name="posNroCuota"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionNroCuota"
+                                                            #posNroCuota="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Número Remesa"
+                                                            class="form-control" id="posNroRemesa" name="posNroRemesa"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionNroRemesa"
+                                                            #posNroRemesa="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Número Linea Remesa"
+                                                            class="form-control" id="posNroLineaRemesa" name="posNroLineaRemesa"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionNroLineaRemesa"
+                                                            #posNroLineaRemesa="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Valor"
+                                                            class="form-control" id="posValor" name="posValor"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionValor"
+                                                            #posValor="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Fecha Acreditación"
+                                                            class="form-control" id="posFechaAcredBanco" name="posFechaAcredBanco"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionFechaAcredBanco"
+                                                            #posFechaAcredBanco="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Referencia Bancaria"
+                                                            class="form-control" id="posRefBancaria" name="posRefBancaria"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionRefBancaria"
+                                                            #posRefBancaria="ngModel" /> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> <input autocomplete="off" type="number" placeholder="Posicion Palabra Confirmación"
+                                                            class="form-control" id="posPalabraConfirmacion" name="posPalabraConfirmacion"
+                                                            [(ngModel)]="configuracionEstadoCuenta.PosicionPalabraConfirmacion"
+                                                            #posPalabraConfirmacion="ngModel" /> </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-12 m-t-md text-center">
+                                
+                                    <button class="btn btn-primary" (click)="guardarConfiguracion();"> Guardar
+                                        Configuración </button>
+                                    <button class="btn btn-primary" (click)="limpiarConfiguracion();"> Limpiar </button>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

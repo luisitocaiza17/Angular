@@ -1,0 +1,95 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-12">
+        <h2>Transacción</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Transacción</li>
+            <li class="breadcrumb-item">
+                <a>Califica la gestión</a>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title" (click)="regresar()">
+                    <a>
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" id="comentario" style="border-width:1px 0px 0px 0px;">
+                    <form class="ibox-content" name="comentarioForm" role="form" #comentarioForm="ngForm">
+                        <fieldset class="col-lg-12">
+                            <legend class="info">Calificación</legend>
+
+                            <div class="col-md-6  m-b">
+                                <label class="text-primary">Califica la gestión:</label>
+                                <br>
+                                <select required class="form-control form-select-control" name="idDesicionCliente" id="idDesicionCliente"
+                                    [(ngModel)]="setComentario.IdDesicionCliente" #IdDesicionCliente="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let item of ListaDesicionCliente" [value]="item.Id">{{
+                                        item.Detalle}}</option>
+                                </select>
+                                <div [hidden]="IdDesicionCliente.valid" class="error">
+                                    <p *ngIf="IdDesicionCliente.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6  m-b">
+                                <label class="text-primary">Califica la contactibilidad:</label>
+                                <br>
+                                <select required class="form-control form-select-control" name="idContactabilidad" id="idContactabilidad"
+                                    [(ngModel)]="setComentario.IdContactabilidad" #IdContactabilidad="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let item of ListaContactabilidad" [value]="item.Id">{{
+                                        item.Detalle}}</option>
+                                </select>
+                                <div [hidden]="IdContactabilidad.valid" class="error">
+                                    <p *ngIf="IdContactabilidad.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12">
+                            <div class="col-md-6 m-b">
+                                <label class="text-primary">Oficina:</label>
+                                <br>
+                                <select required class="form-control form-select-control m-b" name="idOficina" id="idOficina"
+                                    [(ngModel)]="setComentario.IdOficina" #IdOficina="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let item of listaOficinas" [value]="item.Id">{{ item.Valor}}</option>
+                                </select>
+                                <div [hidden]="IdOficina.valid" class="error">
+                                    <p *ngIf="IdOficina.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="col-lg-12 m-b">
+                            <legend class="info">Agregue un Comentario</legend>
+                            <textarea rows="5" placeholder="Ingrese un comentario" id="comentario" name="comentario"
+                                class="form-control" [(ngModel)]="txtComentario" style="resize: none;">
+
+                                </textarea>
+                        </fieldset>
+
+                        <div class="row">
+                            <div class="col-lg-12 m-t-md">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="enviar()" [disabled]="!comentarioForm.form.valid">
+                                    <i class="fa fa-save"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

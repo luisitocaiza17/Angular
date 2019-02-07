@@ -1,0 +1,18 @@
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h5 class="panel-title"> Generación de información en tablas </h5>
+    </div>
+    <div class="panel-body">
+        <div class="row text-center">
+            <label class="col-lg-12 control-label">Formato: Establecimiento-PuntoEmision-Secuencial-TipoDocumento(string)</label>
+            <label class="col-lg-12 control-label" for="obsevaciones">Facturas a reversar:</label>
+            <div>
+                <textarea id="reversar" name="reversar" class="form-control" [(ngModel)]="cr05Reversar" rows="25" style="resize: none;"></textarea>
+            </div>
+            <button class="btn btn-w-m btn-success btn-sm" (click)="ConfirmarGenerarInformacionEnTablas();">
+                <i class="fa fa-cogs"></i> Reprocesar facturas
+            </button>
+        </div>
+    </div>
+</div>
+

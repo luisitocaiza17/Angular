@@ -1,0 +1,30 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+	<div class="col-lg-10">
+		<h2>Premios y Bonos</h2>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a [routerLink]="['carga']">Home</a></li>
+			<li class="breadcrumb-item">Premios y bonos</li>
+		</ol>
+	</div>
+	<div class="col-lg-10">
+		<br>
+		<br>
+	</div>
+	<div class="col-lg-12">
+		<ul id="ulMenuPremiosBonos" class="nav nav-tabs" role="tablist">
+			<li class="nav-item" routerLinkActive="active">
+				<a [routerLink]="['indicadores']"> Indicadores </a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="col-lg-12">
+		<p></p>
+	</div>
+
+	<div class="col-lg-12">
+		<div class="tab-content">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>

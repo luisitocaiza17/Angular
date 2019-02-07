@@ -1,0 +1,43 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Tareas Programadas</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Masivos</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-body no-padding">
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+
+                    <div class="col-lg-12 no-padding">
+
+                        <ul id="ulMenuConsultas" class="nav nav-tabs" role="tablist">
+                            <li *ngIf="true" id="liCargarPrefactura" class="nav-item" [ngClass]="{'active':opcion == 'CargarPrefactura'}">
+                                <a (click)="activar('CargarPrefactura')" id="menCargarPrefactura">Cargar Prefactura</a>
+                            </li>
+
+                            <li *ngIf="true" id="liAuditarReclamo" class="nav-item" [ngClass]="{'active':opcion == 'AuditarReclamos'}">
+                                <a (click)="activar('AuditarReclamos')" id="menAuditarReclamo">Generar/Auditar Reclamos</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="min-height: 70px;">
+                <cargaPrefactura *ngIf="isActive('CargarPrefactura')"></cargaPrefactura>
+                <auditarGenerarReclamo *ngIf="isActive('AuditarReclamos')"></auditarGenerarReclamo>
+
+            </div>
+        </div>
+    </div>
+</div>

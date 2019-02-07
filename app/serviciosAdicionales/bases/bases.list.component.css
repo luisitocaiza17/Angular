@@ -1,0 +1,10 @@
+.badge-danger {
+    background-color: #990000;
+}
+.badge-info {
+    background-color: #009900;
+}
+.badge {
+    font-size: 9px;
+    float: right !important;
+}

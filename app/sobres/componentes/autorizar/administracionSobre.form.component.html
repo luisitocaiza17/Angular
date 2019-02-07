@@ -1,0 +1,36 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Prestadores</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Consultas</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-body no-padding">
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+                    <div class="col-lg-12 no-padding">
+
+                        <ul id="ulMenuAdministrarSobre" class="nav nav-tabs" role="tablist">
+                            <li id="liVerificarSobPendiente" class="nav-item" [ngClass]="{'active':opcion == 'VerificarSobrePendiente'}">
+                                <a (click)="activar('VerificarSobrePendiente')" id="menVerificarSobPendiente">
+                                    Sobres Pendientes</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div style="min-height: 70px;">
+                <verificarSobresPendientes *ngIf="isActive('VerificarSobrePendiente')"></verificarSobresPendientes>
+            </div>
+        </div>
+    </div>
+</div>

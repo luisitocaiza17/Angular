@@ -1,0 +1,138 @@
+<div class="row m-t-sm no-padding">
+    <div class="col-lg-12 ">
+        <div class="panel-group" id="accordionAutorizacion">
+            <div>
+                <h5 class="panel-title">
+                    <div class="col-md-12 alignCenter">
+                        <label class="col-md-12 no-padding m-t-sm" style="color: #ff0000">{{msgEstadoContato}}</label>
+                    </div>
+                    <div *ngIf="!mostrarFormIncluir && !mostrarFormEditar && !mostrarFormEmailFtp" class="col-lg-12  m-t-sm m-b-sm">
+                        <label class="col-lg-2 control-label" for="libLiquidacion">Usuario:</label>
+                        <div class="col-lg-4">
+                            <select class="form-select-control heigth25" id="usuarioFilter" name="usuarioFilter" (change)="onSelectUsuario($event.target.value)">
+                                <option [ngValue]="undefined" selected></option>
+                                <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{usuario}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12  m-t-sm m-b-sm">
+                        <a *ngIf="!mostrarFormIncluir && !mostrarFormEditar && !mostrarFormEmailFtp && habilitarNuevo" id="btnNuevo" data-toggle="collapse" data-parent="#accordionAutorizacion"
+                            (click)="nuevo($event)" class="btn btn-w-m btn-success btn-sm" >
+                            <i class="fa fa-plus-circle"></i> Nuevo
+                        </a>
+                        <a *ngIf="mostrarFormIncluir || mostrarFormEditar || mostrarFormEmailFtp" id="btnListado" data-toggle="collapse" data-parent="#accordionAutorizacion"
+                            href="#divListaAutorizacion" (click)="verListado()" class="btn btn-w-m btn-success btn-sm">
+                            <i class="fa fa-list"></i> Listado
+                        </a>
+                    </div>
+                </h5>
+            </div>
+            <div class="panel-body panelDatos" class="panel-collapse collapse in" id="divListaAutorizacion">
+                <div style="padding-left: 15px;" class="dataTables_info">{{autorizacionService.paginationConstants.EncabezadoTablaAllResults}}</div>
+                <div class="table-responsive col-md-12">
+                    <table id="tablaAutorizacion" class="table table-bordered dataTable tableFixed" style="width:945px;">
+                        <thead>
+                            <tr>
+                                <th class="centerMiddle no-left-border">
+                                    <p class="columnW50 fixedTableCell">Opción</p>
+                                </th>
+                                <th class="centerMiddle no-left-border">
+                                    <p class="columnW70 fixedTableCell">Código</p>
+                                </th>
+                                <th class="centerMiddle no-right-border">
+                                    <p class="columnW90 fixedTableCell">Número de Caso</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="second-column fixedTableCell">Fecha Creación</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW150 fixedTableCell">Fecha Hospitalización</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="second-column fixedTableCell">Fecha Autorización</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW104 fixedTableCell">Estado</p>
+                                </th>
+                                <th class="centerMiddle no-right-border">
+                                    <p class="columnW74 fixedTableCell">Canal</p>
+                                </th>
+                                <th class="centerMiddle no-right-border">
+                                    <p class="columnW90 fixedTableCell">Cobertura</p>
+                                </th>
+                                <th class="no-left-border no-right-border"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyAutorizacion" class="no-borders fixedBodyHeight240" style="max-height: 200px!important;">
+                            <tr id="autorizacion{{i}}" *ngFor="let autorizacion of autorizaciones; let i = index">
+                                <td class="fixedTableCell centerMiddle no-left-border">
+                                    <p class="columnW50 fixedTableCell">
+                                        <a *ngIf="autorizacion.Id!=undefined && autorizacion.Id!=0 && isEditable(autorizacion)" data-toggle="collapse" title="Click para editar"
+                                            data-parent="#accordionAutorizacion" (click)="seleccionar(autorizacion)">
+                                            <i class="fa fa-pencil-square-o" style="vertical-align: middle;"></i>
+                                        </a>
+                                        <a *ngIf="autorizacion.Id!=undefined && autorizacion.Id!=0 && !isEditable(autorizacion)" data-toggle="collapse" title="Detalles"
+                                            data-parent="#accordionAutorizacion" (click)="seleccionar(autorizacion)">
+                                            <i class="fa fa-file-text-o" style="vertical-align: middle;"></i>
+                                        </a>
+                                        <a *ngIf="autorizacion.Id!=undefined && autorizacion.Id!=0" data-toggle="collapse" data-parent="#accordionAutorizacion" href="#divListaAutorizacion"
+                                            title="Click para enviar carta" (click)="sendLetter(autorizacion)">
+                                            <i class="fa fa-envelope-o"></i>
+                                        </a>
+                                        <a *ngIf="autorizacion.NumeroAutorizacion!=undefined && autorizacion.NumeroAutorizacion!=0" href="{{urlPruebas}}{{autorizacion.NumeroAutorizacion}}"
+                                            title="Click para ir a Historias Clínicas" target="_blank">
+                                            <i class="fa fa-archive"></i>
+                                        </a>
+                                    </p>
+                                </td>
+                                <td class="centerMiddle no-left-border">
+                                    <p class="columnW70 fixedTableCell">{{autorizacion.NumeroAutorizacion}}</p>
+                                </td>
+                                <td class="centerMiddle no-left-border">
+                                    <p class="columnW90 fixedTableCell">{{autorizacion.NumeroCaso}}</p>
+                                </td>
+                                <td class="centerMiddle">
+                                    <p class="second-column fixedTableCell">{{autorizacion.FechaCreacionText}}</p>
+                                </td>
+                                <td class="centerMiddle">
+                                    <p class="columnW150 fixedTableCell">{{autorizacion.FechaHospitalizacion | date: 'dd/MM/yyyy'}}</p>
+                                </td>
+                                <td class="centerMiddle">
+                                    <p class="second-column fixedTableCell">{{autorizacion.FechaAutorizacion | date: 'dd/MM/yyyy'}}</p>
+                                </td>
+                                <td class="centerMiddle">
+                                    <p class="columnW104 fixedTableCell">{{autorizacion.Estado.Valor}}</p>
+                                </td>
+                                <td class="alignR centerMiddle">
+                                    <p class="columnW74 fixedTableCell">{{autorizacion.Canal}}</p>
+                                </td>
+                                <td class="alignR centerMiddle">
+                                    <p class="columnW90 fixedTableCell">{{autorizacion.EstadoCobertura}}</p>
+                                </td>
+                                <td class="no-left-border"></td>
+                            </tr>
+                            <tr *ngIf="autorizaciones.length == 0">
+                                <td colspan="8" style="text-align: center;width:945px;">No existen resultados</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="clpFormAutorizacion" *ngIf="mostrarFormIncluir">
+            <div class="panel-body no-padding">
+                <autorizacionForm></autorizacionForm>
+            </div>
+        </div>
+        <div id="clpEditFormAutorizacion" *ngIf="mostrarFormEditar">
+            <div class="panel-body no-padding">
+                <autorizacionEditForm></autorizacionEditForm>
+            </div>
+        </div>
+        <div id="clpEmailFtpFormAutorizacion" *ngIf="mostrarFormEmailFtp">
+            <div class="panel-body no-padding">
+                <emailFtpForm></emailFtpForm>
+            </div>
+        </div>
+    </div>
+</div>

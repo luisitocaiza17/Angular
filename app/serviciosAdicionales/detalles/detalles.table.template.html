@@ -1,0 +1,34 @@
+<div class="table-responsive col-lg-12">
+    <table class="table table-striped table-bordered table-hover dataTable">
+        <thead class="no-borders">
+        <tr>
+            <th class="centerMiddle" *ngIf="columnsSet === 'MOV'">Fecha Efecto</th>
+            <th class="centerMiddle">Contrato</th>
+            <th class="centerMiddle">Beneficiario</th>
+            <th class="centerMiddle">C&eacute;dula</th>
+            <th class="centerMiddle">Edad</th>
+            <th class="centerMiddle">Cobertura</th>
+            <th class="centerMiddle">PVP</th>
+            <th class="centerMiddle" [hidden]="columnsSet !== 'GAP2'">Tarifa anterior</th>
+            <th class="centerMiddle">{{(columnsSet === 'GAP1') ? 'Tarifa' : 'Tarifa actual'}}</th>
+        </tr>
+        </thead>
+        <tbody id="bodyListado" class="no-borders">
+        <tr *ngFor="let item of items | paginate: {id:elementId, itemsPerPage:pageSize, currentPage:currentPage}">
+            <td *ngIf="columnsSet === 'MOV'">{{item.FechaEfecto | date:'short'}}</td>
+            <td>{{item.ContratoId}}</td>
+            <td>{{item.BeneficiarioNombre}}</td>
+            <td>{{item.BeneficiarioCedula}}</td>
+            <td>{{item.BeneficiarioEdad}}</td>
+            <td>{{item.MontoCobertura}}</td>
+            <td>{{item.Pvp|number:'.2-2'}}</td>
+            <td [hidden]="columnsSet !== 'GAP2'">{{item.ValorTarifadoAnterior|number:'.2-2'}}</td>
+            <td>{{item.ValorTarifado|number:'.2-2'}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<pagination-controls [attr.id]="elementId" [id]="elementId" maxSize="5" previousLabel=""
+                     nextLabel=""
+                     autoHide="true"
+                     (pageChange)="currentPage = $event;"></pagination-controls>

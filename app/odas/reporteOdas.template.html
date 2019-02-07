@@ -1,0 +1,120 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Reporte de Odas</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a [routerLink]="['']">Home</a></li>
+            <li class="breadcrumb-item">Odas</li>
+            <li class="breadcrumb-item active">Reporte de Odas</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+        
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading" (click)="colapsarTab()">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar"><i class="fa fa-bookmark" ></i></a>
+                </h5>
+            </div>
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+                        <div class="row">
+                            <form (ngSubmit)="buscar();" #reporteOdasForm="ngForm">
+                                <div class="form-group col-lg-12 no-padding">                                                                                
+                                    <label class="col-lg-1 control-label" for="FechaDesde">Fecha Desde:</label>
+                                    <div class="col-lg-3">
+                                        <datetime required  name="FechaDesde" class="heigth25 col-lg-12 no-padding" [timepicker]="false"
+                                            id="fechaDesde" [(ngModel)]="reclamoEntityFilter.FechaDesde" [datepicker]="datepickerOpts"></datetime>                                                
+                                            <div [hidden]="reclamoEntityFilter.FechaDesde!=undefined" class="error">
+                                                <p>Campo Requerido</p>
+                                            </div>                                                    
+                                    </div>
+                                    <label class="col-lg-1 control-label" for="fechaHasta">Fecha Final:</label>
+                                    <div class="m-b col-lg-3">
+                                        <datetime required name="FechaHasta" class="heigth25 col-lg-12 no-padding" [timepicker]="false" 
+                                            id="fechaHasta" [(ngModel)]="reclamoEntityFilter.FechaHasta" [datepicker]="datepickerOpts"></datetime>
+                                        <div [hidden]="reclamoEntityFilter.FechaHasta!=undefined" class="error">
+                                            <p>Campo Requerido</p>
+                                        </div> 
+                                    </div>                                        
+                                    <label class="col-lg-1 control-label" for="region">Región:</label>
+                                    <div class="col-lg-3">
+                                        <select class="heigth25 col-lg-12 no-padding" [(ngModel)]="reclamoEntityFilter.Region" name="region" id="region" #region="ngModel">
+                                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                                            <option *ngFor="let r of regiones" [ngValue]="r.Codigo">{{r.Nombre}}</option>
+                                        </select>                                                                                        
+                                    </div>  
+                                    <label class="clearInfo col-lg-1 control-label" for="productoContrato"> Producto:</label>
+                                    <div class="col-lg-3">
+                                        <select class="form-control" id="productoContrato" name="productoContrato" [(ngModel)]="reclamoEntityFilter.Producto"
+                                            #producto ="ngModel">
+                                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                                            <option *ngFor="let prod of productoContrato" [value]="prod">{{prod}}</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-lg-1 control-label" for="numeroContrato">Contrato:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" placeholder="Número Contrato" id="numeroContrato" [(ngModel)]="reclamoEntityFilter.NumeroContrato" name="numeroContrato"
+                                            class="form-control" #numeroContrato="ngModel" pattern="\d*" minlength="2" maxlength="20"
+                                        />
+                                        <div [hidden]="numeroContrato.valid || numeroContrato.pristine" class="error">
+                                            <p *ngIf="numeroContrato.errors?.pattern">Solo se admiten dígitos</p>
+                                            <p *ngIf="numeroContrato.errors?.minlength">Minimo 2 dígitos</p>
+                                            <p *ngIf="numeroContrato.errors?.maxlength">Maximo 20 dígitos</p>
+                                        </div>
+                                    </div>                                            
+                                </div>
+                                <div class="col-lg-12">
+                                    <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!reporteOdasForm.form.valid"><i class="fa fa-search" ></i> Buscar</button>
+                                    <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-eraser" ></i> Limpiar</a>
+                                    <a (click)="generarReporte();" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-file-excel-o" ></i> Generar Reporte</a>                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>                          
+                    
+                    <div class="ibox-content">
+                        <div class="dataTables_info">{{paginationConstants.EncabezadoTabla}}</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th class="centerMiddle">Num. Reclamo</th>
+                                        <th class="centerMiddle">Num. Alcance</th>
+                                        <th class="centerMiddle">Contrato</th>
+                                        <th class="centerMiddle">Fec. Liquidación</th>
+                                        <th class="centerMiddle">Región</th>
+                                        <th class="centerMiddle">Producto</th>                                    
+                                        <th class="centerMiddle">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let r of reclamos | paginate: {id : 'reporteOdasTable', itemsPerPage: paginationConstants.pageSize,currentPage: paginationConstants.pageNumber, totalItems: paginationConstants.total};">
+                                        <td class="centerMiddle">{{r.NumeroReclamo}}</td>
+                                        <td class="centerMiddle">{{r.NumeroAlcance}}</td>
+                                        <td class="centerMiddle">{{r.NumeroContrato}}</td>
+                                        <td class="centerMiddle">{{r.FechaLiquidacion}}</td>
+                                        <td class="centerMiddle">{{r.Region}}</td>
+                                        <td class="centerMiddle">{{r.Producto}}</td>                                    
+                                        <td class="centerMiddle">{{r.EstadoReclamo}}</td>
+    
+                                    </tr>
+                                </tbody>
+                                <tfoot *ngIf="paginationConstants.total == 0">
+                                    <tr>
+                                        <td colspan="8" style="text-align: center;">No existen resultados</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <pagination-controls id="reporteOdasTable" maxSize="15" previousLabel="" nextLabel="" autoHide="true" (pageChange)="paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                    </div>                                                                          
+                </div>
+            </div>
+        </div>            
+    </div>
+</div>

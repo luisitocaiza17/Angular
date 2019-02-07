@@ -1,0 +1,108 @@
+<div class="wrapper wrapper-content">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div id="divConsultar" class="panel-collapse collapse in">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+              <form #crearSalasForm="ngForm">
+                <div class="form-group col-lg-12 no-padding">
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="region">Región:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" [(ngModel)]="salas.CodigoRegion" id="region" name="region" #region="ngModel"
+                        (change)="cargarSucursal($event);" required>
+                        <option [value]="undefined" selected>Seleccione región</option>
+                        <option *ngFor="let r of regiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label" for="sucursal">Sucursal:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="Sucursal" name="Sucursal" [(ngModel)]="salas.CodigoSucursal"
+                        #Sucursal="ngModel" required>
+                        <option *ngFor="let sucursal of sucursalesDeRegion" [value]="sucursal.CodigoSucursal"> {{
+                          sucursal.NombreSucursal }} </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label">Canales: </label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="canales" [(ngModel)]="salas.CodigoCanal" name="canales" class="form-control"
+                        #tipo="ngModel" required>
+                        <option [value]="undefined" selected>Seleccione Canal</option>
+                        <option *ngFor="let e of listaCanales" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label">Producto especial: </label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="productos" [(ngModel)]="salas.CodigoProducto" name="productos"
+                        class="form-control" #productos="ngModel">
+                        <option [value]="undefined" selected>Ninguno</option>
+                        <option *ngFor="let e of listaProductos" [value]="e.CodigoProducto">{{e.NombreProducto}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="nombre">Nombre:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="text" placeholder="Nombre" (keyup)="validacionNombre($event)" id="nombre"
+                        [(ngModel)]="salas.Nombre" name="nombre" class="form-control" #nombre="ngModel" required />
+                    </div>
+                    <div class="m-b col-lg-4">
+                      <label *ngIf="estadoNombre" class="text-danger">El nombre ya existe</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="abreviacion">Abreviación:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="text" (keyup)="validacionAbreviacion($event)" placeholder="Abreviación" id="abreviacion"
+                        [(ngModel)]="salas.Abreviacion" uppercase name="abreviacion" class="form-control" #abreviacion="ngModel"
+                        minlength="1" maxlength="2" required pattern="^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$" required/>
+                      <div [hidden]="abreviacion.valid || abreviacion.pristine" class="error">
+                        <p *ngIf="abreviacion.errors?.minlength">Minimo 1 caracteres</p>
+                        <p *ngIf="abreviacion.errors?.maxlength">Maximo 2 caracteres</p>
+                        <p *ngIf="abreviacion.errors?.pattern">Sólo se admiten Letras</p>
+                      </div>
+                    </div>
+                    <div class="m-b col-lg-4">
+                      <label *ngIf="estadoAbreviacion" class="text-danger">La abreviación ya existe</label>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="obsevaciones">Observaciones:</label>
+                    <div>
+                      <textarea rows="5" placeholder="Observaciones. Hasta 255 Caracteres" id="observaciones" name="observaciones" class="form-control"
+                        [(ngModel)]="salas.DescripcionObservacion" style="resize: none;" maxlength="255" #observaciones="ngModel"></textarea>
+                        <div [hidden]="observaciones.valid || observaciones.pristine" class="error">
+                          <p *ngIf="observaciones.errors?.maxlength">Máximo 255 caracteres</p>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-12 m-t-md">
+                    <label class="col-lg-6 control-label " for="estado">Cumple indicador de queja:</label>
+                    <div class="m-b col-lg-6">
+                        <select class="form-control" id="estado" name="estado" [(ngModel)]="salas.CumplimientoQueja" #estado="ngModel">
+                            <option [value]="true"> Si </option>
+                            <option [value]="false"> No </option>
+                        </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 text-center">
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!crearSalasForm.form.valid"
+                    (click)="crearSala();" [disabled]="estadoNombre || estadoAbreviacion">
+                    <i class="fa fa-plus"></i> Crear
+                  </button>
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="salir()">
+                    <i class="fa fa-times"></i> Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

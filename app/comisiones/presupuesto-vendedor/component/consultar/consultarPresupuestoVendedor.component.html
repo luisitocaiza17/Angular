@@ -1,0 +1,183 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+  <div class="col-lg-10">
+    <h2>Comisiones</h2>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['']">Home</a>
+      </li>
+      <li class="breadcrumb-item">Comisiones</li>
+      <li class="breadcrumb-item active">Presupuesto Vendedores</li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h5 class="panel-title">
+          <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+            <i class="fa fa-bookmark"></i>
+          </a>
+        </h5>
+      </div>
+      <div id="divConsultar" class="panel-collapse collapse in">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+              <form #crearPresupuestoVendedorForm="ngForm" (ngSubmit)="consultar();">
+                <div class="form-group col-lg-12 no-padding">
+                  <div class="form-group col-lg-12 no-padding">
+                    <label class="col-lg-1 control-label" for="region">Región:</label>
+                    <div class=" col-lg-3">
+                      <select class="form-control" id="region" [(ngModel)]="filter.Region" name="region" (change)="cargarSucursal($event);" class="form-control"
+                        #estado="ngModel">
+                        <option [value]="undefined" selected>Todos</option>
+                        <option *ngFor="let e of listaRegiones" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-1 control-label" for="sucursal">Sucursal:</label>
+                    <div class=" col-lg-3">
+                      <select class="form-control" id="sucursal" [(ngModel)]="filter.CodigoSucursal" name="sucursal" class="form-control" #estado="ngModel">
+                        <option [value]="undefined" selected>Todos</option>
+                        <option *ngFor="let e of sucursalesDeRegion" [value]="e.CodigoSucursal">{{e.NombreSucursal}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-1 control-label" for="estado">Estado:</label>
+                    <div class=" col-lg-3">
+                      <select class="form-control" id="estado" [(ngModel)]="filter.Estado" name="estado" class="form-control" #estado="ngModel">
+                        <option [value]="undefined" selected>Todos</option>
+                        <option *ngFor="let e of listaEstados" [value]="e.Nombre">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group col-lg-12 no-padding">
+                    <label class="col-lg-1 control-label" for="tipo">Tipo:</label>
+                    <div class=" col-lg-3">
+                      <select class="form-control" id="tipo" [(ngModel)]="filter.Tipo" name="tipo" class="form-control" (change)="cargarSubtipo($event);"
+                        #estado="ngModel">
+                        <option [value]="undefined" selected>Todos</option>
+                        <option *ngFor="let e of listaTipos" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-1 control-label" for="subtipo">Subtipo:</label>
+                    <div class=" col-lg-3">
+                      <select class="form-control" id="subtipo" [(ngModel)]="filter.CodigoSubtipo" name="subtipo" (change)="loadRango($event);"
+                        class="form-control" #estado="ngModel">
+                        <option [value]="undefined" selected>Todos</option>
+                        <option *ngFor="let e of listaSubtipos" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-1 control-label" for="rango">Rangos:</label>
+                    <div class="m-b col-lg-3">
+                      <select class="form-control" id="rango" [(ngModel)]="filter.CodigoRango" name="rango" class="form-control" #rango="ngModel">
+                        <option [value]="undefined" selected>Seleccione Rangos</option>
+                        <option *ngFor="let e of listaRangos" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group col-lg-12 no-padding">
+                    <label class="col-lg-1 control-label" for="valorDesde">Valor Desde:</label>
+                    <div class="m-b col-lg-3">
+                      <input type="text" placeholder="Valor Desde" id="valorDesde" [(ngModel)]="filter.Desde" name="valorDesde" class="form-control"
+                        #valorDesde="ngModel" />
+                    </div>
+                    <label class="col-lg-1 control-label" for="valorHasta">Valor Hasta:</label>
+                    <div class="m-b col-lg-3">
+                      <input type="text" placeholder="Valor Hasta" id="valorHasta" [(ngModel)]="filter.Hasta" name="valorHasta" class="form-control"
+                        #valorHasta="ngModel" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!crearPresupuestoVendedorForm.form.valid">
+                    <i class="fa fa-search"></i> Buscar
+                  </button>
+                  <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">
+                    <i class="fa fa-eraser"></i> Limpiar</a>
+                  <a (click)="openModal('#modalCrear')" class="btn btn-w-m btn-success btn-sm">
+                    <i class="fa fa-plus"></i> Nuevo</a>
+                </div>
+              </form>
+              <div id="divResultadoBusquedaListas" class="ibox-content " style="border-width:1px 0px 0px 0px;">
+                <div class="dataTables_info">Listado de Presupuestos</div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered table-hover dataTable">
+                    <thead>
+                      <tr>
+                        <th class="centerMiddle"> Acciones </th>
+                        <th class="centerMiddle"> Canal </th>
+                        <th class="centerMiddle"> Sucursal </th>
+                        <th class="centerMiddle"> Subtipo </th>
+                        <th class="centerMiddle"> Monto </th>
+                        <th class="centerMiddle"> Porcentaje </th>
+                        <th class="centerMiddle"> Tipo Presupuesto </th>
+                        <th class="centerMiddle"> Rango </th>
+                        <th class="centerMiddle"> Estado </th>
+                      </tr>
+                    </thead>
+                    <tbody class="no-borders" *ngFor="let lista of listaPresupuestoVendedor " (click)="!lista.Selected ? seleccionar(lista, true) : return;">
+                      <tr>
+                        <td rowspan="4" class="centerMiddle clickableColumn">
+                          <i class="fa fa-thumbs-up" (click)="activarEstado('#modalEditar')"></i>
+                          <i class="fa fa-thumbs-down" (click)="desactivarEstado('#modalEditar')"></i>
+                          <i class="fa fa-newspaper-o" (click)="cargarHistorial('#modalHistorial', lista)"></i>
+                        </td>
+                      </tr>
+                      <tr [class.active]="lista.Selected" class="centerMiddle ">
+                        <td>{{lista.rangosEntity.Canal.Nombre}}</td>
+                        <td>{{lista.rangosEntity.NombreSucursal}}</td>
+                        <td>{{lista.rangosEntity.Subtipo.Nombre}}</td>
+                        <td>{{lista.Desde}} - {{lista.Hasta}}</td>
+                        <td>{{lista.Porcentaje}} %</td>
+                        <td>{{lista.DescripcionTipoPresupuesto}}</td>
+                        <td>{{lista.rangosEntity.Nombre}}</td>
+                        <td>{{lista.Estado==true? "Activo" :"Inactivo" }}</td>
+                      </tr>
+                    </tbody>
+                    <tfoot *ngIf="listaPresupuestoVendedor.length==0">
+                      <tr>
+                        <td colspan="11" style="text-align: center;">No existen resultados</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <pagination-controls id="tableListasCor" maxSize="5" previousLabel="" nextLabel="" autoHide="true" (pageChange)="presupuestoVendedorService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal inmodal fade" id="modalCrear" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h5 class="panel-title">Crear nuevo registro de Presupuesto vendedor</h5>
+      </div>
+      <app-ingresarPresupuestoVendedor (eventoGuardarPresupuesto)="consultar();"></app-ingresarPresupuestoVendedor>
+    </div>
+  </div>
+</div>
+<div class="modal inmodal fade" id="modalEditar" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h5 class="panel-title">Editar registro de Presupuesto vendedor</h5>
+      </div>
+      <app-editarPresupuestoVendedor (eventoGuardarPresupuesto)="consultar();"></app-editarPresupuestoVendedor>
+    </div>
+  </div>
+</div>
+<div class="modal inmodal fade" id="modalHistorial" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h5 class="panel-title">Historial Presupuesto</h5>
+      </div>
+      <app-historial-presupuesto-vendedor></app-historial-presupuesto-vendedor>
+    </div>
+  </div>
+</div>

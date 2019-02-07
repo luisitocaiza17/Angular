@@ -1,0 +1,27 @@
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h5 class="panel-title"> Generación de archivos .txt para envío al SRI </h5>
+    </div>
+    <div class="panel-body">
+        <div class="row text-center">
+            <button (click)="generarArchivoControlFacturas()" class="btn btn-w-m btn-success btn-sm">
+                <i class="fa fa-cogs"></i> Control Facturas Txt
+            </button>
+        </div>
+        <div class="row text-center">
+            <label> Numero envio </label>
+            <input type="text" [(ngModel)]="numeroEnvio">
+        </div>
+        <div class="row text-center">
+            <button (click)="generarArchivoEnvioDocumentos()" class="Generar archivo envios documento">
+                <i class="fa fa-cogs"></i> Envios documentos fe01
+            </button>
+        </div>
+        <div class="row text-center">
+            <button (click)="generarArchivoLogErrores()" class="Generar archivo log errores fact">
+                <i class="fa fa-cogs"></i> Log errores fe04
+            </button>
+        </div>
+    </div>
+</div>
+    

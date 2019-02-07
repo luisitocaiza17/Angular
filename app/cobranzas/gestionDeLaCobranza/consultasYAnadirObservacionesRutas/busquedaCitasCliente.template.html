@@ -1,0 +1,245 @@
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    Búsqueda Citas Clientes
+                </h5>
+            </div>
+
+            <div id="clpListaContrato" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+
+                    <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                        <div class="row">
+                            <form #consultaCitasForm="ngForm">
+                                <div class="form-group col-lg-12 no-padding text-center">
+
+                                    <label class="col-lg-1 control-label " for="region">Región:</label>
+                                    <div class="m-b col-lg-2">
+                                        <select (change)="loadSucursalesDeRegion()" class="form-control" [(ngModel)]="filtroCitas.Region" id="region" name="region" #region="ngModel">
+                                            <option [value]="undefined" selected> Todas </option>
+                                            <option *ngFor="let r of regiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                                        </select>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="fechaDesde"> Desde:</label>
+                                    <div class="m-b col-lg-3">
+                                         <datetime [timepicker]="false" id="FechaDesde" name="FechaDesde" [(ngModel)]="filtroCitas.FechaDesde"
+                                            [datepicker]="datepickerOpts" #FechaDesde="ngModel"> 
+                                        </datetime>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label" for="FechaHasta"> Hasta:</label>
+                                    <div class="m-b col-lg-3">
+                                         <datetime [timepicker]="false" id="FechaHasta" name="FechaHasta" [(ngModel)]="filtroCitas.FechaHasta"
+                                            [datepicker]="datepickerOpts" #fechaHasta="ngModel"> 
+                                        </datetime>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-12 no-padding">
+                                    
+                                    <label class="col-lg-1 control-label" for="RealizadoPor"> Realizado por:</label>
+                                    <div class="m-b col-lg-2">
+                                        <input  type="text" class="form-control" placeholder="RealizadoPor" [(ngModel)]="filtroCitas.RealizadoPor" id="RealizadoPor" name="RealizadoPor"
+                                         #RealizadoPor="ngModel"/>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label " for="turno">Turno:</label>
+                                    <div class="m-b col-lg-2">
+                                        <select class="form-control" [(ngModel)]="filtroCitas.Turno" id="turno" name="turno" #turno="ngModel">
+                                            <option [value]="undefined" selected> Cualquiera </option>
+                                            <option [value]="'manana'" > Mañana </option>
+                                            <option [value]="'tarde'" > Tarde </option>
+                                        </select>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label " for="Sector">Sector:</label>
+                                    <div class="m-b col-lg-2">
+                                        <select class="form-control" [(ngModel)]="filtroCitas.Sector" id="Sector" name="Sector" #Sector="ngModel">
+                                            <option [value]="undefined" selected> Todos </option>
+                                            <option *ngFor="let sector of utilidadesService.sectores" [value]="sector.value"> {{ sector.label }} </option>
+                                        </select>
+                                    </div>
+
+                                    <label class="col-lg-1 control-label " for="Sucursal"> Sucursal:</label>
+                                    <div class="m-b col-lg-2">
+                                        <select class="form-control" [(ngModel)]="filtroCitas.CodigoSucursal" id="Sucursal" name="Sucursal" #Sucursal="ngModel">
+                                            <option [value]="undefined" selected> Todas </option>
+                                            <option *ngFor="let s of sucursalesDeRegion" [value]="s.CodigoSucursal"> {{ s.NombreSucursal }} </option>                                
+                                        </select>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="col-lg-12 text-center">
+                                    <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!consultaCitasForm.form.valid" (click)="loadCitasCliente()"><i class="fa fa-search" ></i> Buscar</button>
+                                    <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!consultaCitasForm.form.valid" (click)="generarReporteGeneralCitasCobranza()"><i class="fa fa-file-excel-o" ></i> Reporte General</button>
+                                    <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!consultaCitasForm.form.valid" (click)="generarReporteRutasCitasCobranza()"><i class="fa fa-file-excel-o" ></i> Reporte Ruta</button>
+                                    <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-eraser" ></i> Limpiar</a>
+                                    <a *ngIf="citaSelected.FechaCita != undefined" (click)="openModal('#modalObservacionCita')" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-plus-square-o" ></i> Añadir Observación</a>
+                                    <a *ngIf="citaSelected.FechaCita != undefined" (click)="openModal('#modalRuta')" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-car" ></i> Añadir Ruta</a>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div id="divCitasCliente" class="ibox-content " style="border-width:1px 0px 0px 0px; font-size: 1.05rem;">
+                        <div id="divResultadoCitasCliente">
+                            <div class="dataTables_info">{{cobranzaService.paginationConstants.EncabezadoTabla}}</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle"> Fecha Cita </th>
+                                            <th class="centerMiddle"> Hora </th>
+                                            <th class="centerMiddle"> Sector </th>
+                                            <th class="centerMiddle"> Ruta </th>
+                                            <th class="centerMiddle"> Realizado Por </th>
+                                            <th class="centerMiddle"> Meses a Cobrar </th>
+                                            <th class="centerMiddle"> Meses Cobro </th>
+                                            <th class="centerMiddle"> Meses Detalle </th>
+                                            <th class="centerMiddle"> Monto </th>
+                                            <th class="centerMiddle"> Monto a Cobrar </th>
+                                            <th class="centerMiddle"> Monto Mensual </th>
+                                            <th class="centerMiddle"> Fecha Planificación </th>
+                                            <th class="centerMiddle"> Contrato </th>
+                                            <th class="centerMiddle"> Región </th>
+                                            <th class="centerMiddle"> Cumplida </th>
+                                            <th class="centerMiddle"> Estado </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-borders selectableBodyTable" *ngFor="let cita of citasCliente | paginate: {id : 'citasTable', itemsPerPage: cobranzaService.paginationConstants.pageSize,currentPage: cobranzaService.paginationConstants.pageNumber, totalItems: cobranzaService.paginationConstants.total};">
+                                        <tr title="{{!cita.Selected ? 'Click para seleccionar' : ''}}" (click)="!cita.Selected ? seleccionar(cita, true) : return;" [class.active]="cita.Selected" class="encabezadoNestedClear">
+                                            <td class="centerMiddle ">{{ cita.FechaCita | date: 'dd/MM/yyyy' }}</td>
+                                            <td class="centerMiddle ">{{ cita.Hora }}</td>
+                                            <td class="centerMiddle ">{{ cita.Sector }}</td>
+                                            <td class="centerMiddle ">{{ cita.Ruta }}</td>
+                                            <td class="centerMiddle ">{{ cita.RealizadoPor }}</td>
+                                            <td class="centerMiddle ">{{ cita.MesesACobrar }}</td>
+                                            <td class="centerMiddle ">{{ cita.MesesCobro }}</td>
+                                            <td class="centerMiddle ">{{ cita.MesesDetalle }}</td>
+                                            <td class="centerMiddle ">${{ cita.Monto }}</td>
+                                            <td class="centerMiddle ">${{ cita.MontoACobrar }}</td>
+                                            <td class="centerMiddle ">${{ cita.MontoMensual }}</td>
+                                            <td class="centerMiddle ">{{ cita.FechaPlanificacion | date: 'dd/MM/yyyy' }}</td>
+                                            <td class="centerMiddle ">{{ cita.NumC }}</td>
+                                            <td class="centerMiddle ">{{ cita.Region }}</td>
+                                            <td class="centerMiddle ">{{ cita.Cumplida === 0 ? 'No' : 'Si' }}</td>
+                                            <td class="centerMiddle ">{{ cita.Estado }}</td>
+                                        </tr>
+                                        <tr style="cursor:default" onMouseOver="this.style.backgroundColor='transparent'">
+                                            <td colspan="20">
+                                                <h5> Datos Contrato: </h5>
+                                                <div class="col-lg-6"> <b> Nombre Cliente:</b> {{cita.NombreCliente}} </div>
+                                                <div class="col-lg-6"> <b> Contacto:</b> {{cita.Contacto}} </div>
+                                                <div class="col-lg-12"> <b> Grupal/Individual:</b> {{ cita.GrupalIndividual.replace("", " ") }} </div>
+                                                <div class="col-lg-12"> &nbsp; </div>
+                                                <h5>Direcciones: </h5>
+                                                <div class="col-lg-12"> <b>Direccion Cita:</b> {{cita.DireccionCita}} </div>
+                                                <div class="col-lg-12"> <b>Direccion 1:</b> {{cita.Direccion1}} </div>
+                                                <div class="col-lg-12"> <b>Direccion 2:</b> {{cita.Direccion2}} </div>
+                                                <div class="col-lg-12"> <b>Direccion 3:</b> {{cita.Direccion3}} </div>
+                                                <div class="col-lg-12"> &nbsp; </div>
+                                                <h5>Observaciones: </h5>
+                                                <div class="col-lg-12"> <b>Observaciones Cita:</b> {{cita.ObservacionCita}} </div>
+                                                <div class="col-lg-12"> &nbsp; </div>                                         
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot *ngIf="cobranzaService.paginationConstants.total == 0">
+                                        <tr>
+                                            <td colspan="21" style="text-align: center;">No existen resultados</td>
+                                        </tr>
+                                    </tfoot> 
+                                </table>
+                                <pagination-controls id="citasTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="cobranzaService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+
+    </div>
+</div>
+
+<!-- Modal Actualizar Observacion Cita y cumplida o no -->
+<div class="modal inmodal fade" id="modalObservacionCita" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title"> Añadir Observación</h5>
+            </div>
+            <div class="panel-body text-center">
+                <form>
+                     <div class="col-lg-12 m-t-md text-center">
+                        <label class="col-lg-4 control-label" for="ObservacionCita"> Observación Cita: </label>
+                        <div class="col-lg-8">
+                            <textarea style="min-height:250px; max-height:500px; width: 100%; resize: none;" type="text" placeholder="Observación cita" id="ObservacionCita" name="ObservacionCita" class="form-control" [(ngModel)]="observacionCita"  #ObservacionCita="ngModel"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 m-t-md text-center">
+                        <label class="col-lg-4 control-label" > Cumplida:</label>
+                        <div class="col-lg-8">
+                            <select class="form-control heigth25  no-padding" id="CitaCumplida" name="CitaCumplida" [(ngModel)]="citaCumplida" #CitaCumplida="ngModel">
+                                <option [value]="1"> Si </option>
+                                <option [value]="0"> No </option>
+                            </select>
+                        </div> 
+                    </div>
+
+                    <div class="col-lg-12 m-t-md text-center">
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="addObservacioCitaYCumplida();">
+                            <i class="fa fa-circle-thin"></i> Guardar Datos
+                        </button>
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="limpiarModalObservacion();">
+                                <i class="fa fa-undo"></i> Limpiar 
+                            </button>
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="cancelarModalObservacion();">
+                            <i class="fa fa-file-excel-o"></i> Cancelar 
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Actualizar ruta -->
+<div class="modal inmodal fade" id="modalRuta" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title"> Añadir Ruta</h5>
+            </div>
+            <div class="panel-body text-center">
+                <form>
+                     <div class="col-lg-12 m-t-md text-center">
+                        <label class="col-lg-2 control-label" for="ruta"> Ruta: </label>
+                        <div class="col-lg-10">
+                            <input type="number" placeholder="Ruta" id="Ruta" name="Ruta" class="form-control" [(ngModel)]="ruta"  #Ruta="ngModel"/>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 m-t-md text-center">
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="addRutaToCitaCliente();">
+                            <i class="fa fa-circle-thin"></i> Guardar Datos
+                        </button>
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="limpiarModalRuta();">
+                                <i class="fa fa-undo"></i> Limpiar 
+                            </button>
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="cancelarModalRuta();">
+                            <i class="fa fa-file-excel-o"></i> Cancelar 
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

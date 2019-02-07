@@ -1,0 +1,76 @@
+<div class="wrapper wrapper-content">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div id="divConsultar" class="panel-collapse collapse in">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+              <form #crearPresupuestoVendedorForm="ngForm">
+                <div class="form-group col-lg-12 no-padding">
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="codigoRegion">Región:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" [(ngModel)]="presupuesto.CodigoRegion" id="region" name="region" #region="ngModel" (change)="cargarSucursal($event);"
+                        required>
+                        <option [value]="undefined" selected>Seleccione región</option>
+                        <option *ngFor="let r of regiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label" for="sucursal">Sucursal:</label>
+                    <div class="col-lg-4">
+                      <select class="form-control" id="Sucursal" name="Sucursal" [(ngModel)]="presupuesto.CodigoSucursal"
+                        #Sucursal="ngModel" (change)="loadSalas($event);" required>
+                        <option *ngFor="let sucursal of sucursalesDeRegion" [value]="sucursal.CodigoSucursal"> {{ sucursal.NombreSucursal }} </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="sala">Salas:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="sala" [(ngModel)]="presupuesto.CodigoSala" name="sala" class="form-control" #sala="ngModel" (change)="cargarProductos();" required>
+                        <option [value]="undefined" selected>Seleccione Sala</option>
+                        <option *ngFor="let e of listaSalas" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label">Productos: </label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="productos" [(ngModel)]="presupuesto.CodigoProducto" name="productos" class="form-control"
+                        #productos="ngModel">
+                        <option [value]="undefined" selected>Seleccione Producto</option>
+                        <option *ngFor="let e of listaProductos" [value]="e.CodigoProducto">{{e.NombreProducto}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="col-lg-12">
+                      <label class="col-lg-2 control-label" for="monto">Monto:</label>
+                      <div class="m-b col-lg-4">
+                        <input type="number" placeholder="Monto" id="monto" [(ngModel)]="presupuesto.Monto" name="monto" class="form-control" #monto="ngModel"
+                          pattern="\d*" max="999999" required/>
+                        <div [hidden]="monto.valid || monto.pristine" class="error">
+                          <p *ngIf="monto.errors?.pattern">Sólo dígitos</p>
+                          <p *ngIf="monto.errors?.max">Revise el valor</p>
+                        </div>
+                      </div>
+                      <label class="col-lg-2 control-label" for="comodin">Suma al Presupuesto:</label>
+                      <div class="m-b col-lg-4">
+                        <input type="checkbox" [(ngModel)]="isChecked" name="comodin" id="comodin" (change)="checkValue($event)" />
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 text-center">
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" required [disabled]="!crearPresupuestoVendedorForm.form.valid" (click)="crearPresupuestoDirector();">
+                    <i class="fa fa-plus"></i> Crear
+                  </button>
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="salir()">
+                    <i class="fa fa-times"></i> Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="wrapper wrapper-content" *ngIf="componenteActivo == 'consulta'">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Crear Movimiento Comision Manual</h5>
+        </div>
+        <div class="wrapper wrapper-content">
+            <form #formularioBusqueda="ngForm" (ngSubmit)="cargarMovimientos();">
+                <div class="form-group col-lg-12 no-padding">
+                    <label class="col-lg-2 control-label" for="mes">Año:</label>
+                    <div class="m-b col-lg-4">
+                        <select class="form-control" [(ngModel)]="filtroMovimientos.Anio" name="anioFilter" #anioFilter="ngModel">
+                            <option [ngValue]="undefined">Seleccione</option>
+                            <option *ngFor="let a of anios" [ngValue]="a">{{a}}</option>
+                        </select>
+                    </div>
+                    <label class="col-lg-2 control-label" for="anio">Mes:</label>
+                    <div class="m-b col-lg-4">
+                        <select class="form-control" [(ngModel)]="filtroMovimientos.Mes" name="mesFilter" #mesFilter="ngModel">
+                            <option [ngValue]="undefined">Seleccione</option>
+                            <option *ngFor="let m of meses" [ngValue]="m.Numero">{{m.Nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-12 text-center">
+                    <button (click)="cargarMovimientos();" class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!formularioBusqueda.form.valid">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
+                    <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-eraser"></i> Limpiar </a>
+                    <a (click)="setearComponenteActivo('nuevo')" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-plus"></i> Nuevo </a>
+                </div>
+            </form>
+            <div id="divResultadoBusquedaListas" class="ibox-content m-t-lg" style="border-width:1px 0px 0px 0px;">
+                <div class="dataTables_info">{{movimientoComisionService.paginationConstants.EncabezadoTabla}}</div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable">
+                        <thead>
+                            <tr>
+                                <th class="centerMiddle"> Acciones </th>
+                                <th class="centerMiddle"> Id </th>
+                                <th class="centerMiddle"> Tipo movimiento </th>
+                                <th class="centerMiddle"> Transacción </th>
+                                <th class="centerMiddle"> Codigo producto </th>
+                                <th class="centerMiddle"> Contrato número </th>
+                                <th class="centerMiddle"> Region </th>
+                                <th class="centerMiddle"> Fecha Movimiento </th>
+                                <th class="centerMiddle"> Empresa </th>
+                                <th class="centerMiddle"> Sucursal </th>
+                                <th class="centerMiddle"> Fecha inicio contrato </th>
+                                <th class="centerMiddle"> Fecha fin contrato </th>
+                                <th class="centerMiddle"> Número de beneficiarios </th>
+                            </tr>
+                        </thead>
+                        <tbody class="no-borders selectableBodyTable" *ngFor="let m of movimientos | paginate: {id : 'comisionesTable', itemsPerPage: movimientoComisionService.paginationConstants.pageSize,currentPage: movimientoComisionService.paginationConstants.pageNumber, totalItems: movimientoComisionService.paginationConstants.total};">
+                            <tr (click)="seleccionarMovimiento(m)" [class.active]="m.Selected">
+                                <td class="centerMiddle clickableColumn">
+                                    <a title="Clic para Eliminar">
+                                        <i (click)="eliminarMovimiento(m);" class="fa fa-trash-o"></i>
+                                    </a>
+                                </td>
+                                <td class="centerMiddle"> {{m.Id}} </td>
+                                <td class="centerMiddle"> Manual </td>
+                                <td class="centerMiddle"> {{m.NombreTransaccion}} </td>
+                                <td class="centerMiddle"> {{m.CodigoProducto}} </td>
+                                <td class="centerMiddle"> {{m.ContratoNumero}} </td>
+                                <td class="centerMiddle"> {{m.Region}} </td>
+                                <td class="centerMiddle"> {{m.FechaMovimiento | date: 'dd/MM/yyyy'}} </td>
+                                <td class="centerMiddle"> {{m.EmpresaRazonSocial}} </td>
+                                <td class="centerMiddle"> {{m.SucursalNombre}} </td>
+                                <td class="centerMiddle"> {{m.FechaInicio | date: 'dd/MM/yyyy'}} </td>
+                                <td class="centerMiddle"> {{m.FechaFin | date: 'dd/MM/yyyy'}} </td>
+                                <td class="centerMiddle"> {{m.NumeroBeneficiarios}} </td>
+                            </tr>
+                        </tbody>
+                        <tfoot *ngIf="movimientoComisionService.paginationConstants.total == 0">
+                            <tr>
+                                <td colspan="14" style="text-align: center;">No existen resultados</td>
+                            </tr>
+                        </tfoot> 
+                    </table>
+                    <pagination-controls id="comisionesTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="movimientoComisionService.paginationConstants.pageNumber=$event;pageChangedMovimientos();"></pagination-controls>
+                </div>
+            </div>
+        </div>      
+    </div> 
+</div>
+
+<div class="wrapper wrapper-content" *ngIf="componenteActivo == 'nuevo'">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Crear Movimiento Comision Manual</h5>
+        </div>
+        <app-crearMovimientoComisionManual (eventoGuardar)="setearComponenteActivo($event); limpiar();"></app-crearMovimientoComisionManual>
+    </div>
+</div>

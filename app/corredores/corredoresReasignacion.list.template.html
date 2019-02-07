@@ -1,0 +1,603 @@
+<!-- NAVEGACIÓN SUPERIOR -->
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Reasignación de Brokers</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Brokers</li>
+            <li class="breadcrumb-item active">Reasignación</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<!-- PANEL BUSCADOR -->
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <!-- CRITERIOS DE BÚSQUEDA -->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+            <fieldset>
+                <div *ngIf="busquedaBroker"class="panel panel-success" style="margin-bottom: 0px;" >
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Selección de Broker/Vendedor Actual</h5>
+                        <br>
+                    </div>
+                    <div class="panel-body">
+                        <br>
+                        <div class="row container-fluid">
+                            <div class="col-md-3">
+                                <label class="control-label">Nombre:</label>
+                                <input type="text" placeholder="Broker/Vendedor"
+                                       [(ngModel)]="nombreBroker"  class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Código:</label>
+                                <input type="number" placeholder="Código del Broker/Vendedor"
+                                       [(ngModel)]="codigoBroker" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Ruc:</label>
+                                <input type="text" placeholder="Broker/Vendedor"
+                                       [(ngModel)]="rucBroker" class="form-control" />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row container-fluid">
+                            <div class="col-md-3">
+                                <button class="btn btn-w-m btn-success btn-sm"
+                                        (click)="traerFiltros()">
+                                    <i class="fa fa-search"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!--GRILLA CON RESULTADOS DE BUSQUEDA-->
+                    <div class="ibox-title" *ngIf="VerTabla"  style="border-width:1px 0px 0px 0px;">
+                    <div class="dataTables_info">Mostrando  registros</div>
+                    <div class="table-responsive">
+                        <table id="tablaListado" class="table table-striped table-bordered table-hover dataTable">
+                            <tbody id="bodyListado" class="no-borders">
+                            <tr>
+                                <th class="centerMiddle">
+                                    Sel
+                                </th>
+                                <th class="centerMiddle">
+                                    Código
+                                </th>
+                                <th class="centerMiddle">
+                                    Ruc
+                                </th>
+                                <th class="centerMiddle">
+                                    Nombre
+                                </th>
+                                <th class="centerMiddle">
+                                    Razón Social
+                                </th>
+                                <th class="centerMiddle">
+                                    Región
+                                </th>
+                            </tr>
+                            <tr *ngFor="let corredoresItem of corredoresList">
+                                <td class="centerMiddle general-column">
+                                    <a (click)="abrirEdicion(corredoresItem)" title="Clic para editar">
+                                        <i class="fa fa-file-text"></i>
+                                    </a>
+                                </td>
+                                <td class="centerMiddle">
+                                    {{corredoresItem.Codigo}}
+                                </td>
+                                <td class="centerMiddle">
+                                    {{corredoresItem.RucBroker}}
+                                </td>
+                                <td class="centerMiddle">
+                                    {{corredoresItem.Nombre}}
+                                </td>
+                                <td class="centerMiddle">
+                                    {{corredoresItem.RazonSocialBroker}}
+                                </td>
+                                <td class="centerMiddle">
+                                    {{corredoresItem.Region}}
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="corredoresList.length == 0">
+                                <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+                <!--Seccion tipos de contratos-->
+                <div *ngIf="!busquedaBroker">
+                    <!--SECCION QUE BUSCA LOS CONTRATOS O LISTAS-->
+                    <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                    <div class="row">
+                        <div class="col-md-6"> <h3> Broker/Vendedor: <b>{{corredorInicial.Nombre}}</b></h3></div>
+                        <br>
+                    </div>
+                    <div class="panel panel-success" *ngIf="VerContratosListas" style="margin-bottom: 0px;" >
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Búsqueda de contratos / lista a reasignar</h5>
+                            <br>
+                        </div>
+                        <div class="panel-body">
+                            <br>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="inpTipoContribuyente">Reasignar</label>
+                                        <select id="inpTipoContribuyente"  [(ngModel)]="valorTipoAsignacion" class="form-control" (ngModelChange)="seleccionarAsignacion($event)"  >
+                                            <option [value]="undefined" selected>Seleccione....</option>
+                                            <option *ngFor="let r of tipoAsignacionList" [value]="r.id" >{{r.nombre}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div *ngIf="verContrato">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="inpNumeroContrato">Número de Contrato</label>
+                                        <input type="text" class="form-control" id="inpNumeroContrato" [(ngModel)]="numeroContro" placeholder="Número de Contrato">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="inpNumeroCedula">Cédula/Pasaporte</label>
+                                        <input type="text" class="form-control" id="inpNumeroCedula" [(ngModel)]="numeroCedula" placeholder="Número de Contrato">
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="inpNombres">Nombre/Apellidos</label>
+                                        <input type="text" class="form-control" id="inpNombres" [(ngModel)]="nombreApellidos" placeholder="Nombres/Apellidos">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <button class="btn btn-w-m btn-sm"
+                                                (click)="RegresarInicio()">
+                                            <i class="fa fa-chevron-left"></i> Regresar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-w-m btn-success btn-sm"
+                                                (click)="buscar()">
+                                            <i class="fa fa-search"></i> Buscar Contratos
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-w-m btn-sm"
+                                                (click)="Inicio()">
+                                            <i class="fa fa-home"></i> Inicio
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="verLista">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="inpNombreEmpresa">Nombre Empresa</label>
+                                        <input type="text" class="form-control" id="inpNombreEmpresa" [(ngModel)]="nombreEmpresa" placeholder="Nombre de Empresa">
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="inpRuc">Ruc</label>
+                                        <input type="text" class="form-control" id="inpRuc" [(ngModel)]="numeroRuc" placeholder="Número de Ruc">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="inpNumeroEmpresa">Número Empresa</label>
+                                        <input type="text" class="form-control" id="inpNumeroEmpresa" [(ngModel)]="numeroEmpresa" placeholder="Número de Empresa">
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="inpLista">Número Lista</label>
+                                        <input type="text" class="form-control" id="inpLista" [(ngModel)]="numeroLista" placeholder="Número de Lista">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <button class="btn btn-w-m btn-sm"
+                                                (click)="RegresarInicio()">
+                                            <i class="fa fa-chevron-left"></i> Regresar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-w-m btn-success btn-sm"
+                                                (click)="buscarListas()">
+                                            <i class="fa fa-search"></i> Buscar Listas
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-w-m btn-sm"
+                                                (click)="Inicio()">
+                                            <i class="fa fa-home"></i> Inicio
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="verProducto">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Producto</label>
+                                        <select [(ngModel)]="valorTipoproducto" class="form-control" >
+                                            <option [value]="undefined" selected>Seleccione....</option>
+                                            <option *ngFor="let r of tipoProductoList" [value]="r.id" >{{r.nombre}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <button class="btn btn-w-m btn-sm"
+                                                (click)="RegresarInicio()">
+                                            <i class="fa fa-chevron-left"></i> Regresar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-w-m btn-success btn-sm"
+                                                (click)="buscarProducto()">
+                                            <i class="fa fa-search"></i> Buscar Producto
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div  *ngIf="VerTablaAfiliado"  >
+                                <br>
+                                <div class="dataTables_info">Seleccione los contratos a ser reasignados</div>
+                                <br>
+                                <div class="table-responsive">
+                                    <table id="tablaListadoContrato" class="table table-striped table-bordered table-hover dataTable">
+                                        <tbody id="bodyListadoContrato" class="no-borders">
+                                        <tr>
+                                            <th class="centerMiddle">
+                                                Número de Contrato
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Cliente
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Producto
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Región
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Seleccionar
+                                            </th>
+                                        </tr>
+                                        <tr *ngFor="let contrato of contratos">
+
+                                            <td class="centerMiddle">
+                                                {{contrato.NumeroContrato}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{contrato.NombresApellidos}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{contrato.CodigoProducto}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{contrato.CodigoRegion}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                <input type="checkbox" [(ngModel)]="contrato.esSeleccionado" >
+                                            </td>
+                                        </tr>
+
+                                        <tr *ngIf="contratos.length == 0">
+                                            <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row container-fluid">
+                                    <div class="col-md-10">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-w-m btn-success btn-sm"
+                                                (click)="continuar()">
+                                             Continuar <i class="fa fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div  *ngIf="VerTablaListas"  >
+                                <br>
+                                <div class="dataTables_info">Seleccione las listas a ser reasignadas</div>
+                                <br>
+                                <div class="table-responsive">
+                                    <table  class="table table-striped table-bordered table-hover dataTable">
+                                        <tbody class="no-borders">
+                                        <tr>
+                                            <th class="centerMiddle">
+                                                Número de Empresa
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Nombre de Empresa
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Número de Lista
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Nombre de Lista
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Producto
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Region
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Seleccionar
+                                            </th>
+                                        </tr>
+                                        <tr *ngFor="let sucursal of sucursalesList">
+                                            <td class="centerMiddle">
+                                                {{sucursal.NumeroEmpresa}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{sucursal.RazonSocial}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{sucursal.NumeroSucursal}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{sucursal.NombreSucursal}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{sucursal.CodigoProducto}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{sucursal.Region}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                <input type="checkbox" [(ngModel)]="sucursal.esSeleccionado" >
+                                            </td>
+                                        </tr>
+
+                                        <tr *ngIf="sucursalesList.length== 0">
+                                            <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row container-fluid">
+                                    <div class="col-md-10">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-w-m btn-success btn-sm"
+                                                (click)="continuar()">
+                                            Continuar <i class="fa fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Seccion seleccion de Contratos-->
+                    <!--seccion reasignacion-->
+                    <div class="panel panel-success" *ngIf="VerSeleccionBrokerReasignacion" style="margin-bottom: 0px;" >
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Broker a reasignar</h5>
+                            <br>
+                        </div>
+                        <div class="panel-body">
+                            <br>
+                            <div class="dataTables_info">Seleccione el Broker al cual se reasignarán los contratos</div>
+                            <br>
+                            <div class="row container-fluid">
+                                <div class="col-md-3">
+                                    <label class="control-label">Nombre del Broker:</label>
+                                    <input type="text" placeholder="Nombre del Broker"
+                                           [(ngModel)]="nombreBrokerAAsignar"  class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Código del Broker:</label>
+                                    <input type="number" placeholder="Código del Broker"
+                                           [(ngModel)]="codigoBrokerAAsignar" class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Ruc del Broker:</label>
+                                    <input type="text" placeholder="Ruc del Broker"
+                                           [(ngModel)]="rucBrokerAAsignar" class="form-control" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row container-fluid">
+                                <div class="col-md-3">
+                                    <button class="btn btn-w-m btn-sm"
+                                            (click)="RegresarContratos()">
+                                        <i class="fa fa-chevron-left"></i> Regresar
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-w-m btn-success btn-sm"
+                                            (click)="traerFiltrosAAsignar()">
+                                        <i class="fa fa-search"></i> Buscar 
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-w-m btn-sm"
+                                            (click)="Inicio()">
+                                        <i class="fa fa-home"></i> Inicio
+                                    </button>
+                                </div>
+                            </div>
+                            <hr>
+                            <!--GRILLA CON RESULTADOS DE BUSQUEDA-->
+                            <div class="ibox-title" *ngIf="VerTablaBrokerAAsignar"  style="border-width:1px 0px 0px 0px;">
+                                <div class="dataTables_info">Mostrando registros</div>
+                                <div class="table-responsive">
+                                    <table id="tablaListadoAsignar" class="table table-striped table-bordered table-hover dataTable">
+                                        <tbody id="bodyListadoAsignar" class="no-borders">
+                                        <tr>
+                                            <th class="centerMiddle">
+                                                Selecionar
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Código
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Ruc
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Nombre
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Razón Social
+                                            </th>
+                                            <th class="centerMiddle">
+                                                Región
+                                            </th>
+                                        </tr>
+                                        <tr *ngFor="let corredoresItem of corredoresListAASignar">
+                                            <td class="centerMiddle general-column">
+                                                <a (click)="abrirEdicionAsignar(corredoresItem)" title="Clic para editar">
+                                                    <i class="fa fa-file-text"></i>
+                                                </a>
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{corredoresItem.Codigo}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{corredoresItem.RucBroker}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{corredoresItem.Nombre}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{corredoresItem.RazonSocialBroker}}
+                                            </td>
+                                            <td class="centerMiddle">
+                                                {{corredoresItem.Region}}
+                                            </td>
+                                        </tr>
+
+                                        <tr *ngIf="corredoresList.length == 0">
+                                            <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--seccion Consolidado Final-->
+                    <div class="panel panel-success" *ngIf="verSeccionFinal" style="margin-bottom: 0px;" >
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Confirmar Reasignación</h5>
+                            <br>
+                        </div>
+                        <div class="panel-body">
+                            <br>
+                            <div class="row container-fluid">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-2">
+                                    Broker/Vendedor Actual:
+                                </div>
+                                <div class="col-md-3">
+                                    <b>{{corredorInicial.Nombre}}</b>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row container-fluid">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-2">
+                                    Broker a Reasignar:
+                                </div>
+                                <div class="col-md-3">
+                                    <b>{{corredorAsignar.Nombre}}</b>
+                                </div>
+                            </div>
+                            <br>
+                            <div *ngIf="busquedaTipoContrato==1">
+                                <div class="row container-fluid">
+                                    <div class="col-md-4">
+                                    </div>
+                                    <div class="col-md-2">
+                                        Contratos a reasignarse:
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div *ngFor="let contrato of contratosSeleccionados">
+                                            <b>{{contrato.NumeroContrato}} </b> {{contrato.NombresApellidos}}
+                                            <br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="busquedaTipoContrato==2">
+                                <div class="row container-fluid">
+                                    <div class="col-md-4">
+                                    </div>
+                                    <div class="col-md-2">
+                                        Listas a reasignarse:
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div *ngFor="let sucursal of sucursalesSeleccionadas">
+                                            <b>{{sucursal.NumeroSucursal}} </b> {{sucursal.NombreSucursal}}
+                                            <br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row container-fluid" *ngIf="comisionActivate">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-2">
+                                    Porcentaje de Comisión:
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" placeholder="% de comisión"
+                                           [(ngModel)]="valorComision" class="form-control" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row container-fluid">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-w-m btn-sm"
+                                            (click)="RegresarSeleccionBrokerReasignacion()">
+                                        <i class="fa fa-chevron-left"></i> Regresar
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-w-m btn-success btn-sm"
+                                            (click)="Reasignar()">
+                                        <i class="fa fa-save"></i>  Reasignar
+                                    </button>
+                                </div>
+                                <div class="col-md-1">
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-w-m btn-sm"
+                                            (click)="Inicio()">
+                                        <i class="fa fa-home"></i> Inicio
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

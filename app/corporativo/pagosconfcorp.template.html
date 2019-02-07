@@ -1,0 +1,123 @@
+<!-- NAVEGACIÓN SUPERIOR -->
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Grupos Empresariales</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Corporativo</li>
+            <li class="breadcrumb-item active">Pagos-Prefactura</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<!--Seccion de filtros de busquedas-->
+<div class="wrapper wrapper-content" *ngIf="!showEditor">
+    <div class="ibox float-e-margins">
+        <!-- CRITERIOS DE BÚSQUEDA -->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+            <fieldset>
+                <legend>Criterios de Búsqueda</legend>
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-3">
+                    <p>Por Número de Empresa:</p>
+                    <input type="text" placeholder="Buscar por Numero Empresa"
+                           [(ngModel)]="searchNumeroE" class="form-control"/>
+                </div>
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-3">
+                    <p>Por Ruc:</p>
+                    <input type="text" placeholder="Buscar por Ruc"
+                           [(ngModel)]="searchRucE" class="form-control"/>
+
+                </div>
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-3">
+                    <p>Por fecha desde:</p>
+                    <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="FechaBloqueo" [(ngModel)]="searchDate"
+                              [datepicker]="datepickerOpts"></datetime>
+                </div>
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-3">
+                    <p>Por: Ejecutivo Responsable</p>
+                    <select class="form-control" [(ngModel)]="searchejecutivoResponsable" id="Ejecutivo" name="Ejecutivo" #Unidad="ngModel">
+                        <option [value]="undefined" selected>Seleccione ejecutivo</option>
+                        <option *ngFor="let r of unidades" [value]="r.Responsable">{{r.Nombre}}</option>
+                    </select>
+                </div>
+                <!-- BOTÓN DE BUSCAR -->
+                <div class="form-group col-lg-12 no-padding">
+                    <button class="btn btn-w-m btn-success btn-sm"
+                            [disabled]="!puedeBuscar()" (click)="buscar()">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
+                    <button class="btn btn-w-m btn-success btn-sm"
+                            (click)="limpiarBusqueda()">
+                        <i class="fa fa-eraser"></i> Limpiar
+                    </button>
+                </div>
+            </fieldset>
+
+
+        </div>
+    </div>
+    <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+        <div class="dataTables_info">Mostrando {{listEmpresas.length}} registros</div>
+        <div class="table-responsive">
+            <table id="tablaListado" class="table table-striped table-bordered table-hover dataTable">
+                <tbody id="bodyListado" class="no-borders">
+                <tr>
+                    <th class="centerMiddle">
+                        Número
+                    </th>
+                    <th class="centerMiddle">
+                        Nombre
+                    </th>
+                    <th class="centerMiddle">
+                        Total Pago
+                    </th>
+                    <th class="centerMiddle">
+                        Fecha de Confirmación Empresa
+                    </th>
+                    <th class="centerMiddle">
+                        Confirmar Pago Asesor
+                    </th>
+                </tr>
+                <tr *ngFor="let listItem of listEmpresas" [ngClass]="{isSelect:(esCheked(listItem))}">
+
+                    <td class="centerMiddle">
+                        {{listItem.IDEmpresa}}
+                    </td>
+                    <td class="centerMiddle">
+                        {{listItem.NombreEmpresa}}
+                    </td>
+                    <td class="centerMiddle">
+                        {{listItem.Total}}
+                    </td>
+                    <td class="centerMiddle">
+                        {{listItem.FechaRegistro | date:'MM/dd/yyyy'  }}
+                    </td>
+                    <td class="centerMiddle">
+                        <input type="checkbox" class="ng-pristine ng-valid ng-touched" ng-reflect-model="true" (change)="agregarEmpresa($event,listItem)">
+
+                    </td>
+                </tr>
+
+                <tr *ngIf="listEmpresas.length == 0">
+                    <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-2">
+                <button class="btn btn-w-m btn-success btn-sm" (click)="confirmarEmpresas()" >
+                    Procesar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

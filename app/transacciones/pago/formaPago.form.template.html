@@ -1,0 +1,394 @@
+<h2 class="text-primary">Forma de Pago Actual</h2>
+
+<div class="panel panel-default panel-body">
+    <div class="row" class="flex-row">
+        <div class="col-md-12">
+            <div class="row m-b">
+                <form>
+                    <fieldset class="col-lg-12">
+                        <legend class="info">DATOS DE PAGO</legend>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Forma de Pago:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <label type="text" *ngIf="DatosContrato.FormaPago == 1" class="heigth25  col-lg-12">Débito</label>
+                            <label type="text" *ngIf="DatosContrato.FormaPago == 2 " class="heigth25  col-lg-12">Pago
+                                Directo</label>
+                        </div>
+                        <div class="m-b col-lg-2">
+                            <label class="control-label">Periodo del Pago:</label>
+                        </div>
+
+                        <div class="m-b col-lg-4">
+                            <label type="text" *ngIf="DatosContrato.PeriodoPago == 1" class="heigth25  col-lg-12">Mensual</label>
+                            <label type="text" *ngIf="DatosContrato.PeriodoPago == 2" class="heigth25  col-lg-12">Bimestral</label>
+                            <label type="text" *ngIf="DatosContrato.PeriodoPago == 3" class="heigth25  col-lg-12">Trimestral</label>
+                            <label type="text" *ngIf="DatosContrato.PeriodoPago == 4" class="heigth25  col-lg-12">Semestral</label>
+                            <label type="text" *ngIf="DatosContrato.PeriodoPago == 5" class="heigth25  col-lg-12">Anual</label>
+                            <label type="text" *ngIf="DatosContrato.PeriodoPago == 6" class="heigth25  col-lg-12">Cuatrimestral</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                        <legend class="info">DATOS DEL BANCO Y CUENTA</legend>
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-rigth">Banco:</label>
+                        </div>
+
+                        <div class="m-b col-lg-4">
+                            <b *ngFor="let banco of bancos">
+                                <label type="text" *ngIf="banco.CodigoBanco == DatosContrato.CodigoBanco" class="heigth25  col-lg-12">{{banco.NombreBanco}}</label>
+                            </b>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Código Banco:</label>
+                        </div>
+                        <div class="m-b col-lg-1">
+                            <label type="text" class="heigth25  col-lg-12">{{DatosContrato.CodigoBanco}}</label>
+                        </div>
+
+
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-rigth">Número de Cuenta:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+
+                            <label type="text" class="heigth25  col-lg-12">{{DatosContrato.NumeroCuenta}}</label>
+
+                        </div>
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Tipo de
+                                Cuenta:</label>
+                        </div>
+
+                        <div class="m-b col-lg-4">
+
+                            <label type="text" *ngIf="DatosContrato.TipoCuenta == 1" class="heigth25  col-lg-12">Cuenta
+                                Corriente</label>
+                            <label type="text" *ngIf="DatosContrato.TipoCuenta == 2" class="heigth25  col-lg-12">Cuenta
+                                Ahorro</label>
+                            <label type="text" *ngIf="DatosContrato.TipoCuenta == 3" class="heigth25  col-lg-12">Tarjeta</label>
+                            <label type="text" *ngIf="DatosContrato.TipoCuenta == 4" class="heigth25  col-lg-12">Pago
+                                Directo</label>
+                        </div>
+
+
+
+                    </fieldset>
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left clearInfo">Fecha
+                                Cad Tarjeta:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <label type="text" class="heigth25  col-lg-12">{{fechaFinTarjeta | date : "dd/MM/y"}}</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                        <legend class="info">DATOS DEL CLIENTE</legend>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">R.U.C:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <label type="text" class="heigth25  col-lg-12">{{DatosContrato.FacturarRuc}}</label>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-rigth">Pasaporte:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <label type="text" class="heigth25  col-lg-12">{{DatosContrato.FacturarPasaporte}}</label>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Cédula:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <label type="text" class="heigth25  col-lg-12">{{DatosContrato.FacturarCedula}}</label>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-rigth">Nombre
+                                Completo:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <label type="text" class="heigth25  col-lg-12">{{DatosContrato.NombreDuenioCuenta}}</label>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-rigth">Descuento:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            {{this.DatosContrato.PorcentajeDescuento + ' %'}}
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="text-primary">Forma de Pago Nueva</h2>
+
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Cambio Forma de Pago Individual</h5>
+        </div>
+        <div class="panel-body">
+
+            <form (ngSubmit)="guardarFormaPago();" name="formaPagoForm" role="form" #formaPagoForm="ngForm">
+                <fieldset class="col-lg-12">
+                    <legend class="info">DATOS DE PAGO</legend>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="slcformaPago">Forma de Pago:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control" [(ngModel)]="_contratoKey.FormaPago" id="slcformaPago"
+                            name="slcformaPago" (change)="changeFormaPago()" #slcformaPago="ngModel" [disabled]="habilitar">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">Débito</option>
+                            <option [ngValue]="2">Pago Directo</option>
+                        </select>
+                        <div [hidden]="slcformaPago.valid" class="error">
+                            <p *ngIf="slcformaPago.errors?.required">Campo requerido</p>
+                        </div>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label" for="slcPeriodoPago">Periodo del Pago:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control" [(ngModel)]="_contratoKey.PeriodoPago" id="slcPeriodoPago"
+                            name="slcPeriodoPago" [disabled]="habilitar" #slcPeriodoPago="ngModel" (change)="changePeriodoPago()">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">Mensual</option>
+                            <option [ngValue]="2">Bimestral</option>
+                            <option [ngValue]="3"> Trimestral</option>
+                            <option [ngValue]="4">Semestral</option>
+                            <option [ngValue]="5"> Anual</option>
+                            <option [ngValue]="6">Cuatrimestral</option>
+                        </select>
+                        <div [hidden]="slcPeriodoPago.valid" class="error">
+                            <p *ngIf="slcPeriodoPago.errors?.required">Campo requerido</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <legend class="info">DATOS DEL BANCO Y CUENTA</legend>
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="slcBanco">Banco:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control" [(ngModel)]="_contratoKey.CodigoBanco" id="slcBanco"
+                            name="slcBanco" [disabled]="habilitar" #slcBanco="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let banco of bancos" [ngValue]="banco.CodigoBanco">{{banco.NombreBanco}}</option>
+                        </select>
+                        <div [hidden]="slcBanco.valid" class="error">
+                            <p *ngIf="slcBanco.errors?.required">Campo requerido</p>
+                        </div>
+                    </div>
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="codigoBanco">Código Banco:</label>
+                    </div>
+                    <div class="m-b col-lg-1">
+                        <input type="text" [(ngModel)]="_contratoKey.CodigoBanco" id="codigoBanco" name="codigoBanco"
+                            class="heigth25 form-control col-lg-12" [disabled]="true" />
+                    </div>
+
+
+                </fieldset>
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="numeroCuenta">Número de Cuenta:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.NumeroCuenta" id="numeroCuenta" name="numeroCuenta"
+                            class="heigth25 form-control col-lg-12" [disabled]="habilitar" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="slcTipoCuenta">Tipo de Cuenta:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control" [(ngModel)]="_contratoKey.TipoCuenta" id="slcTipoCuenta"
+                            name="slcTipoCuenta" [disabled]="habilitar" #slcTipoCuenta="ngModel" (change)="changeTipoCuenta()">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">Cuenta Corriente</option>
+                            <option [ngValue]="2">Cuenta Ahorro</option>
+                            <option [ngValue]="3">Tarjeta</option>
+                            <option [ngValue]="4">Pago Directo</option>
+                        </select>
+                        <div [hidden]="slcTipoCuenta.valid" class="error">
+                            <p *ngIf="slcTipoCuenta.errors?.required">Campo requerido</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left clearInfo" for="txtExpiracion">Fecha Cad Tarjeta:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaFinTarjeta"
+                            [(ngModel)]="fechaFinTarjeta" [ngModelOptions]="{standalone: true}" [datepicker]="datepickerOpts"
+                            *ngIf="desabilitar==true;" (dateChange)="validarTargeta()"></datetime>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <legend class="info">DATOS DEL CLIENTE</legend>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="txtRuc">R.U.C:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.FacturarRuc" id="txtRuc" name="txtRuc" class="heigth25 form-control"
+                            [disabled]="habilitar" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="txtPasaporte">Pasaporte:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.FacturarPasaporte" id="txtPasaporte" name="txtPasaporte"
+                            class="heigth25 form-control" [disabled]="habilitar" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="txtCedula">Cédula:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.FacturarCedula" id="txtCedula" name="txtCedula"
+                            class="heigth25 form-control" [disabled]="habilitar" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="txtNombreApellido">Nombre Completo:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.NombreDuenioCuenta" id="txtNombreApellido" name="txtNombreApellido"
+                            class="heigth25 form-control" [disabled]="habilitar" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="txtDescuento">Descuento:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        {{this._contratoKey.PorcentajeDescuento + ' %'}}
+                    </div>
+                </fieldset>
+
+                <div class="col-lg-6 m-t-md no-padding">
+                    <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!formaPagoForm.valid || guardar || habilitar"
+                        data-toggle="modal" data-target="#cuentaShowModal">
+                        <i class="fa fa-save"></i>  Guardar</button>
+                </div>
+
+                <div class="modal inmodal fade" id="cuentaShowModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="col-lg-12 m-t-sm no-padding">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">CUOTAS AFECTAR</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divResultadoBusquedaContratos" class="ibox-content" style="border-width:1px 0px 0px 0px;">
+                            <div class="dataTables_info">{{detalleRemesaService.paginationConstants.EncabezadoTabla}}</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Región</th>
+                                            <th>Producto</th>
+                                            <th>Contrato</th>
+                                            <th>Cuota</th>
+                                            <th>Cuenta</th>
+                                            <th>Fecha Fin Tarjeta</th>
+                                            <th>Valor Cuota</th>
+                                            <th>Valor Remitido</th>
+                                            <th>Valor Seguro Campesino</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-borders" *ngFor="let contrato of cuotas | paginate: {id : 'contratosTable', itemsPerPage: detalleRemesaService.paginationConstants.pageSize,currentPage: detalleRemesaService.paginationConstants.pageNumber, totalItems: detalleRemesaService.paginationConstants.total};">
+                                        <tr>
+                                            <td>{{contrato.Region}}</td>
+                                            <td>{{contrato.CodigoProducto}}</td>
+                                            <td>{{contrato.ContratoNumero}}</td>
+                                            <td>{{contrato.NumeroCuota}}</td>
+                                            <td>{{contrato.NumeroCuenta}}</td>
+                                            <td>{{contrato.FechaFinTarjeta | date: 'dd/MM/yyyy' }}</td>
+                                            <td>{{contrato.ValorCuota}}</td>
+                                            <td>{{contrato.ValorRemitido}}</td>
+                                            <td>{{contrato.ValorSeguroCampesino}}</td>
+                                            <td>{{contrato.EstatusDetalleRemesa}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot *ngIf="detalleRemesaService.paginationConstants.total == 0">
+                                        <tr>
+                                            <td colspan="11" style="text-align: center;">No existen resultados</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <pagination-controls id="contratosTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true"
+                                (pageChange)="detalleRemesaService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                            <span>
+                                <button *ngIf="cuotas.length>0" class="btn btn-w-m btn-success btn-sm" type="button"
+                                    data-toggle="modal" data-target="#confirmacionShowModal" data-dismiss="modal">Aceptar</button>
+
+                                <button *ngIf="cuotas.length==0" class="btn btn-w-m btn-success btn-sm" type="button"
+                                    data-dismiss="modal" (click)="Mensaje();">Aceptar</button>
+                            </span>
+                            <button class="btn btn-w-m btn-success btn-sm" type="button" data-dismiss="modal" (click)="Mensaje();">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal inmodal fade" id="confirmacionShowModal" tabindex="-2" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="col-lg-12 m-t-sm no-padding">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">MENSAJE DE CONFIRMACION</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divResultadoBusquedaContratos" class="ibox-content" style="border-width:1px 0px 0px 0px;">
+                            <div class="dataTables_info"></div>
+
+                            <h1 style="text-align: center">ESTA SEGURO QUE DESEA REALIZAR EL CAMBIO DE LAS CUOTAS</h1>
+
+                            <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="ActualizarCuotas();"
+                                data-dismiss="modal">SI</button>
+
+                            <button class="btn btn-w-m btn-success btn-sm" type="button" data-dismiss="modal" (click)="Mensaje();">
+                                NO
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

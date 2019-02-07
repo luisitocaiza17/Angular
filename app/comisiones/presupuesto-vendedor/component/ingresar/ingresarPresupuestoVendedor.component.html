@@ -1,0 +1,123 @@
+<div class="wrapper wrapper-content">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div id="divConsultar" class="panel-collapse collapse in">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+              <form #crearPresupuestoVendedorForm="ngForm">
+                <div class="form-group col-lg-12 no-padding">
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="tipo">Tipo:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="tipo" [(ngModel)]="presupuesto.CodigoTipo" (change)="cargarSubtipo($event);" name="tipo"
+                        class="form-control" #tipo="ngModel" required>
+                        <option [value]="undefined" selected>Seleccione Tipo</option>
+                        <option *ngFor="let e of listaTipos" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label" for="subtipo">Subtipo:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="subtipo" [(ngModel)]="idsubtipo" name="subtipo" class="form-control" #subtipo="ngModel"
+                        required>
+                        <option [value]="undefined" selected>Seleccione Subtipo</option>
+                        <option *ngFor="let e of listaSubtipos" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="region">Región:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" [(ngModel)]="codigoRegion" id="region" name="region" #region="ngModel" (change)="cargarSucursal($event);"
+                        required>
+                        <option [value]="undefined" selected>Seleccione región</option>
+                        <option *ngFor="let r of listaRegiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label" for="sucursal">Sucursal:</label>
+                    <div class="col-lg-4">
+                      <select class="form-control heigth25  no-padding" id="Sucursal" name="Sucursal" [(ngModel)]="idSucursal" #Sucursal="ngModel"
+                        required>
+                        <option *ngFor="let sucursal of sucursalesDeRegion" [value]="sucursal.CodigoSucursal"> {{ sucursal.NombreSucursal }} </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="canales"> Canales: </label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="canales" [(ngModel)]="idCanal" (change)="loadRango($event);" name="canales" class="form-control"
+                        #canal="ngModel" required>
+                        <option [value]="undefined" selected>Seleccione Canal</option>
+                        <option *ngFor="let e of listaCanales" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="rango">Rangos:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="rango" [(ngModel)]="presupuesto.CodigoRango" name="rango" class="form-control" #rango="ngModel"
+                        required>
+                        <option [value]="undefined" selected>Seleccione Rangos</option>
+                        <option *ngFor="let e of listaRangos" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label" for="tipoPresupuesto">Tipo Presupuesto:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="tipoPresupuesto" [(ngModel)]="presupuesto.TipoPresupuesto" name="tipoPresupuesto" class="form-control"
+                        #tipoPresupuesto="ngModel" required>
+                        <option [value]="undefined" selected>Seleccione Tipo Presupuesto</option>
+                        <option *ngFor="let e of listaTipoPresupuesto" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="valorDesde">Valor Desde:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="number" placeholder="Valor Desde" id="valorDesde" [(ngModel)]="presupuesto.Desde" name="valorDesde" class="form-control"
+                        #valorDesde="ngModel" pattern="\d*" max="999999" required/>
+                      <div [hidden]="valorDesde.valid || valorDesde.pristine" class="error">
+                        <p *ngIf="valorDesde.errors?.pattern">Sólo dígitos</p>
+                        <p *ngIf="valorDesde.errors?.max">Revise el valor</p>
+                      </div>
+                    </div>
+                    <label class="col-lg-2 control-label" for="valorHasta">Valor Hasta:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="number" placeholder="Valor Hasta" id="valorHasta" (keyup)="validacionNombre($event)" [(ngModel)]="presupuesto.Hasta"
+                        name="valorHasta" class="form-control" #valorHasta="ngModel" pattern="\d*" max="999999" required />
+                      <div [hidden]="valorHasta.valid || valorHasta.pristine" class="error">
+                        <p *ngIf="valorHasta.errors?.pattern">Sólo dígitos</p>
+                        <p *ngIf="valorHasta.errors?.max">Revise el valor</p>
+                      </div>
+                    </div>
+                    <label class="col-lg-2 control-label" for="comodin">Comodín:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="checkbox" [(ngModel)]="isChecked" name="comodin" id="comodin" (change)="checkValue($event)" />
+                    </div>
+                    <label class="col-lg-2 control-label" for="valorDesde">Porcentaje:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="text" placeholder="Porcentaje" id="porcentaje" name="porcentaje" maxlength="3" [(ngModel)]="presupuesto.Porcentaje"
+                        #porcentaje="ngModel" required class="form-control" max="999" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                      <div [hidden]="porcentaje.valid || porcentaje.pristine" class="error">
+                        <p *ngIf="porcentaje.errors?.pattern">Sólo dígitos</p>
+                        <p *ngIf="porcentaje.errors?.max">Máximo valor 999 %</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 text-center">
+                  <button class="btn btn-w-m btn-success btn-sm" [disabled]="!crearPresupuestoVendedorForm.form.valid" type="submit" (click)="crearPresupuestoVendedor();"
+                    [disabled]="estadoNombre">
+                    <i class="fa fa-plus"></i> Crear
+                  </button>
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="salir()">
+                    <i class="fa fa-times"></i> Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,742 @@
+<nav class="navbar-default navbar-static-side canvas-menu" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header displayFlex" style="background-image: url('./assets/img/background_armonixLogin.png'); ">
+                <div class="profile-element alignMiddleFlex">
+                    <div class="col-lg-12 no-padding alignMiddleFlex">
+                        <div class="col-lg-12 ">
+
+                            <a class="goHome" [routerLink]="['/mainView']">
+                                <img width="140px" class="consultasImg" src="./assets/img/Logo_armonix_loading.png" />
+                                <!-- <strong style="color: #676a6c!important;" class="font-bold bannerFontStyle">{{authService.nombreUsuario}}</strong> -->
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="logo-element col-lg-12 alignMiddleFlex">
+                    <a class="goHome" [routerLink]="['/mainView']">
+                        <img width="30px" src="./assets/img/saludsa_logop.png" />
+                    </a>
+                </div>
+            </li>
+
+            <li *ngIf="accessConsulta" [ngClass]="{active: activeRoute('contratos')}">
+                <a href="#">
+                    <i class="fa fa-search"></i>
+                    <span class="nav-label">Consultas</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse" [ngClass]="{in: activeRoute('contratos')}">
+                    <li [ngClass]="{active: activeRoute('contratos')}">
+                        <a [routerLink]="['/contratos/list']">Contratos</a>
+                    </li>
+                </ul>
+            </li>
+
+            <!--CORREDORES-->
+            <li *ngIf="accesoCorredores ||accesoCorredoresGrupoAgentes || accesoCorredoresTerminosCondiciones||accesoCorredoresReasignacion||accesoCorredoresReporteReasignacion "
+                [ngClass]="{active: activeRoute('CorredoresCondicionesListComponent')|| activeRoute('CorredoresAdmnistracionListComponent')
+            || activeRoute('CorredoresGrupoAgentesListComponent')|| activeRoute('CorredoresReasignacionListComponent') || activeRoute('accesoCorredoresReporteReasignacion')}">
+                <a href="#">
+                    <i class="fa  fa-building"></i>
+                    <span class="nav-label">Brokers</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accesoCorredoresGrupoAgentes" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('CorredoresGrupoAgentesListComponent')}">
+                    <li [ngClass]="{active: activeRoute('CorredoresGrupoAgentesListComponent')}">
+                        <a [routerLink]="['/CorredoresGrupoAgentesListComponent/list']"> Grupo de Brókers</a>
+                    </li>
+                </ul>
+                <ul class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('CorredoresAdmnistracionListComponent')}">
+                    <li [ngClass]="{active: activeRoute('CorredoresAdmnistracionListComponent')}">
+                        <a [routerLink]="['/CorredoresAdmnistracionListComponent/list']"> Brokers</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accesoCorredoresReasignacion" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('CorredoresReasignacionListComponent')}">
+                <li [ngClass]="{active: activeRoute('CorredoresReasignacionListComponent')}">
+                        <a [routerLink]="['/CorredoresReasignacionListComponent/list']">Reasignación Brokers</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accesoCorredoresReporteReasignacion" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('CorredoresReporteReasignacionListComponent')}">
+                    <li [ngClass]="{active: activeRoute('CorredoresReporteReasignacionListComponent')}">
+                        <a [routerLink]="['/CorredoresReporteReasignacionListComponent/list']">Reporte Reasignación</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accesoCorredoresTerminosCondiciones" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('CorredoresCondicionesListComponent')}">
+                    <li [ngClass]="{active: activeRoute('CorredoresCondicionesListComponent')}">
+                        <a [routerLink]="['/CorredoresCondicionesListComponent/list']"> Brokers Términos y Condiciones
+                        </a>
+                    </li>
+                </ul>
+
+            </li>
+
+            <li *ngIf="accessCorporativoConsultar || accessCorporativoCrear|| accessCorporativoGrupo || accessCorporativoTerminosCondiciones"
+                [ngClass]="{active: activeRoute('EmpresaCorp') || activeRoute('consultarGrupoCorp') || activeRoute('consultarGrupos') || activeRoute('TerminosCondiciones') || activeRoute('UsuarioSaludCorp')}">
+                <a href="#">
+                    <i class="fa  fa-building"></i>
+                    <span class="nav-label">SmartPlan</span>
+                    <span class="fa arrow"></span>
+                </a>
+
+                <ul *ngIf="accessCorporativoGrupo" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('consultarGrupoCorp')}">
+                    <li [ngClass]="{active: activeRoute('consultarGrupoCorp')}">
+                        <a [routerLink]="['/consultarGrupoCorp/list']">Grupos Corporativos</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessCorporativoCrear" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('EmpresaCorp')}">
+                    <li [ngClass]="{active: activeRoute('EmpresaCorp')}">
+                        <a [routerLink]="['/EmpresaCorp/list']">Empresa</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessCorporativoCrear" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('PagosConfCorp')}">
+                    <li [ngClass]="{active: activeRoute('PagosConfCorp')}">
+                        <a [routerLink]="['/PagosConfCorp/list']">Prefacturas Confirmadas</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessCorporativoTerminosCondiciones" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('TerminosCondiciones')}">
+                    <li [ngClass]="{active: activeRoute('TerminosCondiciones')}">
+                        <a [routerLink]="['/TerminosCondiciones/list']">Términos y Condiciones</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accesoCorporativoUsuarioSalud" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('UsuarioSaludCorp')}">
+                    <li [ngClass]="{active: activeRoute('UsuarioSaludCorp')}">
+                        <a [routerLink]="['/UsuarioSaludCorp/list']">Usuarios Salud</a>
+                    </li>
+                </ul>
+            </li>
+
+
+            <li *ngIf="accessCrudAutorizaciones || accessTrackingAutorizaciones || accessReporteAutorizaciones || accessReporteInSituAutorizaciones"
+                [ngClass]="{active: activeRoute('movimientos') || activeRoute('autorizacion') || activeRoute('reporteAutorizacionesNormal') || activeRoute('reporteAutorizacionesInSitu')}">
+                <a href="#">
+                    <i class="fa fa-user-md"></i>
+                    <span class="nav-label">Autorizaciones</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('movimientos') || activeRoute('autorizacion') || activeRoute('reporteAutorizacionesNormal') || activeRoute('reporteAutorizacionesInSitu')}">
+                    <li *ngIf="accessCrudAutorizaciones" [ngClass]="{active: activeRoute('autorizacion')}">
+                        <a [routerLink]="['/autorizacion/list']">Autorización</a>
+                    </li>
+                    <li *ngIf="accessTrackingAutorizaciones" [ngClass]="{active: activeRoute('movimientos')}">
+                        <a [routerLink]="['/movimientos/list']">Tracking</a>
+                    </li>
+                    <li *ngIf="accessReporteAutorizaciones" [ngClass]="{active: activeRoute('reporteAutorizacionesNormal')}">
+                        <a [routerLink]="['/reporteAutorizacionesNormal/list']">Reporte Autorizaciones</a>
+                    </li>
+                    <li *ngIf="accessReporteInSituAutorizaciones" [ngClass]="{active: activeRoute('reporteAutorizacionesInSitu')}">
+                        <a [routerLink]="['/reporteAutorizacionesInSitu/list']">Reporte Autorizaciones In Situ</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessODAS" [ngClass]="{active: activeRoute('odas') || activeRoute('reporteOdas')}">
+                <a href="#">
+                    <i class="fa fa-file-archive-o"></i>
+                    <span class="nav-label">ODAS</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('odas') || activeRoute('reporteOdas')}">
+                    <li [ngClass]="{active: activeRoute('autorizacion')}">
+                        <a [routerLink]="['/odas/list']">Órdenes</a>
+                    </li>
+                    <li [ngClass]="{active: activeRoute('reporteOdas')}">
+                        <a [routerLink]="['/reporteOdas/list']">Reporte ODAS</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessTransacciones || accessMovimientosReportes" [ngClass]="{active: activeRoute('transacciones') || activeRoute('reporteMovimientos') || activeRoute('transferencia')}">
+                <a href="#">
+                    <i class="fa fa-exchange"></i>
+                    <span class="nav-label">Transacciones</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessTransacciones" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('transacciones')}">
+                    <li [ngClass]="{active: activeRoute('transacciones')}">
+                        <a [routerLink]="['/transacciones/list']">Transacción</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessMovimientosReportes" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('reporteMovimientos')}">
+                    <li [ngClass]="{active: activeRoute('reporteMovimientos')}">
+                        <a [routerLink]="['/reporteMovimientos/list']">Reporte Movimientos</a>
+                    </li>
+                </ul>
+                <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('transferencia')}">
+                    <li [ngClass]="{active: activeRoute('transferencia')}">
+                        <a [routerLink]="['/transferenciaRemesa/list']">Transferencia de Remesa</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessPrestadoresConsultar || accessPrestadoresAgendarCita|| accessCalificacionPrestadores || accessAgendarCentrosMedico || accessSolicitarCitas|| acessConsultarSolicitudes|| accessConsultarCitas || accessActualizaConvenio || accessInsertarConvenio"
+                [ngClass]="{active: activeRoute('consultarPrestadores') || activeRoute('agendarCitaPrestador') || activeRoute('calificacionPrestador') ||  activeRoute('agendarCitasSalud') || activeRoute('solicitarCita') || activeRoute('consultaCitasSolicitud')}">
+                <a href="#">
+                    <i class="fa fa-user-md"></i>
+                    <span class="nav-label">Prestadores</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessPrestadoresConsultar || accessActualizaConvenio||accessInsertarConvenio" class="nav nav-second-level collapse"
+                    [ngClass]="{active: activeRoute('consultarPrestadores')}">
+                    <li [ngClass]="{active: activeRoute('consultarPrestadores')}">
+                        <a [routerLink]="['/consultarPrestadores/list']">Consultar Prestadores</a>
+                    </li>
+                </ul>
+                <!-- <ul *ngIf="accessPrestadoresAgendarCita" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('agendarCitaPrestador')}">
+                        <li [ngClass]="{active: activeRoute('agendarCitaPrestador')}">
+                            <a [routerLink]="['/agendarCitaPrestador/list']">Agendar Citas Veris</a>
+                        </li>
+                    </ul> -->
+
+                <ul *ngIf="accessAgendarCentrosMedico" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('agendarCitasSalud')}">
+                    <li [ngClass]="{active: activeRoute('agendarCitasSalud')}">
+                        <a [routerLink]="['/agendarCitasSalud/list']">Cita Centros</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessSolicitarCitas" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('solicitarCita')}">
+                    <li [ngClass]="{active: activeRoute('solicitarCita')}">
+                        <a [routerLink]="['/solicitarCita/list']">Citas Destacados</a>
+                    </li>
+                </ul>
+                <ul *ngIf="acessConsultarSolicitudes || accessConsultarCitas" class="nav nav-second-level collapse"
+                    [ngClass]="{active: activeRoute('consultaCitasSolicitud')}">
+                    <li [ngClass]="{active: activeRoute('consultaCitasSolicitud')}">
+                        <a [routerLink]="['/consultaCitasSolicitud/form']">Consultar Citas</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessCalificacionPrestadores" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('calificacionPrestador')}">
+                    <li [ngClass]="{active: activeRoute('calificacionPrestador')}">
+                        <a [routerLink]="['/calificacionPrestador/list']">Consulta Calificación</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessCatalogosDiagnostico || accessCatalogosProcedimiento || accessCatalogosValorPunto || accessEditValorPunto"
+                [ngClass]="{active: activeRoute('diagnostico') || activeRoute('procedimiento') || activeRoute('valorPunto')}">
+                <a href="#">
+                    <i class="fa fa-list-ul"></i>
+                    <span class="nav-label">Catálogos</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessCatalogosDiagnostico" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('diagnostico')}">
+                    <li [ngClass]="{active: activeRoute('diagnostico')}">
+                        <a [routerLink]="['/diagnostico/list']">Diagnósticos</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessCatalogosProcedimiento" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('procedimiento')}">
+                    <li [ngClass]="{active: activeRoute('procedimiento')}">
+                        <a [routerLink]="['/procedimiento/list']">Procedimientos</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessCatalogosValorPunto || accessEditValorPunto" class="nav nav-second-level collapse"
+                    [ngClass]="{active: activeRoute('valorPunto')}">
+                    <li [ngClass]="{active: activeRoute('valorPunto')}">
+                        <a [routerLink]="['/valorPunto/list']">Valores de Punto</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessAuditorias" [ngClass]="{active: activeRoute('auditoria')}">
+                <a href="#">
+                    <i class="fa fa-user-secret"></i>
+                    <span class="nav-label">Auditorías</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('auditoria')}">
+                    <li [ngClass]="{active: activeRoute('auditoria')}">
+                        <a [routerLink]="['/auditoria/list']">Auditorías Sistema</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessAdministracionUsuarios || accessAdministracionRoles" [ngClass]="{active: activeRoute('usuarios') || activeRoute('roles')}">
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span class="nav-label">Administración</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessAdministracionUsuarios" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('usuarios')}">
+                    <li [ngClass]="{active: activeRoute('usuarios')}">
+                        <a [routerLink]="['/usuarios/list']">Usuarios</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessAdministracionRoles" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('roles')}">
+                    <li [ngClass]="{active: activeRoute('roles')}">
+                        <a [routerLink]="['/roles/list']">Roles</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessAdmin || accessProcesoFacturacion || acccessLogErrores || accessDevolucionSaldos || accessNotasCredito || accessReporteMorosoCobrar || accessReporteFacturasEmitidas || accessTareasProgramadasFacturacion || accessConsultaDocumentosElectronicosDirectoSri || accessCotizacionesPrincipal || accessDescuentoParametro"
+                [ngClass]="{active: activeRoute('configuracionFacturacion') || activeRoute('logErrores') || activeRoute('procesoFacturacion') || activeRoute('devolucionSaldoFavor') || activeRoute('notasCredito') || activeRoute('reportesFacturacion') || activeRoute('tareasProgramadasFacturacion') || activeRoute('cotizacionesPrincipal') }">
+                <a href="#">
+                    <i class="fa fa-calculator"></i>
+                    <span class="nav-label">Facturación</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessAdmin" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('configuracionFacturacion')}">
+                    <li [ngClass]="{active: activeRoute('configuracionFacturacion')}">
+                        <a [routerLink]="['/configuracionFacturacion/form']">Configuración</a>
+                    </li>
+                </ul>
+                <ul *ngIf="acccessLogErrores" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('logErrores')}">
+                    <li [ngClass]="{active: activeRoute('logErrores')}">
+                        <a [routerLink]="['/logErrores/form']">Log Errores</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessProcesoFacturacion" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('procesoFacturacion')}">
+                    <li [ngClass]="{active: activeRoute('procesoFacturacion')}">
+                        <a [routerLink]="['/procesoFacturacion/principal']">Proceso Facturación</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessDevolucionSaldos" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('devolucionSaldoFavor')}">
+                    <li [ngClass]="{active: activeRoute('devolucionSaldoFavor')}">
+                        <a [routerLink]="['/devolucionSaldoFavor/list']">Saldos a Favor</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessNotasCredito" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('notasCredito')}">
+                    <li [ngClass]="{active: activeRoute('notasCredito')}">
+                        <a [routerLink]="['/notasCredito/list']">Notas de Crédito</a>
+                    </li>
+                </ul>
+                <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('notasCreditoMasivas')}">
+                    <li [ngClass]="{active: activeRoute('notasCreditoMasivas')}">
+                        <a [routerLink]="['/notasCreditoMasivas/form']">Notas de Crédito Masivas</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessTareasProgramadasFacturacion" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('tareasProgramadasFacturacion')}">
+                    <li [ngClass]="{active: activeRoute('tareasProgramadasFacturacion')}">
+                        <a [routerLink]="['/tareasProgramadasFacturacion/form']">Tareas Programadas</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessReporteMorosoCobrar || accessReporteFacturasEmitidas" class="nav nav-second-level collapse"
+                    [ngClass]="{active: activeRoute('reportesFacturacion')}">
+                    <li [ngClass]="{active: activeRoute('reportesFacturacion')}">
+                        <a [routerLink]="['/reportesFacturacion/form']">Reportes</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessConsultaDocumentosElectronicosDirectoSri" class="nav nav-second-level collapse"
+                    [ngClass]="{active: activeRoute('consultaDocumentosFacturacion')}">
+                    <li [ngClass]="{active: activeRoute('consultaDocumentosFacturacion')}">
+                        <a [routerLink]="['/consultaDocumentosFacturacion']">Consulta Documentos</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessCotizacionesPrincipal" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('cotizacionesPrincipal')}">
+                    <li [ngClass]="{active: activeRoute('cotizacionesPrincipal')}">
+                        <a [routerLink]="['/cotizacionesPrincipal/form']">Cotizaciones</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessDescuentoParametro" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('descuentoParametrizacion')}">
+                    <li [ngClass]="{active: activeRoute('descuentoParametrizacion')}">
+                        <a [routerLink]="['/descuentoParametrizacion']"> Descuentos </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessAdmin || accessRecaudosSaludpay || accessRecaudosCajaPich || accessSobresPorContrato || accessIngresoCaja"
+                [ngClass]="{active: activeRoute('facturarCobros') || activeRoute('botonPago') || activeRoute('genearArchivosDebitosInstituciones') || activeRoute('ingresoCaja')}">
+                <a href="#">
+                    <i class="fa fa-suitcase"></i>
+                    <span class="nav-label">Recaudos</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessRecaudosSaludpay" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('facturarCobros/cargaArchivosPichincha') || activeRoute('facturarCobros/cobrosPichincha') }">
+                    <li [ngClass]="{active: activeRoute('facturarCobros/cargaArchivosPichincha') || activeRoute('facturarCobros/cobrosPichincha') }">
+                        <a [routerLink]="['/facturarCobros/cargaArchivosPichincha']">Saludsa Pay</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessRecaudosCajaPich" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('botonPago/cargarArchivosBotonPago') || activeRoute('botonPago/facturarBotonPago') || activeRoute('botonPago/cuadreCajaPichincha') || activeRoute('botonPago/generarArchivosCajaPichincha')}">
+                    <li [ngClass]="{active: activeRoute('botonPago/cargarArchivosBotonPago') || activeRoute('botonPago/facturarBotonPago') || activeRoute('botonPago/cuadreCajaPichincha') || activeRoute('botonPago/generarArchivosCajaPichincha') }">
+                        <a [routerLink]="['/botonPago/cargarArchivosBotonPago']">Botón Pago</a>
+                    </li>
+                </ul>
+                <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('genearArchivosDebitosInstituciones') }">
+                    <li [ngClass]="{active: activeRoute('genearArchivosDebitosInstituciones') }">
+                        <a [routerLink]="['genearArchivosDebitosInstituciones']">Archivos Debitos Instituciones</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessIngresoCaja" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('ingresoCaja')}">
+                    <li [ngClass]="{active: activeRoute('ingresoCaja')}">
+                        <a [routerLink]="['/ingresoCaja/form']"> Ingreso Caja </a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('menuCargaRespuestas')}">
+                    <li [ngClass]="{active: activeRoute('menuCargaRespuestas')}">
+                        <a [routerLink]="['/menuCargaRespuestas']"> Carga Respuestas </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessSobresPorContrato || accessSobresReportes || accessSobresAsignar || accessSobresConsultor || accessSobresDevolucion"
+                [ngClass]="{active: activeRoute('sobresPorContrato') || activeRoute('reporteSobres') || activeRoute('asignarSobres') || activeRoute('listadoSobresConsultor') || activeRoute('devolucionSobres') || activeRoute('autorizarSobres') }">
+                <a href="#">
+                    <i class="fa fa-envelope"></i>
+                    <span class="nav-label">Sobres</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessSobresPorContrato" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('sobresPorContrato') }">
+                    <li [ngClass]="{active: activeRoute('sobresPorContrato')}">
+                        <a [routerLink]="['/sobresPorContrato/list']">Sobres por Contrato</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessSobresReportes" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('reporteSobres') }">
+                    <li [ngClass]="{active: activeRoute('reporteSobres')}">
+                        <a [routerLink]="['/reporteSobres/form']">Reportes</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessSobresAsignar" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('asignarSobres') }">
+                    <li [ngClass]="{active: activeRoute('asignarSobres')}">
+                        <a [routerLink]="['/asignarSobres/form']">Asignar</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessSobresConsultor" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('listadoSobresConsultor') }">
+                    <li [ngClass]="{active: activeRoute('listadoSobresConsultor')}">
+                        <a [routerLink]="['/listadoSobresConsultor/list']">Consultor</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessSobresDevolucion" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('devolucionSobres') }">
+                    <li [ngClass]="{active: activeRoute('devolucionSobres')}">
+                        <a [routerLink]="['/devolucionSobres/list']">Devolución</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessAutorizarSobres" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('autorizarSobres')}">
+                    <li [ngClass]="{active: activeRoute('autorizarSobres')}">
+                        <a [routerLink]="['/autorizarSobres/form']"> Autorizar </a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessSimuladorConstitucion" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('simuladorReporte') }">
+                    <li [ngClass]="{active: activeRoute('simuladorReporte')}">
+                        <a [routerLink]="['/simuladorReporte/form']">Simulador</a>
+                    </li>
+                </ul>
+            </li>
+            <!--Creditos-->
+            <li *ngIf="accessCreditoPorContrato || accessCreditoReportes || accessCreditoAsignar || accessCreditoConsultor|| accessCreditoAutorizar "
+                [ngClass]="{active: activeRoute('creditoPorContrato') || activeRoute('reporteCredito') || activeRoute('asignarCredito')  || activeRoute('listadoCreditoConsultor') || activeRoute('autorizarCreditos') }">
+
+                <a href="#">
+                    <i class="fa fa-envelope"></i>
+                    <span class="nav-label">Credito</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessCreditoPorContrato" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('creditoPorContrato') }">
+                    <li [ngClass]="{active: activeRoute('creditoPorContrato')}">
+                        <a [routerLink]="['/creditoPorContrato/list']">Creditos por Contrato</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessCreditoReportes" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('reporteCredito') }">
+                    <li [ngClass]="{active: activeRoute('reporteCredito')}">
+                        <a [routerLink]="['/reporteCredito/form']">Reportes</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessCreditoAsignar" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('asignarCredito') }">
+                    <li [ngClass]="{active: activeRoute('asignarCredito')}">
+                        <a [routerLink]="['/asignarCredito/form']">Asignar</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessCreditoConsultor" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('listadoCreditoConsultor') }">
+                    <li [ngClass]="{active: activeRoute('listadoCreditoConsultor')}">
+                        <a [routerLink]="['/listadoCreditoConsultor/list']">Auditor/Liquidador</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessCreditoAutorizar" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('autorizarCreditos')}">
+                    <li [ngClass]="{active: activeRoute('autorizarCreditos')}">
+                        <a [routerLink]="['/autorizarCreditos/form']"> Autorizar </a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessSimuladorConstitucion" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('simuladorReporte') }">
+                    <li [ngClass]="{active: activeRoute('simuladorReporte')}">
+                        <a [routerLink]="['/simuladorReporte/form']">Simulador</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessRetencionConsulta || accessInformacionRetencion || accessRetencionReporte || accessRetencionParametroDescuento || accessRetencionAprobacion"
+                [ngClass]="{ active: activeRoute('/retencion') || activeRoute('/retencion/list') || activeRoute('/retencion/info/ver') || activeRoute('/retencion/reportes')  || activeRoute('/retencion/descuento/list') }">
+                <a href="#">
+                    <i class="fa fa-money"></i>
+                    <span class="nav-label">Retención</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessRetencionConsulta" class="nav nav-second-level collapse" [ngClass]="{ active: activeRoute('/retencion/list') }">
+                    <li [ngClass]="{ active: activeRoute('/retencion/list') }">
+                        <a [routerLink]="['/retencion/list']">Consulta</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessInformacionRetencion" class="nav nav-second-level collapse" [ngClass]="{ active: activeRoute('/retencion/info/ver') }">
+                    <li [ngClass]="{ active: activeRoute('/retencion/info/ver') }">
+                        <a [routerLink]="['/retencion/info/ver']">Información de retención</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessRetencionReporte" class="nav nav-second-level collapse" [ngClass]="{ active: activeRoute('/retencion/reportes') }">
+                    <li [ngClass]="{ active: activeRoute('/retencion/reportes') }">
+                        <a [routerLink]="['/retencion/reportes']">Reportes</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessRetencionParametroDescuento" class="nav nav-second-level collapse" [ngClass]="{ active: activeRoute('/retencion/descuento/list') }">
+                    <li [ngClass]="{ active: activeRoute('/descuento/parametros') }">
+                        <a [routerLink]="['/retencion/descuento/parametros']">Parametrizaci&oacute;n descuento</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessRetencionAprobacion" class="nav nav-second-level collapse" [ngClass]="{ active: activeRoute('/retencion/descuento/reportes') }">
+                    <li [ngClass]="{ active: activeRoute('/retencion/descuento/reportes') }">
+                        <a [routerLink]="['/retencion/descuento/reportes']">Aprobación</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessReporteVendedores || accessEjecutivoComercial || accessAdministracionFun" [ngClass]="{active: activeRoute('reporteVendedores') || activeRoute('ejecutivoComercial') || activeRoute('administracionFunes') }">
+                <a href="#">
+                    <i class="fa fa-sticky-note"></i>
+                    <span class="nav-label">Comercial</span>
+                    <span class="fa arrow"></span>
+                </a>
+
+                <!--<ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('reporteVendedores') }">
+                    <li [ngClass]="{active: activeRoute('reporteVendedores')}">
+                        <a [routerLink]="['/reporteVendedores/form']">Reporte Cartera</a>
+                    </li>
+                </ul> -->
+
+                <ul *ngIf="accessEjecutivoComercial" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('ejecutivoComercial') }">
+                    <li [ngClass]="{active: activeRoute('ejecutivoComercial')}">
+                        <a [routerLink]="['/ejecutivoComercial/list']">Ejecutivo Comercial</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessAdministracionFun" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('administracionFunes') }">
+                    <li [ngClass]="{active: activeRoute('administracionFunes')}">
+                        <a [routerLink]="['/administracionFunes/form']">Administración de Funes</a>
+                    </li>
+                </ul>
+
+            </li>
+
+
+            <li *ngIf="accessReservas" [ngClass]="{active: activeRoute('reporteReservas') || activeRoute('configuracionReservas') || activeRoute('menuCargaEstadoCuentaBancaria')}">
+                <a href="#">
+                    <i class="fa fa-book"></i>
+                    <span class="nav-label">Contabilidad</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessReservas" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('reporteReservas') }">
+                    <li [ngClass]="{active: activeRoute('reporteReservas')}">
+                        <a [routerLink]="['/reporteReservas/form']">Reporte Reservas</a>
+                    </li>
+                </ul>
+                <ul *ngIf="accessReservas" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('configuracionReservas') }">
+                    <li [ngClass]="{active: activeRoute('configuracionReservas')}">
+                        <a [routerLink]="['/configuracionReservas/form']">Configuracion Reservas</a>
+                    </li>
+                </ul>
+                <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('menuCargaEstadoCuentaBancaria') }">
+                    <li [ngClass]="{active: activeRoute('menuCargaEstadoCuentaBancaria')}">
+                        <a [routerLink]="['/menuCargaEstadoCuentaBancaria']">Carga Estado Cuenta Bancaria</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accessCobranzasFull" [ngClass]="{active: activeRoute('menuGestionDeCobranza') || activeRoute('impresionDeRecibosCobranzas') || activeRoute('reportesCobranzas')}">
+                <a href="#">
+                    <i class="fa fa-usd"></i>
+                    <span class="nav-label">Cobranzas</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessCobranzasFull" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('menuGestionDeCobranza')}">
+
+                    <li [ngClass]="{active: activeRoute('menuGestionDeCobranza')}">
+                        <a [routerLink]="['gestionDeCobranzas/menuGestionDeCobranza']"> Gestión de la Cobranza</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessCobranzasFull" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('impresionDeRecibosCobranzas')}">
+                    <li [ngClass]="{active: activeRoute('impresionDeRecibosCobranzas')}">
+                        <a [routerLink]="['gestionDeCobranzas/impresionRecibos']"> Impresión de Recibos </a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessCobranzasFull" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('reportesCobranzas')}">
+                    <li [ngClass]="{active: activeRoute('reportesCobranzas')}">
+                        <a [routerLink]="['menuReporteCobranzas/form']">Reportes</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="accesPortalClientes" [ngClass]="{active:activeRoute('portalClientes') }">
+                <a href="#">
+                    <i class="fa fa-book"></i>
+                    <span class="nav-label">Portal Clientes</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accesPortalClientes " class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('portalClientes')}">
+                    <li [ngClass]="{active: activeRoute('portalClientes')}">
+                        <a [routerLink]="['/portalClientes/form']">Administración</a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="accessServiciosAdicionalesBases || accessServiciosAdicionalesAdmin" [ngClass]="{active: activeRoute('srvAdicBases')}">
+                <a href="#">
+                    <i class="fa  fa-building"></i>
+                    <span class="nav-label">Servicios adicionales</span>
+                    <span class="fa arrow"></span>
+                </a>
+
+                <ul *ngIf="accessServiciosAdicionalesBases" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('srvAdicBases')}">
+                    <li [ngClass]="{active: activeRoute('srvAdicBases')}">
+                        <a [routerLink]="['/srvAdicBases/list']">Listado de bases existentes</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="accessServiciosAdicionalesAdmin" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('srvAdicAdmin')}">
+                    <li [ngClass]="{active: activeRoute('srvAdicAdmin')}">
+                        <a [routerLink]="['/srvAdicAdmin/polizas']">Polizas</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="true" [ngClass]="{active: activeRoute('liquidacion')}">
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span class="nav-label">Liquidaciones</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('liquidacion')}">
+                    <li [ngClass]="{active: activeRoute('liquidacion')}">
+                        <a [routerLink]="['/liquidacion/list']">Liquidaci&oacute;n</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="true" [ngClass]="{active: activeRoute('masivos')}">
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span class="nav-label">Masivos</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('masivos')}">
+                    <li [ngClass]="{active: activeRoute('masivos')}">
+                        <a [routerLink]="['/masivos/form']">Masivos</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="true" [ngClass]="{ active: activeRoute('comisiones')}">
+                <a href="#">
+                    <i class="fa fa-money"></i>
+                    <span class="nav-label">Comisiones</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('menuParametrizacionComisiones')}">
+                    <li [ngClass]="{active: activeRoute('menuParametrizacionComisiones')}">
+                        <a [routerLink]="['menuParametrizacionComisiones']"> <i class="fa fa-cog"></i> Parametrización
+                        </a>
+                    </li>
+                </ul>
+                <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{ active: activeRoute('salas') }">
+                    <li [ngClass]="{ active: activeRoute('niveles') }">
+                        <a href="#">
+                            <i class="fa fa-dollar"></i>
+                            <span class="nav-label">Presupuestos</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{ active: activeRoute('presupuestoVendedor') }">
+                            <li [ngClass]="{ active: activeRoute('presupuestoVendedor') }">
+                                <a [routerLink]="['/presupuestoVendedor/form']">Presupuesto Vendedor</a>
+                            </li>
+                            <li [ngClass]="{ active: activeRoute('presupuestoDirector') }">
+                                <a [routerLink]="['/presupuestoDirector/form']">Presupuesto Director</a>
+                            </li>
+                            <li [ngClass]="{ active: activeRoute('presupuestoRangosDirector') }">
+                                <a [routerLink]="['/presupuestoRangosDirector/form']">Presupuesto Rangos Director</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li [ngClass]="{ active: activeRoute('niveles') }">
+                        <a href="#">
+                            <i class="fa fa-address-book"></i>
+                            <span class="nav-label">Referidos</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{ active: activeRoute('comisionCorporativo') }">
+                            <li [ngClass]="{active: activeRoute('comisionCorporativo')}">
+                                <a [routerLink]="['/comisionCorporativo/form']">Mantenimiento para cálculo de comisión</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li [ngClass]="{ active: activeRoute('parametrizacionPremios') }">
+                        <a href="#">
+                            <i class="fa fa-trophy"></i>
+                            <span class="nav-label">Parametrización Premios</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul *ngIf="true" class="nav nav-second-level collapse" [ngClass]="{ active: activeRoute('parametrizacionPremios') }">
+                            <li [ngClass]="{active: activeRoute('parametrizacionPremios')}">
+                                <a [routerLink]="['/parametrizacionPremios/premios']">Premios</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li [ngClass]="{active: activeRoute('premiosBonos')}">
+                        <a [routerLink]="['/premiosBonos']">
+                            <i class="fa fa-gift" aria-hidden="true"></i>
+                            Premios y bonos
+                        </a>
+                    </li>
+                    <li [ngClass]="{active: activeRoute('consultasComisiones')}">
+                        <a [routerLink]="['/consultasComisiones']"> <i class="fa fa-search" aria-hidden="true"></i>
+                            Consultas </a>
+                    </li>
+                    <li [ngClass]="{active: activeRoute('semaforoComisiones')}">
+                        <a [routerLink]="['/semaforoComisiones']"> <i class="fa fa-hourglass-1" aria-hidden="true"></i>
+                            Semaforo </a>
+                    </li>
+                    <li [ngClass]="{active: activeRoute('menuMovimientosManuales')}">
+                        <a [routerLink]="['/menuMovimientosManuales']"> <i class="fa fa-exchange" aria-hidden="true"></i>
+                            Movimientos Manuales </a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="true" [ngClass]="{ active: activeRoute('listaCorporativo')}">
+                <a href="#">
+                    <i class="fa fa-money"></i>
+                    <span class="nav-label">Corporativo</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul *ngIf="accessCorporativoTerminosCondiciones" class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('listaCorporativo')}">
+                    <li [ngClass]="{active: activeRoute('listaCorporativo')}">
+                        <a [routerLink]="['/listaCorporativo/form']">Plan</a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="accessCargaPCA" [ngClass]="{ active: activeRoute('contratosPCA')}">
+                <a href="#">
+                    <i class="fa  fa-building"></i>
+                    <span class="nav-label">Contratos PCA</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse" [ngClass]="{active: activeRoute('contratosPCA')}">
+                    <li [ngClass]="{active: activeRoute('contratosPCA')}">
+                        <a [routerLink]="['/contratosPCA/uploads']">Cargar archivo</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

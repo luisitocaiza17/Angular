@@ -1,0 +1,110 @@
+<div id="divConsultarTransferencia" class="panel-collapse collapse in">
+    <div class="col-lg-12 m-t-sm no-padding">
+        <div class="row no-padding">
+            <div class="col-lg-8">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Datos Generales</h5>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Remesa Numero:</label>
+                            <span class="col-lg-2">{{detalleRemesa.NumeroRemesa}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Region:</label>
+                            <span class="col-lg-2">{{detalleRemesa.Region}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Banco:</label>
+                            <span class="col-lg-2">{{verBanco(detalleRemesa.CodigoBanco)}}</span>
+                        </div>
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Dueño Cuenta:</label>
+                            <span class="col-lg-2">{{detalleRemesa.NombreDuenioCuenta}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Valor Remitido:</label>
+                            <span class="col-lg-2">{{detalleRemesa.ValorRemitido}}</span>
+
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Tipo Cuenta:</label>
+                            <span class="col-lg-2">{{detalleRemesa.TipoCuenta}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Cuenta:</label>
+                            <span class="col-lg-2">{{detalleRemesa.NumeroCuenta}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Banco:</label>
+                            <select [disabled]="habilitarCombo" [(ngModel)]="detalleRemesa.CodigoBanco" >
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let banco of bancos" [ngValue]="banco.CodigoBanco">{{banco.NombreBanco}}</option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Contrato:</label>
+                            <span class="col-lg-2">{{detalleRemesa.ContratoNumero}}</span>
+
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Status:</label>
+                            <span class="col-lg-2">{{detalleRemesa.EstadoRemesa}}</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Transferir a : </h5>
+                    </div>
+                    <div class="panel-body">
+                        <input type="radio" [(ngModel)]="optionRadio" value="1" (change)="validarSeleccion()"> Otro
+                        Banco<br>
+                        <input type="radio" [(ngModel)]="optionRadio" value="2" (change)="validarSeleccion()"> Lo que
+                        dice el Contrato<br>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="panel-heading">
+                            <button class="btn btn-w-m btn-success btn-sm" [disabled]="habilitarBoton" (click)="transferir()">
+                                Tranferir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="divDetallesCotizacion" class="col-lg-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Datos Contrato</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="col-lg-12 no-padding">
+                        <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Producto:</label>
+                        <span class="col-lg-2">{{detalleRemesa.CodigoProducto}}</span>
+                        <label class="col-lg-2 control-label no-padding-left" for="slcPlan">FormaPago:</label>
+                        <span class="col-lg-2">{{detalleRemesa.Region}}</span>
+                        <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Institucion:</label>
+                        <span class="col-lg-2">{{detalleRemesa.CodigoBanco}}</span>
+
+                    </div>
+                    <div class="col-lg-12 no-padding">
+                        <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Tipo Cuenta:</label>
+                        <span class="col-lg-2">{{detalleRemesa.TipoCuenta}}</span>
+                        <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Cuenta:</label>
+                        <span class="col-lg-2">{{detalleRemesa.NumeroCuenta}}</span>
+                    </div>
+                    <div class="col-lg-12 no-padding">
+
+                        <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Facturad A:</label>
+                        <span class="col-lg-2">{{detalleRemesa.FacturadoA}}</span>
+                        <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombre:</label>
+                        <span class="col-lg-2">{{detalleRemesa.NombreDuenioCuenta}}</span>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>

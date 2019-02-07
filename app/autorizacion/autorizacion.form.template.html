@@ -1,0 +1,320 @@
+<div class="col-md-12 no-padding">
+    <form name="autorizacionForm" role="form" #autorizacionForm="ngForm">
+        <!-- encabezado -->
+        <encabezadoAutorizacionForm [autorizacion]="autorizacion" [showSelectBeneficiario]="true"></encabezadoAutorizacionForm>
+
+        <div class="col-md-12 no-padding m-t-sm">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body no-padding">
+                        <div class="col-md-12 no-padding">
+                            <fieldset>
+                                <legend class="info">Datos Generales</legend>
+                                <!-- -->
+                                <label class="col-lg-2 control-label" for="canal">Canal:</label>
+                                <div class="col-lg-4">
+                                    <select required class="form-select-control heigth25" id="canal" name="canal" [(ngModel)]="autorizacion.Canal" #canal="ngModel"
+                                        (change)="updateObservaciones()">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let can of canales" [value]="can">{{can}}</option>
+                                    </select>
+                                    <div [hidden]="canal.valid" class="error">
+                                        <p *ngIf="canal.errors?.required">Campo Requerido</p>
+                                    </div>
+                                </div>
+
+                                <label class="col-lg-2 control-label" for="fechaRequerimiento">Fecha Requerimiento:</label>
+                                <div class="col-lg-4">
+                                    <datetime class="heigth25 col-lg-12 no-padding" name="fechaRequerimiento" [timepicker]="false" id="fechaRequerimiento" [(ngModel)]="autorizacion.FechaRequerimiento"
+                                        [datepicker]="datepickerOpts" required></datetime>
+                                </div>
+
+                                <!-- -->
+                                <div class="col-md-6 no-padding clearInfo">
+                                    <label class="col-lg-4 control-label clearInfo padT6" for="nombrePrestador">Prestador:</label>
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 padT6" style="padding-right: 5px;">
+                                            <input type="text" required placeholder="Iniciales Prestador" id="nombrePrestador" name="nombrePrestador" class="heigth25 form-control"
+                                                minlength="4" maxlength="255" [(ngModel)]="filtroPrestador" #nombrePrestador="ngModel"
+                                                style="padding-right: 20px;" />
+                                            <a (click)="listarConveniosPrestador()" [class.disabled]="(filtroPrestador==undefined || filtroPrestador.length<4)?true:false"
+                                                class="lupita" data-toggle="modal" data-target="#prestadorViewModal">
+                                                <i class="fa fa-search"></i>
+                                            </a>
+                                            <div [hidden]="autorizacion.CodigoPrestadorEmpresa!=undefined" class="error">
+                                                <p *ngIf="(nombrePrestador.errors?.required || autorizacion.CodigoPrestadorEmpresa==undefined)">Campo Requerido</p>
+                                                <p *ngIf="nombrePrestador.errors?.minlength">Mínimo 4 caracteres</p>
+                                                <p *ngIf="nombrePrestador.errors?.maxlength">Máximo 255 caracteres</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 no-padding">
+                                        <label class="col-lg-4 control-label padT6" style="padding-left: 0px;padding-right: 0px;" for="nivel">Nivel:</label>
+                                        <span class="col-lg-6 padT6" style="padding-right: 0px;padding-left: 10px;">{{autorizacion.NivelPrestadorEmpresa}}</span>
+                                    </div>
+                                </div>
+
+                                <label class="col-lg-2 control-label padT6" for="aplicaA">Aplica A:</label>
+                                <div class="col-lg-4 padT6">
+                                    <select class="form-select-control heigth25" id="aplicaA" name="aplicaA" [(ngModel)]="autorizacion.TipoAplicacion" #aplicaA="ngModel"
+                                        (change)="updateObservaciones()">
+                                        <option [value]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let apl of tiposAplicacion" [value]="apl">{{apl}}</option>
+                                    </select>
+                                </div>
+
+                                <!-- -->
+                                <div class="col-md-6 clearInfo no-padding clearInfo">
+                                    <label class="col-lg-4 control-label padT6" for="medico">Medico:</label>
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 padT6" style="padding-right: 5px;">
+                                            <input required type="text" placeholder="Iniciales Médico" id="medico" name="medico" class="heigth25 form-control" minlength="4"
+                                                maxlength="255" [(ngModel)]="filtroMedico" #medico="ngModel" style="padding-right: 20px;"
+                                            />
+                                            <a (click)="listarConveniosMedico()" [class.disabled]="(filtroMedico==undefined || filtroMedico.length<4)?true:false" class="lupita"
+                                                data-toggle="modal" data-target="#prestadorViewModal">
+                                                <i class="fa fa-search"></i>
+                                            </a>
+                                            <div [hidden]="autorizacion.CodigoPrestador!=undefined" class="error">
+                                                <p *ngIf="(medico.errors?.required || autorizacion.CodigoPrestador==undefined)">Campo Requerido</p>
+                                                <p *ngIf="medico.errors?.minlength">Mínimo 4 caracteres</p>
+                                                <p *ngIf="medico.errors?.maxlength">Máximo 255 caracteres</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 no-padding">
+                                        <label class="col-lg-4 control-label padT6" style="padding-left: 0px;padding-right: 0px;" for="nivelMedico">Nivel:</label>
+                                        <span class="col-lg-6 padT6" style="padding-right: 0px;padding-left: 10px;">{{autorizacion.NivelPrestador}}</span>
+                                    </div>
+                                </div>
+
+                                <label class="col-lg-2 control-label padT6" for="tipoSolicitud">Tipo Solicitud:</label>
+                                <div class="col-lg-4 padT6">
+                                    <select required class="form-select-control heigth25" id="tipoSolicitud" name="tipoSolicitud" [(ngModel)]="autorizacion.TipoSolicitud"
+                                        #tipoSolicitud="ngModel" [disabled]="autorizacion.CodigoPrestadorEmpresa == undefined || autorizacion.CodigoPrestadorEmpresa==0"
+                                        (change)="onChangeTipoSolicitud($event.target.value)">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let tipo of tiposSolicitud" [value]="tipo">{{tipo}}</option>
+                                    </select>
+                                    <div [hidden]="tipoSolicitud.valid" class="error">
+                                        <p *ngIf="tipoSolicitud.errors?.required">Campo Requerido</p>
+                                    </div>
+                                </div>
+
+                                <!-- -->
+                                <label class="col-lg-2 control-label padT6 clearInfo" for="tipoCobertura">Tipo Cobertura:</label>
+                                <div class="col-lg-4 padT6">
+                                    <select class="form-select-control  heigth25" id="tipoCobertura" name="tipoCobertura" [(ngModel)]="autorizacion.TipoCobertura"
+                                        #tipoCobertura="ngModel" (change)="updateObservaciones()">
+                                        <option [value]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let cob of tiposCobertura" [value]="cob">{{cob}}</option>
+                                    </select>
+                                </div>
+
+                                <!-- 
+                                <label class="col-lg-2 control-label padT6" for="fechaHospitalizacion">Hospitalización:</label>
+                                <div class="col-lg-4 padT6">
+                                    <datetime class="heigth25 col-lg-12 no-padding" name="fechaHospitalizacion" [timepicker]="false" id="fechaHospitalizacion"
+                                        [(ngModel)]="autorizacion.FechaHospitalizacion" [datepicker]="datepickerOpts"></datetime>
+                                </div>
+                                -->
+
+                                <label class="col-lg-2 control-label padT6" for="fechaHospitalizacion">Hospitalización:</label>
+                                <div class="col-lg-4 padT6">
+                                    <datetime required  name="fechaHospitalizacion" class="heigth25 col-lg-12 no-padding" [timepicker]="false"
+                                        id="fechaHospitalizacion" [(ngModel)]="autorizacion.FechaHospitalizacion"  [datepicker]="datepickerOpts"></datetime>
+                                    <div [hidden]="autorizacion.FechaHospitalizacion!=undefined" class="error">
+                                        <p>Campo Requerido</p>
+                                    </div>                                    
+                                </div>
+
+
+
+
+                                <!-- cobertura-diagnosticos -->
+                                <coberturaDiagnosticoForm [autorizacion]="autorizacion" [msgMostrar]="messageCoberturaRequerida"></coberturaDiagnosticoForm>
+                            </fieldset>
+
+                            <historialObservacionForm [autorizacion]="autorizacion" [numeroObservacion]="numeroObservacion"></historialObservacionForm>
+                            <!-- -->
+                            <div class="col-lg-12  m-t-sm m-b-sm">
+
+                                <!--  <button class="btn btn-w-m btn-success btn-sm" [disabled]="!autorizacionForm.valid || isFormDisabled()" (click)="guardarAutorizacion()"
+                                    type="button">
+                                    <i class="fa fa-save"></i> Guardar
+                                </button> -->
+
+                                <button class="btn btn-w-m btn-success btn-sm" [disabled]="!autorizacionForm.valid || isFormDisabled()" (click)="getCasosParaAutorizacion()"
+                                    type="button" data-toggle="modal" data-target="#casosViewModal">
+                                    <i class="fa fa-save"></i> Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal de Prestadores -->
+<div id="prestadorModalDiv">
+    <div class="modal inmodal fade" id="prestadorViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">{{popupTitle}}</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaPrestadores" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle no-left-border">Número</th>
+                                            <th class="centerMiddle">Nombre
+                                                <input type="text" (input)="filtrarConvenios($event.target.value)" placeholder="Buscar..." id="buscarPrestador" name="buscarPrestador"
+                                                    class="form-control heigth25">
+                                            </th>
+                                            <th class="centerMiddle">Estado</th>
+                                            <th class="centerMiddle">Tipo Prestador</th>
+                                            <th class="centerMiddle">Nivel Desde</th>
+                                            <th class="centerMiddle">Nivel Hasta</th>
+                                            <th class="centerMiddle">Fecha Suspensión</th>
+                                            <th class="centerMiddle">Codigo Ciudad</th>
+                                            <th class="centerMiddle">Tipo Convenio</th>
+                                            <th *ngIf="esPrestador" class="centerMiddle">Centro Médico</th>
+                                            <th *ngIf="esPrestador" class="centerMiddle">Nombre del Centro Médico</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyPrestador" class="no-borders selectableBodyTable">
+                                        <tr id="prestador{{i}}" [class.active]="convenio.Selected" title="{{!convenio.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!convenio.Selected ? seleccionarConvenio(convenio) : return;" *ngFor="let convenio of convenios; let i = index">
+                                            <td class="centerMiddle">{{convenio.Numero}}</td>
+                                            <td class="centerMiddle">{{convenio.Nombre}}</td>
+                                            <td class="centerMiddle">{{convenio.Estado}}</td>
+                                            <td class="centerMiddle">{{convenio.TipoPrestador}}</td>
+                                            <td class="centerMiddle">{{convenio.NivelPrestadorDesde}}</td>
+                                            <td class="centerMiddle">{{convenio.NivelPrestadorHasta}}</td>
+                                            <td class="centerMiddle">{{convenio.FechaSuspension}}</td>
+                                            <td class="centerMiddle">{{convenio.CodigoCiudad}}</td>
+                                            <td class="centerMiddle">{{convenio.TipoConvenio}}</td>
+                                            <td class="centerMiddle" *ngIf="esPrestador">{{convenio.DescripcionEstaff}}</td>
+                                            <td class="centerMiddle" *ngIf="esPrestador">{{convenio.Receptor}}</td>
+                                        </tr>
+                                        <tr *ngIf="convenios.length == 0">
+                                            <td *ngIf="esPrestador" colspan="11" class="alignCenter">No existen resultados</td>
+                                            <td *ngIf="!esPrestador" colspan="9" class="alignCenter">No existen resultados</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de casos -->
+<div id="casosModalDiv">
+    <div class="modal inmodal fade" id="casosViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Casos para Central Hospitalaria</h5>
+                        </div>
+
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaCasos" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle no-left-border">Número Caso</th>
+                                            <th class="centerMiddle">Observaciones</th>
+                                            <th class="centerMiddle">Estado</th>
+                                            <th class="centerMiddle">Fecha Creacion</th>
+                                            <th class="centerMiddle">Diagnostico</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyCasos" class="no-borders selectableBodyTable">
+                                        <tr id="casoId{{i}}" [class.active]="ca.Selected" title="{{!ca.Selected ? 'Click para seleccionar' : ''}}" (click)="!ca.Selected ? seleccionarCaso(ca) : return;"
+                                            *ngFor="let ca of casos; let i = index">
+                                            <td class="centerMiddle">{{ca.numeroCaso}}</td>
+                                            <td class="centerMiddle">{{ca.observaciones}}</td>
+                                            <td class="centerMiddle">{{ca.estado}}</td>
+                                            <td class="centerMiddle">{{ca.fechaCreacion}}</td>
+                                            <td class="centerMiddle">{{ca.diagnostico.observaciones}}</td>
+                                        </tr>
+                                        <tr *ngIf="casos.length == 0">
+                                            <td colspan="9" class="alignCenter">No existen resultados</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-lg-12  m-t-sm m-b-sm">
+                                <button class="btn btn-w-m btn-success btn-sm" [disabled]="!autorizacionForm.valid || isFormDisabled() || this.casos.length == 0" (click)="guardarAutorizacion()"
+                                    type="button">
+                                    <i class="fa fa-save"></i> Guardar
+                                </button>
+
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="nuevoCaso()" type="button" type="button" data-toggle="modal" data-target="#casosNuevoViewModal">
+                                    <i class="fa fa-plus"></i> Nuevo
+                                </button>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="casosNuevoModalDiv">
+    <div class="modal inmodal fade" id="casosNuevoViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Crear nuevo Caso</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <form>
+                                <label class="col-lg-4 control-label" for="obsCaso">Observación:</label>
+                                <div class="col-lg-6 no-padding">
+                                    <div class="col-lg-12 padT6" style="padding-right: 5px;">
+                                        <input type="text" placeholder="Observación del caso" id="obsCaso" name="obsCaso" class="heigth25 form-control" minlength="4"
+                                            maxlength="255" [(ngModel)]="casoNuevo.Observaciones" #medico="ngModel" style="padding-right: 20px;"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12  m-t-sm m-b-sm">
+                                    <button class="btn btn-w-m btn-success btn-sm" (click)="guardarNuevoCaso(true)" type="button" data-toggle="modal" data-target="#casosViewModal">
+                                        <i class="fa fa-save"></i> Guardar Caso
+                                    </button>
+
+                                    <button class="btn btn-w-m btn-success btn-sm" (click)="guardarNuevoCaso(false)" type="button" type="button" data-toggle="modal"
+                                        data-target="#casosViewModal">
+                                        <i class="fa fa-close"></i> Cerrar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

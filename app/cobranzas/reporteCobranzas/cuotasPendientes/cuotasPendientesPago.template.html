@@ -1,0 +1,43 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Cuotas pendientes de pago</h5>
+        </div>
+        <div class="panel-body">
+            <fieldset class="col-lg-12">
+                    <label class="m-b col-lg-10 control-label" for="slcRegiones">Nota: El reporte ser&aacute; enviado a: {{nombreUsuario}} </label>
+            </fieldset>
+            <fieldset class="col-lg-12">
+                <form (ngSubmit)="reportePersonalizado();" #reporteFilter="ngForm">
+                    <label class="m-b col-lg-2 control-label" for="slcRegiones">Regi&oacute;n:</label>
+                    <div class="m-b col-lg-3">
+                        <select class="form-control" [(ngModel)]="filter.Region" id="slcRegiones" name="slcRegiones"
+                            #slcRegiones="ngModel">
+                            <option *ngFor="let r of regiones" [value]="r.Id">{{r.Nombre}}</option>
+                        </select>
+                        <div [hidden]="slcRegiones.valid" class="error">
+                            <p *ngIf="slcRegiones.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+
+                    <label class="m-b col-lg-2 control-label" for="slcProducto">Producto:</label>
+                    <div class="m-b col-lg-3">
+                        <select class="form-control" [(ngModel)]="filter.CodigoProducto" id="slcProducto" name="slcProducto"
+                            #slcProducto="ngModel">
+                            <option *ngFor="let p of productos" [value]="p.Id">{{p.Nombre}}</option>
+                        </select>
+                        <div [hidden]="slcProducto.valid" class="error">
+                            <p *ngIf="slcProducto.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+                    <div class="m-b col-lg-2">
+                        <button class="btn btn-w-m btn-success btn-sm" type="submit"><i class="fa fa-file-excel-o"></i>
+                            Enviarme Reporte</button>
+                    </div>
+                </form>
+            </fieldset>
+
+
+        </div>
+    </div>
+</div>

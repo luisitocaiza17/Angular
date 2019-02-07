@@ -1,0 +1,92 @@
+<div class="m-t-sm no-padding">
+    <div class="col-lg-12">
+        <form name="enviarMailSobreForm" role="form" #enviarMailSobreForm="ngForm">
+            <h3 class="alignCenter" style="font-size: 20px">Envío de Devolución de Sobres</h3>
+            <h5 class="panel-title alignCenter">Titular: {{datos.Nombres +" "+datos.Apellidos}} - Sobre#:
+                {{sobre.NumeroSobre}}</h5>
+
+            <div class="col-md-12 no-padding">
+                <div class="panel panel-default no-padding m-t-md">
+                    <div class="panel-body no-padding">
+                        <div class="col-lg-12 m-t-sm m-b-sm no-padding">
+
+                            <label class="col-lg-2 control-label clearInfo">Correo domicilio:</label>
+                            <div class="col-lg-4">
+                                <input email type="text" required id="emailDomicilio" name="emailDomicilio" class="heigth25 form-control"
+                                    [(ngModel)]="sobre.EmailDomicilio" #emailDomicilio="ngModel" maxlength="50" />
+                                <div [hidden]="emailDomicilio.valid || emailDomicilio.pristine" class="error">
+                                    <p *ngIf="emailDomicilio.errors?.required">Campo requerido</p>
+                                    <p *ngIf="emailDomicilio.errors?.email">Formato correo incorrecto</p>
+                                </div>
+                            </div>
+
+                            <label class="col-lg-2 control-label">Correo trabajo:</label>
+                            <div class="col-lg-4">
+                                <input email="false" type="text" id="emailTrabajo" name="emailTrabajo" class="heigth25 form-control"
+                                    [(ngModel)]="sobre.EmailTrabajo" #emailTrabajo="ngModel" maxlength="50" />
+                                <div [hidden]="emailTrabajo.valid || emailTrabajo.pristine" class="error">
+                                    <p *ngIf="emailTrabajo.errors?.email">Formato correo incorrecto</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 m-t-sm m-b-sm no-padding">
+                            <label class="col-lg-2 control-label clearInfo">Correo Corredor:</label>
+                            <div class="col-lg-4">
+                                <input email="false" type="text" id="renovacionEmailBroker" name="renovacionEmailBroker"
+                                    class="heigth25 form-control" [(ngModel)]="sobre.RenovacionEmailBroker"
+                                    #renovacionEmailBroker="ngModel" maxlength="50" />
+                                <div [hidden]="renovacionEmailBroker.valid || renovacionEmailBroker.pristine" class="error">
+                                    <p *ngIf="renovacionEmailBroker.errors?.email">Formato correo incorrecto</p>
+                                </div>
+
+                            </div>
+
+                            <label class="col-lg-2 control-label">Empresa:</label>
+                            <div class="col-lg-4">
+                                <p>
+                                    {{datos.Empresa}}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 m-t-sm m-b-sm no-padding">
+                            <label class="col-lg-2 control-label">Ciudad:</label>
+                            <div class="m-b col-lg-4">
+                                <select required class="form-select-control" [(ngModel)]="sobre.Ciudad" id="slcCiudad"
+                                    name="slcCiudad" #slcCiudad="ngModel">
+                                    <option [value]="undefined" selected>Seleccione...</option>
+                                    <option [value]="1">Quito</option>
+                                    <option [value]="2">Guayaquil</option>
+                                    <option [value]="3">Cuenca</option>
+                                    <option [value]="4">Manta</option>
+                                </select>
+                                <div [hidden]="slcCiudad.valid" class="error">
+                                    <p *ngIf="slcCiudad.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 no-padding m-t-md">
+                    <button id="btnGenerar" (click)="view()" [disabled]="!enviarMailSobreForm.form.valid" class="btn btn-w-m btn-success btn-sm">
+                        <i class="fa fa-refresh"></i> Visualizar
+                    </button>
+                    <button id="btnEmail" (click)="notificarCliente(constantesSobres.TIPO_MAIL)" [disabled]="!enviarMailSobreForm.form.valid"
+                        class="btn btn-w-m btn-success btn-sm" type="button">
+                        <i class="fa fa-envelope-o"></i> Email
+                    </button>
+                    <button id="btnSms" (click)="notificarCliente(constantesSobres.TIPO_SMS)" class="btn btn-w-m btn-success btn-sm"
+                        type="button">
+                        <i class="fa fa-commenting-o"></i> SMS
+                    </button>
+                    <button id="btnEmailSms" (click)="notificarCliente(constantesSobres.TIPO_MAIL_SMS)" [disabled]="!enviarMailSobreForm.form.valid"
+                        class="btn btn-w-m btn-success btn-sm" type="button">
+                        <i class="fa fa-envelope-o"></i>
+                        <i class="fa fa-commenting-o"></i> Email y SMS
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

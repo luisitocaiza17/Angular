@@ -1,0 +1,113 @@
+<div class="row no-padding">
+    <div class="col-md-12 m-t-sm" *ngIf="resumenBeneficiario.Oda!= undefined && resumenBeneficiario.Oda.PorBeneficiario!=undefined && resumenBeneficiario.Oda.PorBeneficiario">
+        <label class="col-md-2 no-padding">Odas Consumidas:</label>
+        <span class="col-md-10">{{resumenBeneficiario.Oda.OdasConsumidas!=undefined
+            &&resumenBeneficiario.Oda.OdasDisponibles==0?'No contiene Odas':
+            resumenBeneficiario.Oda.OdasConsumidas+'/'+resumenBeneficiario.Oda.OdasDisponibles}}</span>
+    </div>
+
+    <div class="col-md-6 m-t-sm" *ngIf="beneficiarioKey.CodigoProducto != 'COR' && beneficiarioKey.CodigoProducto != 'CPO' && beneficiarioKey.CodigoProducto != 'POO'">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">Deducible Consumido / Disponible</h5>
+            </div>
+            <div class="panel-body panelDatos">
+                <div class="flot-chart">
+                    <div *ngIf="!showGraphicConsumidoDisponible" style="height: 223px;" class="displayFlex centerMiddle">
+                        <p style="width: 100%" class="alignMiddleFlex">Plan sin deducible</p>
+                    </div>
+                    <div *ngIf="showGraphicConsumidoDisponible" class="flot-chart-pie-content" id="flot-pie-chart"
+                        style="padding: 0px; position: relative;">
+                        <canvas class="flot-base" style="direction: ltr; position: absolute; left: 0px; top: 0px;"
+                            baseChart [data]="pieChartDataDeducible" [labels]="pieChartLabels" [chartType]="pieChartType"
+                            [options]="optionsChart" [colors]="chartColors"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 m-t-sm" *ngIf="beneficiarioKey.CodigoProducto == 'COR' || beneficiarioKey.CodigoProducto == 'CPO' || beneficiarioKey.CodigoProducto == 'POO'">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">Deducible Consumido / Disponible</h5>
+            </div>
+            <div class="panel-body panelDatos">
+                <div class="flot-chart">
+                    <div id="flot-pie-chart" style="padding: 0px; position: relative;">
+                        <table class="table  table-hover dataTable">
+                            <tbody class="fixedBodyHeight200">
+                                <tr *ngFor="let p of resumenBeneficiario.DeducibleEnfermedades">
+                                    <td style="font-size:10px;height:10px;width:30%;">{{p.Label}}</td>
+                                    <td>
+                                        <div class="progress-bar progress-bar-success" [ngStyle]="{'height': getheight(), 'width' : concatenar(p.Value)  }"></div>&nbsp;{{p.Value | number:'1.2-2'}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 m-t-sm">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">Máximo Consumido / Disponible</h5>
+            </div>
+            <div class="panel-body panelDatos">
+                <div class="flot-chart">
+                    <div *ngIf="!showGraphicMaximoConsumidoDisponible" style="height: 223px;" class="displayFlex centerMiddle">
+                        <p style="width: 100%" class="alignMiddleFlex">No existen resultados</p>
+                    </div>
+                    <div *ngIf="showGraphicMaximoConsumidoDisponible" class="flot-chart-pie-content" id="flot-pie-chart"
+                        style="padding: 0px; position: relative;">
+                        <canvas class="flot-base" style="direction: ltr; position: absolute; left: 0px; top: 0px; "
+                            baseChart [data]="pieChartDataMaximo" [labels]="pieChartLabels" [chartType]="pieChartType"
+                            [options]="optionsChart" [colors]="chartColors"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="consultaVendedor == false" class="col-md-6 m-t-sm">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">Top Diagnósticos</h5>
+            </div>
+            <div class="panel-body panelDatos">
+                <div class="col-md-12 no-padding">
+                    <div *ngIf="!showGraphicTopDiagnosticos" style="height: 223px;" class="displayFlex centerMiddle">
+                        <p style="width: 100%" class="alignMiddleFlex">No existen diagnósticos</p>
+                    </div>
+                    <div *ngIf="showGraphicTopDiagnosticos" class="flot-chart-content" id="flot-bar-chart" style="padding: 0px; position: relative;">
+                        <canvas baseChart class="flot-base" [datasets]="barChartDiagnosticoData" [labels]="barChartLabels"
+                            [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" [colors]="barChartColors">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="consultaVendedor == false" class="col-md-6 m-t-sm">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">Top Prestadores</h5>
+            </div>
+            <div class="panel-body panelDatos">
+                <div class="col-md-12 no-padding">
+                    <div *ngIf="!showGraphicTopPrestadores" style="height: 223px;" class="displayFlex centerMiddle">
+                        <p style="width: 100%" class="alignMiddleFlex">No existen prestadores</p>
+                    </div>
+                    <div *ngIf="showGraphicTopPrestadores" class="flot-chart-content" id="flot-bar-chart" style="padding: 0px; position: relative;">
+                        <canvas baseChart class="flot-base" [datasets]="barChartPrestadoresData" [labels]="barChartLabels"
+                            [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" [colors]="barChartColors">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

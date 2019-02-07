@@ -1,0 +1,48 @@
+<div class="wrapper wrapper-content">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div id="divConsultar" class="panel-collapse collapse in">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+                <form #crearSubtipoForm="ngForm">
+                    <div class="form-group col-lg-12 no-padding">
+                      <div class="col-lg-12">
+                        <label class="col-lg-2 control-label" for="nombre">Nombre:</label>
+                        <div class="m-b col-lg-4">
+                          <input type="text" placeholder="Nombre" id="nombre" [(ngModel)]="tempTipoEditado.Nombre" name="nombre" class="form-control" #nombre="ngModel"
+                          disabled= "true"/>
+                        </div>
+                        <label class="col-lg-2 control-label" for="obsevaciones">Observaciones:</label>
+                        <div>
+                            <textarea rows="5" placeholder="Observaciones." id="observaciones" name="observaciones"
+                            class="form-control" [(ngModel)]="tempTipoEditado.Descripcion" style="resize: none;"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-12 text-center">
+                      <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!crearSubtipoForm.form.valid" (click)="guardarObservacion();">
+                        <i class="fa fa-save"></i> Guardar
+                      </button>
+                      <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="salir()">
+                        <i class="fa fa-times"></i> Cancelar
+                      </button>
+                    </div>
+                  </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal inmodal fade" id="modalCrear" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h5 class="panel-title">Crear Nuevo</h5>
+      </div>
+      <app-ingresar-tipo></app-ingresar-tipo>
+    </div>
+  </div>
+</div>

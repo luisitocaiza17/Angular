@@ -1,0 +1,171 @@
+<div class="col-lg-12">
+    <h2>Consulta Documentos Facturación Directos al SRI</h2>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a [routerLink]="['']">Home</a></li>
+        <li class="breadcrumb-item">Facturación</li>
+        <li class="breadcrumb-item active">Consulta Documentos Facturación Directos al SRI</li>
+    </ol>
+</div>
+
+<div class="col-lg-12">
+    <div class="panel panel-success m-t-lg">
+        <div class="panel-heading">
+            <h5 class="panel-title"> Consulta de documentos electrónicos </h5>
+        </div>
+        <div class="panel-body">
+            <div class="row no-padding">
+                <form name="filtrosForm" role="form" #filtrosForm="ngForm">
+                    <div class="col-lg-12">
+                        <div class="col-lg-1 m-t-sm"> <label  for="establecimiento"> Establecimiento: </label></div>
+                        <div class="col-lg-3 m-t-sm text-center"> <input  type="text" id="establecimiento" name="establecimiento" [(ngModel)]="filterDF.Establecimiento" #establecimiento="ngModel"></div>
+                        <div class="col-lg-1 m-t-sm"> <label  for="puntoEmision"> Punto Emisión: </label></div>
+                        <div class="col-lg-3 m-t-sm text-center"> <input  type="text" id="puntoEmision" name="puntoEmision" [(ngModel)]="filterDF.PuntoEmision" #puntoEmision="ngModel"></div>
+                        <div class="col-lg-1 m-t-sm"> <label  for="secuencial"> Secuencial: </label> </div>
+                        <div class="col-lg-3 m-t-sm text-center"> <input  type="text" id="secuencial" name="secuencial" [(ngModel)]="filterDF.Secuencial" #secuencial="ngModel"> </div>  
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="col-lg-1 m-t-sm"> <label  for="numeroEnvio"> Nro. Envio: </label></div>
+                        <div class="col-lg-3 m-t-sm text-center"> <input  type="text" id="numeroEnvio" name="numeroEnvio" [(ngModel)]="filterDF.NumeroEnvio" #numeroEnvio="ngModel"> </div>
+                        <div class="col-lg-1 m-t-sm"> <label  for="tipoDocumento"> Tipo Documento: </label></div>
+                        <div class="col-lg-3 m-t-sm text-center">
+                            <select id="tipoDocumento" name="tipoDocumento" [(ngModel)]="filterDF.TipoDocumento" #tipoDocumento="ngModel">
+                                <option [ngValue]="undefined" selected> Todos </option>
+                                <option [ngValue]="4"> NC </option>
+                                <option [ngValue]="1"> F </option>
+                            </select> 
+                        </div>
+                        <div class="col-lg-1 m-t-sm"> <label for="estado"> Estado: </label></div>
+                        <div class="col-lg-3 m-t-sm text-center">
+                            <select id="estado" name="estado" [(ngModel)]="filterDF.Estado" #estado="ngModel">
+                                <option [ngValue]="undefined" selected> Todos </option>
+                                <option [ngValue]="61" selected> AUTORIZADO </option>
+                                <option [ngValue]="101"> RECHAZADO </option>
+                            </select> 
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-12">
+                        <div class="col-lg-6">
+                            <div class="col-lg-4 m-t-sm"><label  for="fechaDesde"> Fecha Desde: </label></div>
+                            <div class="col-lg-8 m-t-sm text-center">
+                                <div class="col-lg-8 m-t-sm text-center">
+                                    <datetime class="heigth25  no-padding pull-left" [timepicker]="false" id="fechaDesde" name="fechaDesde" [(ngModel)]="filterDF.FechaEmisionDesde"
+                                        [datepicker]="datepickerOpts" #fechaDesde="ngModel" [max]="filterDF.FechaEmisionHasta"> 
+                                    </datetime>
+                                </div>
+                                <div class="col-lg-8 m-t-sm text-center">
+                                    <div [hidden]="fechaDesde.Valid || fechaDesde.pristine" class="error">
+                                        <p *ngIf="fechaDesde.errors?.max">Fecha Desde debe ser igual o menor a Fecha Hasta</p>
+                                    </div>
+                                </div>
+                            </div>      
+                        </div>
+    
+                        <div class="col-lg-6">
+                            <div class="col-lg-4 m-t-sm"><label  for="fechaHasta"> Fecha Hasta: </label></div>
+                            <div class="col-lg-8 m-t-sm text-center">
+                                <datetime class="heigth25  no-padding pull-left" [timepicker]="false" id="fechaHasta" name="fechaHasta" [(ngModel)]="filterDF.FechaEmisionHasta"
+                                    [datepicker]="datepickerOpts" #fechaHasta="ngModel"> 
+                                </datetime>
+                            </div>
+                        </div>
+                    </div>
+                                  
+                    <div class="col-lg-12 text-center">
+                        <div class="col-lg-12 m-t-sm">
+                            <button class="btn btn-primary btn-md" (click)="loadDocumentosFacturacion()" [disabled]="!(filtrosForm.form.valid)"> Buscar </button> 
+                            <button class="btn btn-primary btn-md" (click)="DescargarReporteDocumentosFacturacionDirectoSri()" [disabled]="!(filtrosForm.form.valid)"> Generar Reporte </button> 
+                            <button class="btn btn-primary btn-md" (click)="limpiarFiltroDocumento()"> Limpiar </button> 
+                        </div>
+                    </div>
+                        
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<!-- Muestra fe02 -->
+<div class="col-lg-12 m-t-sm no-padding">
+    <div class="row no-padding">
+        <div class="col-lg-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Documentos</h5>
+                </div>
+                <div class="panel-body panelDatos">
+                    <div id="divResultadoDocumentos">
+                        <div class="dataTables_info">{{consultaDocumentosFacturacionService.paginationConstants.EncabezadoTabla}}</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th class="centerMiddle"> No. Envio </th>
+                                        <th class="centerMiddle"> Sec. Envio </th>
+                                        <th class="centerMiddle"> Documento </th>
+                                        <th class="centerMiddle"> Tipo Documento </th>
+                                        <th class="centerMiddle"> Ciclo Pago </th>
+                                        <th class="centerMiddle"> Estado </th>
+                                        <th class="centerMiddle"> Nombre Estado </th>
+                                        <th class="centerMiddle"> Razon Social Comprador </th>
+                                        <th class="centerMiddle"> Valor </th>
+                                        <th class="centerMiddle"> + </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="no-borders" *ngFor="let documento of documentosFacturacion | paginate: {id : 'documentosTable', itemsPerPage: consultaDocumentosFacturacionService.paginationConstants.pageSize,currentPage: consultaDocumentosFacturacionService.paginationConstants.pageNumber, totalItems: consultaDocumentosFacturacionService.paginationConstants.total};">
+                                    <tr title="{{!documento.Selected ? 'Click para seleccionar' : ''}}"
+                                        [class.active]="documento.Selected">
+                                        <td class="centerMiddle">{{ documento.NumeroEnvio }}</td>
+                                        <td class="centerMiddle">{{ documento.SecuencialEnvio }}</td>
+                                        <td class="centerMiddle">{{ documento.Documento }}</td>
+                                        <td class="centerMiddle">{{ documento.NombreTipoDocumento }}</td>
+                                        <td class="centerMiddle">{{ documento.CicloPago }}</td>
+                                        <td class="centerMiddle">{{ documento.Estado }}</td>
+                                        <td class="centerMiddle">{{ documento.NombreEstado }}</td>
+                                        <td class="centerMiddle">{{ documento.RazonSocialComprador }}</td>
+                                        <td class="centerMiddle">{{ documento.TotalSinImpuestos }}</td>
+                                        <td class="centerMiddle" style="cursor: pointer;" (click)="openModal('#modalInfo', documento)"><i class="fa fa-info-circle" aria-hidden="true"></i></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot *ngIf="consultaDocumentosFacturacionService.paginationConstants.total == 0">
+                                    <tr>
+                                        <td colspan="14" style="text-align: center;">No existen resultados</td>
+                                    </tr>
+                                </tfoot> 
+                            </table>
+                            <pagination-controls id="documentosTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="consultaDocumentosFacturacionService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal mayor informacion -->
+<div class="modal inmodal fade" id="modalInfo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title"> Información documento {{ documentoFacturacionSelected.Documento }} </h5>
+            </div>
+            <div class="panel-body">             
+                <div class="col-lg-3"> Region: </div>
+                <div class="col-lg-9"> {{ documentoFacturacionSelected.Region }} </div>
+                <div class="col-lg-3"> Producto: </div>
+                <div class="col-lg-9"> {{ documentoFacturacionSelected.CodigProducto }} </div>
+                <div class="col-lg-3"> Coontrato: </div>
+                <div class="col-lg-9"> {{ documentoFacturacionSelected.ContratoNumero }} </div>
+                <div class="col-lg-3"> Fecha Emisión: </div>
+                <div class="col-lg-9"> {{ documentoFacturacionSelected.FechaEmision | date: "dd/MM/yyyy" }} </div>
+                <div class="col-lg-3"> Clave Acceso: </div>
+                <div class="col-lg-9"> {{ documentoFacturacionSelected.ClaveAcceso }} </div>
+                <div class="col-lg-3"> Fecha Aut.: </div>
+                <div class="col-lg-9"> {{ documentoFacturacionSelected.FechaAutorizacion | date: "dd/MM/yyyy" }} </div>
+                <div class="col-lg-3"> Hora Aut.: </div>
+                <div class="col-lg-9"> {{ documentoFacturacionSelected.HoraAutorizacion }} </div>
+            </div>
+        </div>
+    </div>
+</div>

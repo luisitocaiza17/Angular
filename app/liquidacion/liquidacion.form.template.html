@@ -1,0 +1,329 @@
+<div class="col-md-12 no-padding">
+    <form name="autorizacionForm" role="form" #autorizacionForm="ngForm">
+        <!-- encabezado -->
+        <encabezadoLiquidacionForm [autorizacion]="autorizacion" [showSelectBeneficiario]="true"></encabezadoLiquidacionForm>
+        <div class="col-md-12 no-padding m-t-sm">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body no-padding">
+                        <div class="col-md-12 no-padding">
+                            <fieldset>
+                                <legend class="info">Datos Generales</legend>
+
+                                <div class="col-md-12 no-padding m-t-sm">
+                                    <label class="col-md-2" for="numeroReclamo">Numero Reclamo:</label>
+                                    <div class="col-md-4">
+                                        <input type="text" placeholder="Número Reclamo" id="numeroReclamo" [(ngModel)]="liquidacion.NumeroReclamo"
+                                            name="numeroReclamo" class="heigth25 form-control" #numeroReclamo="ngModel" />
+                                    </div>
+                                    <label class="col-md-2" for="alcance">Alcance:</label>
+                                    <div class="col-md-4">
+                                        <input type="text" placeholder="Alcance" id="alcance" [(ngModel)]="liquidacion.NumeroAlcance"
+                                            name="alcance" class="heigth25 form-control" #alcance="ngModel" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 no-padding m-t-sm">
+                                    <label class="col-md-2 clearInfo" for="presentacion">Presentación:</label>
+                                    <div class="col-md-4">
+                                        <datetime required [disabled]="true" name="fechaPresentacion" class="heigth25 col-lg-12 no-padding"
+                                            [timepicker]="false" id="fechaPresentacion" [(ngModel)]="autorizacion.FechaHospitalizacion"
+                                            [datepicker]="datepickerOpts"></datetime>
+                                        <div [hidden]="autorizacion.FechaHospitalizacion!=undefined" class="error">
+                                            <p>Campo Requerido</p>
+                                        </div>
+                                    </div>
+                                    <label class="col-md-2" for="estados">Estados:</label>
+                                    <div class="col-md-4">
+                                        <input type="text" placeholder="Estado" id="estadpReclamo" [(ngModel)]="liquidacion.Estado"
+                                            name="estadpReclamo" class="heigth25 form-control" #estadpReclamo="ngModel" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 no-padding clearInfo">
+                                    <label class="col-lg-4 control-label clearInfo padT6" for="nombreAutorizacion">Autorización:</label>
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 padT6" style="padding-right: 5px;">
+                                            <input type="text" required placeholder="Numero Aurotización" id="nombreAutorizacion"
+                                                name="nombreAutorizacion" class="heigth25 form-control" minlength="4"
+                                                maxlength="255" [(ngModel)]="numeroAutorizacion" #nombreAutorizacion="ngModel"
+                                                style="padding-right: 20px;" />
+                                            <a (click)="buscarAutorizacion(numeroAutorizacion)" [class.disabled]="(numeroAutorizacion==undefined)?true:false"
+                                                class="lupita" data-toggle="modal">
+                                                <i class="fa fa-search"></i>
+                                            </a>
+                                            <div [hidden]="autorizacion.CodigoPrestadorEmpresa!=undefined" class="error">
+                                                <p *ngIf="nombreAutorizacion.errors?.required">Campo Requerido</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label class="col-lg-4 control-label padT6 clearInfo" for="inpDetalleMotivo">Observación
+                                    Interna:</label>
+                                <div class="col-lg-12 padT6 m-b-md">
+                                    <textarea id="inpDetalleMotivo" name="inpDetalleMotivo" placeholder="Detalles del Motivo No Cubierto"
+                                        class="col-lg12 form-control" [(ngModel)]="autorizacion.DetalleMotivoNoCubierto"
+                                        #inpDetalleMotivo="ngModel" rows="3" minlength="10" maxlength="1000" style="resize: none;"></textarea>
+                                </div>
+
+                                <div class="col-md-6 no-padding clearInfo">
+                                    <label class="col-lg-4 control-label clearInfo padT6" for="nombrePrestador">Prestador:</label>
+                                    <div class="col-lg-6 no-padding">
+                                        <div class="col-lg-12 padT6" style="padding-right: 5px;">
+                                            <input type="text" required placeholder="Iniciales Prestador" id="nombrePrestador"
+                                                name="nombrePrestador" class="heigth25 form-control" minlength="4"
+                                                maxlength="255" [(ngModel)]="filtroPrestador" #nombrePrestador="ngModel"
+                                                style="padding-right: 20px;" />
+                                            <a (click)="listarConveniosPrestador()" [class.disabled]="(filtroPrestador==undefined || filtroPrestador.length<4)?true:false"
+                                                class="lupita" data-toggle="modal" data-target="#prestadorViewModal">
+                                                <i class="fa fa-search"></i>
+                                            </a>
+                                            <div [hidden]="autorizacion.CodigoPrestadorEmpresa!=undefined" class="error">
+                                                <p *ngIf="(nombrePrestador.errors?.required || autorizacion.CodigoPrestadorEmpresa==undefined)">Campo
+                                                    Requerido</p>
+                                                <p *ngIf="nombrePrestador.errors?.minlength">Mínimo 4 caracteres</p>
+                                                <p *ngIf="nombrePrestador.errors?.maxlength">Máximo 255 caracteres</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- cobertura-diagnosticos -->
+                                <coberturaDiagnosticoLiquidacionForm [autorizacion]="autorizacion" [msgMostrar]="messageCoberturaRequerida"></coberturaDiagnosticoLiquidacionForm>
+
+                                <div class="col-md-12 no-padding m-t-sm">
+
+                                    <label class="col-md-2 clearInfo" for="presentacion">Fecha Incurrencia:</label>
+                                    <div class="col-md-4">
+                                        <datetime name="fechaIncurrencia" class="heigth25 col-lg-12 no-padding"
+                                            [timepicker]="false" id="fechaIncurrencia" [(ngModel)]="liquidacion.FechaIncurrencia"
+                                            [datepicker]="datepickerOpts"></datetime>
+                                        <div [hidden]="liquidacion.FechaIncurrencia!=undefined" class="error">
+                                            <p>Campo Requerido</p>
+                                        </div>
+                                    </div>
+
+                                    <label class="col-md-2" for="tope">Tope:</label>
+                                    <div class="col-md-4">
+                                        <input type="text" placeholder="Tope" id="topeId" [(ngModel)]="liquidacion.Tope"
+                                            name="topeId" class="heigth25 form-control" #topeId="ngModel" />
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12 no-padding m-t-sm">
+                                    <label class="col-md-2" for="planId">Plan:</label>
+                                    <div class="col-md-4">
+                                        <input type="text" placeholder="Plan" id="planId" [(ngModel)]="liquidacion.Plan"
+                                            name="planId" class="heigth25 form-control" #planId="ngModel" [disabled]="true" />
+                                    </div>
+                                    <label class="col-md-2" for="planId">Deducible:</label>
+                                    <div class="col-md-4">
+                                        <input type="text" placeholder="Deducible" id="deducibleId" [(ngModel)]="liquidacion.Deducible"
+                                            name="deducibleId" class="heigth25 form-control" #deducibleId="ngModel"
+                                            [disabled]="true" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 no-padding m-t-sm">
+                                    <label class="col-md-2" for="lugarAtencionId">Lugar Atencion:</label>
+                                    <div class="col-md-4">
+                                        <select class="form-select-control" id="lugarAtencionId" name="lugarAtencionId"
+                                            [(ngModel)]="liquidacion.LugarAtencion" #lugarAtencionId="ngModel">
+                                            <option *ngFor="let est of estadosCobertura" [value]="est">{{est}}</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-md-2" for="formaPagoId">Forma Pago:</label>
+                                    <div class="col-md-4">
+                                        <select class="form-select-control" id="formaPagoId" name="formaPagoId"
+                                            [(ngModel)]="liquidacion.FormaPago" #formaPagoId="ngModel">
+                                            <option *ngFor="let est of estadosCobertura" [value]="est">{{est}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 no-padding m-t-sm">
+                                    <label class="col-md-2" for="emisionId">Emision:</label>
+                                    <div class="col-md-4">
+                                        <select class="form-select-control" id="emisionId" name="emisionId" [(ngModel)]="liquidacion.Emision"
+                                            #emisionId="ngModel">
+                                            <option *ngFor="let est of estadosCobertura" [value]="est">{{est}}</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-md-2" for="tipoEnfermedadId">Tipo Enfermedad:</label>
+                                    <div class="col-md-4">
+                                        <select class="form-select-control" id="tipoEnfermedadId" name="tipoEnfermedadId"
+                                            [(ngModel)]="liquidacion.TipoEnfermedad" #tipoEnfermedadId="ngModel">
+                                            <option *ngFor="let est of estadosCobertura" [value]="est">{{est}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="col-md-12 no-padding m-t-sm">
+
+                                    <label class="col-md-2 clearInfo" for="fechaHospId">Fecha Hospitalizacion:</label>
+                                    <div class="col-md-4">
+                                        <datetime name="fechaHospId" class="heigth25 col-lg-12 no-padding" [timepicker]="false"
+                                            id="fechaHospId" [(ngModel)]="liquidacion.FechaHospitalizacion"
+                                            [datepicker]="datepickerOpts"></datetime>
+                                        <div [hidden]="liquidacion.FechaHospitalizacion!=undefined" class="error">
+                                            <p>Campo Requerido</p>
+                                        </div>
+                                    </div>
+
+                                    <label class="col-md-2" for="tipoId">Tipo:</label>
+                                    <div class="col-md-4">
+                                        <select class="form-select-control" id="tipoId" name="tipoId" [(ngModel)]="liquidacion.Tipo"
+                                            #tipoId="ngModel">
+                                            <option *ngFor="let est of estadosCobertura" [value]="est">{{est}}</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12 no-padding m-t-sm">
+                                    <label class="col-md-2 clearInfo" for="tratamientoId">Tratamiento:</label>
+                                    <div class="col-md-4">
+                                        <datetime name="tratamientoId" class="heigth25 col-lg-12 no-padding"
+                                            [timepicker]="false" id="tratamientoId" [(ngModel)]="liquidacion.Tratamiento"
+                                            [datepicker]="datepickerOpts"></datetime>
+                                        <div [hidden]="liquidacion.Tratamiento!=undefined" class="error">
+                                            <p>Campo Requerido</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
+
+                                <div class="col-md-12 no-padding m-t-sm">
+                                    <label class="col-md-2" for="coorBeneId">Coor. Beneficio:</label>
+                                    <div class="col-md-4">
+                                        <input type="text" placeholder="Coor. Beneficio" id="coorBeneId" [(ngModel)]="liquidacion.CoorBeneficio"
+                                            name="coorBeneId" class="heigth25 form-control" #coorBeneId="ngModel"
+                                            [disabled]="true" />
+                                    </div>
+                                    <label class="col-md-2" for="numSobreId">Numero Sobre:</label>
+                                    <div class="col-md-4">
+                                        <input type="text" placeholder="Numero Sobre" id="numSobreId" [(ngModel)]="liquidacion.NumeroSobre"
+                                            name="numSobreId" class="heigth25 form-control" #numSobreId="ngModel"
+                                            [disabled]="true" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 no-padding m-t-sm">
+                                    <label class="col-md-2" for="aseguradorId">Asegurador:</label>
+                                    <div class="col-md-4">
+                                        <input type="text" placeholder="Asegurador" id="aseguradorId" [(ngModel)]="liquidacion.Asegurador"
+                                            name="aseguradorId" class="heigth25 form-control" #aseguradorId="ngModel"
+                                            [disabled]="true" />
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-12 no-padding m-t-sm">
+                                        <label class="col-md-2" for="maximoId">Maximo:</label>
+                                        <div class="col-md-4">
+                                            <input type="text" placeholder="Maximo" id="maximoId" [(ngModel)]="liquidacion.Asegurador"
+                                                name="maximoId" class="heigth25 form-control" #maximoId="ngModel"
+                                                [disabled]="true" />
+                                        </div>
+                                        <label class="col-md-2" for="planId">Deducible:</label>
+                                        <div class="col-md-4">
+                                            <select class="form-select-control" id="idDeducible" name="idDeducible"
+                                                [(ngModel)]="liquidacion.Deducible" #idDeducible="ngModel">
+                                                <option *ngFor="let est of estadosCobertura" [value]="est">{{est}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                            </fieldset>
+
+
+                            <div class="col-lg-12  m-t-sm m-b-sm">
+
+
+                                <button class="btn btn-w-m btn-success btn-sm" [disabled]="!autorizacionForm.valid || isFormDisabled()"
+                                     type="button" data-toggle="modal" >
+                                    <i class="fa fa-save"></i> Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal de Prestadores -->
+<div id="prestadorModalDiv">
+    <div class="modal inmodal fade" id="prestadorViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">{{popupTitle}}</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaPrestadores" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle no-left-border">Número</th>
+                                            <th class="centerMiddle">Nombre
+                                                <input type="text" (input)="filtrarConvenios($event.target.value)"
+                                                    placeholder="Buscar..." id="buscarPrestador" name="buscarPrestador"
+                                                    class="form-control heigth25">
+                                            </th>
+                                            <th class="centerMiddle">Estado</th>
+                                            <th class="centerMiddle">Tipo Prestador</th>
+                                            <th class="centerMiddle">Nivel Desde</th>
+                                            <th class="centerMiddle">Nivel Hasta</th>
+                                            <th class="centerMiddle">Fecha Suspensión</th>
+                                            <th class="centerMiddle">Codigo Ciudad</th>
+                                            <th class="centerMiddle">Tipo Convenio</th>
+                                            <th *ngIf="esPrestador" class="centerMiddle">Centro Médico</th>
+                                            <th *ngIf="esPrestador" class="centerMiddle">Nombre del Centro Médico</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyPrestador" class="no-borders selectableBodyTable">
+                                        <tr id="prestador{{i}}" [class.active]="convenio.Selected" title="{{!convenio.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!convenio.Selected ? seleccionarConvenio(convenio) : return;"
+                                            *ngFor="let convenio of convenios; let i = index">
+                                            <td class="centerMiddle">{{convenio.Numero}}</td>
+                                            <td class="centerMiddle">{{convenio.Nombre}}</td>
+                                            <td class="centerMiddle">{{convenio.Estado}}</td>
+                                            <td class="centerMiddle">{{convenio.TipoPrestador}}</td>
+                                            <td class="centerMiddle">{{convenio.NivelPrestadorDesde}}</td>
+                                            <td class="centerMiddle">{{convenio.NivelPrestadorHasta}}</td>
+                                            <td class="centerMiddle">{{convenio.FechaSuspension}}</td>
+                                            <td class="centerMiddle">{{convenio.CodigoCiudad}}</td>
+                                            <td class="centerMiddle">{{convenio.TipoConvenio}}</td>
+                                            <td class="centerMiddle" *ngIf="esPrestador">{{convenio.DescripcionEstaff}}</td>
+                                            <td class="centerMiddle" *ngIf="esPrestador">{{convenio.Receptor}}</td>
+                                        </tr>
+                                        <tr *ngIf="convenios.length == 0">
+                                            <td *ngIf="esPrestador" colspan="11" class="alignCenter">No existen
+                                                resultados</td>
+                                            <td *ngIf="!esPrestador" colspan="9" class="alignCenter">No existen
+                                                resultados</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

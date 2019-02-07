@@ -1,0 +1,126 @@
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <form #formularioCrear="ngForm">
+            <div class="form-group col-lg-12">
+                <div class="col-lg-12">
+                    <div class="col-lg-1"><label class="control-label" for="contratoNumero"> Contrato Numero: </label></div>
+                    <div class="col-lg-3">
+                        <input autocomplete="off" type="text" placeholder="Contrat Numero" class="form-control"
+                            id="contratoNumero" name="contratoNumero" [(ngModel)]="keyContratoValidar.NumeroContrato"
+                            #contratoNumero="ngModel" />
+                    </div>
+
+                    <div class="col-lg-1"><label class="control-label" for="codigoProducto"> Codigo Producto: </label></div>
+                    <div class="col-lg-3">
+                        <input autocomplete="off" type="text" placeholder="Codigo Producto" class="form-control"
+                            id="codigoProducto" name="codigoProducto" [(ngModel)]="keyContratoValidar.CodigoProducto"
+                            #codigoProducto="ngModel" />
+                    </div>
+
+                    <label class="col-lg-1 control-label" for="regionContrato">Región Contrato:</label>
+                    <div class="m-b col-lg-3">
+                        <select class="form-control" [(ngModel)]="keyContratoValidar.CodigoRegion" id="regionContrato" name="regionContrato" 
+                            #regionContrato="ngModel" required>
+                            <option [value]="undefined" selected>Seleccione región</option>
+                            <option *ngFor="let r of listaRegiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="col-lg-1"><label class="control-label" for="precioBeneficiario"> Precio Beneficiario: </label></div>
+                    <div class="col-lg-3">
+                        <input autocomplete="off" type="number" step="0.01" placeholder="Precio Beneficiario" class="form-control"
+                            id="precioBeneficiario" name="precioBeneficiario" [(ngModel)]="beneficiarioComision.PrecioBeneficiario"
+                            #precioBeneficiario="ngModel" pattern="^[0-9]+(\.[0-9]{1,2})?$"/>
+                        <div [hidden]="precioBeneficiario.valid || precioBeneficiario.pristine" class="error">
+                            <p *ngIf="precioBeneficiario.errors?.pattern"> No es un numero decimal</p>
+                        </div>
+                    </div>              
+                    <label class="col-lg-1 control-label" for="tipoTransaccion">Tipo Transaccion:</label>
+                    <div class="m-b col-lg-3">
+                        <select class="form-control" [(ngModel)]="movimiento.CodigoTransaccion" id="tipoTransaccion" name="tipoTransaccion" 
+                            #regionContrato="ngModel" required>
+                            <option [ngValue]="undefined" selected>Seleccione tipo transaccion</option>
+                            <option [ngValue]="1">Credito</option>
+                            <option [ngValue]="2">Debito</option>
+                        </select>
+                    </div>               
+                </div>    
+                <div class="col-lg-12 text-center">
+                   <div class="alert alert-info" role="alert">
+                        Por favor seleccione una sala y un vendedor asociado al movimiento 
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-1 control-label" for="region">Región Sala:</label>
+                    <div class="m-b col-lg-3">
+                        <select class="form-control" [(ngModel)]="movimiento.Region" id="region" name="region" #region="ngModel" (change)="cargarSucursal($event);"
+                            required>
+                            <option [value]="undefined" selected>Seleccione región</option>
+                            <option *ngFor="let r of listaRegiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                        </select>
+                    </div>
+                    <label class="col-lg-1 control-label" for="sucursal">Sucursal:</label>
+                    <div class="col-lg-3">
+                        <select class="form-control" id="Sucursal" name="Sucursal" (change)="cargarSalas();" [(ngModel)]="movimiento.SucursalCodigo" #Sucursal="ngModel"
+                            required>
+                            <option [value]="undefined" selected>Seleccione Sucursal</option>
+                            <option *ngFor="let sucursal of sucursalesDeRegion" [value]="sucursal.CodigoSucursal"> {{ sucursal.NombreSucursal }} </option>
+                        </select>
+                    </div>
+                    <label class="col-lg-1 control-label" for="sala">Sala:</label>
+                    <div class=" col-lg-3">
+                        <select class="form-control" id="sala" [(ngModel)]="salaSelected" name="sala" (change)="cargarAgentesVenta();" class="form-control" #sala="ngModel">
+                            <option [value]="undefined" selected>Seleccione Sala</option>
+                            <option *ngFor="let s of salas" [ngValue]="s">{{s.Nombre}}</option>
+                        </select>
+                    </div>               
+                </div>
+                <div class="col-lg-12">
+                    <div class="dataTables_info">{{ventasService.paginationConstants.EncabezadoTabla}}</div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle">Código Agente</th>
+                                    <th class="centerMiddle">Nombre</th>
+                                    <th class="centerMiddle">Estado</th>
+                                    <th class="centerMiddle">Fecha Ingreso</th>
+                                    <th class="centerMiddle">Fecha Salida</th>
+                                    <th class="centerMiddle">Usuario</th>
+                                </tr>
+                            </thead>
+                            <tbody class="no-borders selectableBodyTable" *ngFor="let director of agentesVenta | paginate: {id : 'directoresTable', itemsPerPage: ventasService.paginationConstants.pageSize,currentPage: ventasService.paginationConstants.pageNumber, totalItems: ventasService.paginationConstants.total};">
+                                <tr (click)="!director.Selected ? seleccionar(director, true) : return;" [class.active]="director.Selected">
+                                    <td class="centerMiddle">{{director.Codigo}}</td>
+                                    <td>{{director.Nombre}}</td>
+                                    <td class="centerMiddle"> {{director.Estado}} </td>
+                                    <td class="centerMiddle">{{director.FechaIngreso | date: 'dd/MM/yyyy'}}</td>
+                                    <td class="centerMiddle">{{director.FechaSalida | date: 'dd/MM/yyyy'}}</td>
+                                    <td class="centerMiddle">{{director.UsuarioDirectorioActivo}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot *ngIf="ventasService.paginationConstants.total == 0">
+                                <tr>
+                                    <td colspan="14" style="text-align: center;">No hay Vendedores</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <pagination-controls id="directoresTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="ventasService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                </div>                          
+            </div>
+            <div class="col-lg-12 text-center">
+                <button class="btn btn-w-m btn-success btn-sm" [disabled]="!formularioCrear.form.valid || agenteVentaSelected.Codigo === undefined" (click)="validarContrato();">
+                    <i class="fa fa-plus"></i> Crear
+                </button>
+                <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">
+                    <i class="fa fa-eraser"></i> Limpiar 
+                </a>
+                <button class="btn btn-w-m btn-success btn-sm" (click)="salir()">
+                    <i class="fa fa-times"></i> Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

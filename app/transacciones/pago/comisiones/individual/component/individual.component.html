@@ -1,0 +1,94 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Pago Comisiones</h5>
+        </div>
+        <div class="panel-body">
+            <form name="comisionIndividualForm" role="form" #comisionIndividualForm="ngForm" (ngSubmit)="guardarIndividuales()">
+                <div class="panel-body no-padding m-b-md">
+                    <legend class="info">Mantenimiento para cálculo de comisión</legend>
+                    <div class="col-lg-12">
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Venta Familiar:</label>
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <input type="radio" name="checkFamiliarNo" id="checkFamiliarNo" #checkFamiliarNo="ngModel"
+                                [(ngModel)]="referidorIndividual.VentaFamiliar" (click)="noFamiliar()" value="0"> No
+                            <input type="radio" name="checkFamiliarSi" id="checkTarifarioSi" #checkFamiliarSi="ngModel"
+                                [(ngModel)]="referidorIndividual.VentaFamiliar" (click)="siFamiliar()" value="1"> Si
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Pertenece a la Competencia:</label>
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <input type="radio" name="checkCompetenciaNo" id="checkCompetenciaNo" #checkCompetenciaNo="ngModel"
+                                [(ngModel)]="referidorIndividual.PerteneceCompetencia" (click)="noCompetencia()" value="0">
+                            No
+                            <input type="radio" name="checkCompetenciaSi" id="checkCompetenciaSi" #checkCompetenciaSi="ngModel"
+                                [(ngModel)]="referidorIndividual.PerteneceCompetencia" (click)="siCompetencia()" value="1">
+                            Si
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="m-b col-lg-3">
+                                <label class="control-label">Cupón:</label>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <input type="number" placeholder={{auxVista.Cupon}} name="cupon" id="cupon" #cupon="ngModel"
+                                    [(ngModel)]="referidorIndividual.Cupon" min="0" max="100" [required]="estadoObligatorio">
+                                <div [hidden]="cupon.valid" class="error">
+                                    <p *ngIf="cupon.errors?.max">Revise el porcentaje</p>
+                                    <p *ngIf="cupon.errors?.min">Revise el porcentaje</p>
+                                    <p *ngIf="cupon.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <label class="control-label">Código Referidor:</label>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <input type="number" name="codigoReferidor" id="codigoReferidor" [required]="estadoObligatorio"
+                                    placeholder={{auxVista.CodigoReferidor}} #codigoReferidor="ngModel" [(ngModel)]="referidorIndividual.CodigoReferidor"
+                                    minlength="2">
+                                <div [hidden]="codigoReferidor.valid" class="error">
+                                    <p *ngIf="codigoReferidor.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="m-b col-lg-3">
+                                <label class="control-label">Porcentaje Referidor %:</label>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <input type="number" name="porcentajeReferidor" id="porcentajeReferidor"
+                                    #porcentajeReferidor="ngModel" [(ngModel)]="referidorIndividual.PorcentajeReferidor"
+                                    minlength="2" max="100" min="0" [required]="estadoObligatorio" placeholder={{auxVista.PorcentajeReferidor}}>
+                                <div [hidden]="porcentajeReferidor.valid" class="error">
+                                    <p *ngIf="porcentajeReferidor.errors?.max">Revise el porcentaje</p>
+                                    <p *ngIf="porcentajeReferidor.errors?.min">Revise el porcentaje</p>
+                                    <p *ngIf="porcentajeReferidor.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <label class="control-label">Porcentaje Director Referidor %:</label>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <input type="number" name="porcentajeDirectorReferidor" id="porcentajeDirectorReferidor"
+                                    #porcentajeDirectorReferidor="ngModel" [(ngModel)]="referidorIndividual.PorcentajeDirectorReferidor"
+                                    max="100" min="0" [required]="estadoObligatorio" placeholder={{auxVista.PorcentajeDirectorReferidor}}>
+                                <div [hidden]="porcentajeDirectorReferidor.valid" class="error">
+                                    <p *ngIf="porcentajeDirectorReferidor.errors?.max">Revise el porcentaje</p>
+                                    <p *ngIf="porcentajeDirectorReferidor.errors?.min">Revise el porcentaje</p>
+                                    <p *ngIf="porcentajeDirectorReferidor.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 m-t-md">
+                    <button [disabled]="!comisionIndividualForm.form.valid" class="btn btn-w-m btn-success btn-sm" type="submit">
+                        <i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

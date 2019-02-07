@@ -1,0 +1,112 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Errores</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/srvAdicBases/list']">Bases</a>
+            </li>
+            <li class="breadcrumb-item">Errores</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div id="erroresContainer" class="ibox-title">
+            <div class="row">
+                <div class="col-lg-9 no-padding m-b-md" *ngIf="resumen !== null">
+                    <div class="padT6 col-lg-6">
+                        <label>PROVEEDOR:</label> <span>{{resumen.ProveedorNombre}}</span>
+                    </div>
+                    <div class="padT6 col-lg-6">
+                        <label>PERIODO:</label> <span>{{resumen.PeriodoDesde | date:'dd MMM yyyy'}} al {{resumen.PeriodoHasta | date:'dd MMM yyyy'}}</span>
+                    </div>
+                    <div class="padT6 col-lg-6">
+                        <label>POLIZA:</label> <span>{{resumen.PolizaNum}}</span>
+                    </div>
+                    <div class="padT6 col-lg-6">
+                        <label>SERVICIO:</label> <span>{{resumen.ServicioDescripcion}}</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 no-padding m-b-md" *ngIf="resumen !== null">
+                    <button id="processAllBaseBtn" class="btn btn-primary" (click)="reprocesarBase();">Re-procesar toda la
+                        base
+                    </button>
+                    <button id="processSelectedBaseBtn" class="btn btn-primary" (click)="reprocesarSeleccion();">
+                        Re-procesar selecci&oacute;n
+                    </button>
+                </div>
+            </div>
+            <div class="row form-group form-check">
+                <div class="col-lg-6 m-b-md">
+                    <h4 class="centerMiddle">MOVIMIENTOS</h4>
+                    <div class="table-responsive">
+                        <table id="listadoMovimientos" class="table table-bordered table-hover dataTable">
+                            <thead class="no-borders">
+                            <tr>
+                                <th class="centerMiddle">
+                                    <input id="selectAllMovs" name="selectAllMovs" type="checkbox"
+                                           class="form-check-input" (change)="handleSelectAll($event);"/>
+                                </th>
+                                <th class="centerMiddle">Contrato</th>
+                                <th class="centerMiddle">Nombre Benef.</th>
+                                <th class="centerMiddle">C&eacute;dula</th>
+                                <th class="centerMiddle">Edad</th>
+                            </tr>
+                            </thead>
+                            <tbody class="no-borders">
+                            <tr *ngFor="let mov of movimientos"
+                                [ngClass]="{'fila-inclusion':mov.Tipo === 'INC','fila-exclusion':mov.Tipo === 'EXC'}">
+                                <td class="centerMiddle"><input [id]="mov.Id.toString().concat('MovCheck')"
+                                                                type="checkbox"
+                                                                class="form-check-input" [ngModel]="mov.Seleccionado"/>
+                                </td>
+                                <td>{{mov.ContratoId}}</td>
+                                <td>{{mov.BeneficiarioNombre}}</td>
+                                <td>{{mov.BeneficiarioCedula}}</td>
+                                <td>{{mov.BeneficiarioEdad}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-6 m-b-md">
+                    <h4 class="centerMiddle">GAP</h4>
+                    <div class="table-responsive">
+                        <table id="listadoGaps" class="table table-bordered table-hover dataTable">
+                            <thead class="no-borders">
+                            <tr>
+                                <th class="centerMiddle">
+                                    <input id="selectAllGaps" name="selectAllGaps" type="checkbox"
+                                           class="form-check-input" (change)="handleSelectAll($event);"/>
+                                </th>
+                                <th class="centerMiddle">Contrato</th>
+                                <th class="centerMiddle">Nombre Benef.</th>
+                                <th class="centerMiddle">C&eacute;dula</th>
+                                <th class="centerMiddle">Edad</th>
+                            </tr>
+                            </thead>
+                            <tbody class="no-borders">
+                            <tr *ngFor="let gap of gaps"
+                                [ngClass]="{'fila-alta':gap.Tipo === 'ALT','fila-baja':gap.Tipo === 'BAJ'}">
+                                <td class="centerMiddle"><input [id]="gap.Id.toString().concat('GapCheck')"
+                                                                type="checkbox"
+                                                                class="form-check-input" [ngModel]="gap.Seleccionado"/>
+                                </td>
+                                <td>{{gap.ContratoId}}</td>
+                                <td>{{gap.BeneficiarioNombre}}</td>
+                                <td>{{gap.BeneficiarioCedula}}</td>
+                                <td>{{gap.BeneficiarioEdad}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

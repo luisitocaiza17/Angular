@@ -1,0 +1,605 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+	<div class="panel panel-success">
+		<div class="panel-heading">
+			<h5 class="panel-title">Modificar Beneficiario</h5>
+		</div>
+		<div class="panel-body">
+			<form name="form" role="form" #form="ngForm">
+				<div class="row">
+					<div class="col-lg-12 m-t-sm m-b-sm">
+						<button class="btn {{activateBotonB}} btn-w-m btn-sm m-b-sm m-l-sm" id="beneficiariosTab" (click)="abrirPantalla(false)">
+							<i class="fa fa-list-alt"></i> Beneficiario
+						</button>
+						<button class="btn {{activateBotonS}} btn-w-m btn-sm m-b-sm m-l-sm" id="serviciosTab" (click)="abrirPantalla(true)">
+							<i class="fa fa-list-alt"></i> Servicios
+						</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="m-b col-lg-12">
+						<legend class="info">{{title}}</legend>
+					</div>
+				</div>
+				<!--Pagina de Beneficiarios-->
+				<div class="row" *ngIf="showBeneficiarios">
+					<div class="col-lg-12 m-t-sm m-b-sm">
+						<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" (click)="incluirBeneficiario()">
+							<i class="fa fa-plus-circle"></i> Incluir
+						</button>
+						<!--<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" (click)="actualizarBeneficiario()">
+							<i class="fa fa-pencil-square-o"></i> Actualizar
+						</button>-->
+						<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" (click)="selectFechaExclusion()" [disabled]="habilitaReingreso"
+						 data-toggle="modal" data-target="#reingresoShowModal">
+							<i class="fa fa-list-alt"></i> Excluir
+						</button>
+						<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" (click)="reactivarBeneficiario()" [disabled]="habilitaReingreso"
+						 data-toggle="modal" data-target="#reingresoShowModal">
+							<i class="fa fa-list-alt"></i> Reactivar
+						</button>
+					</div>
+					<div class="col-lg-12 m-t-sm m-b-sm">
+						<div class="tab-content">
+							<div class="tab-pane active" id="beneficiarios" role="tabpanel">
+								<div class="panel panel-success">
+									<div class="panel-heading">
+										<h5 class="panel-title">Beneficiarios</h5>
+									</div>
+									<div class="panel-body panelDatos">
+										<div class="table-responsive">
+											<table class="table table-striped table-bordered table-hover dataTable">
+												<thead>
+													<tr>
+														<th class="centerMiddle">Persona Número</th>
+														<th class="centerMiddle">Nombres</th>
+														<th class="centerMiddle">Relación</th>
+														<th class="centerMiddle">Edad</th>
+														<th class="centerMiddle">Sexo</th>
+														<th class="centerMiddle">Maternidad</th>
+														<th class="centerMiddle">Dsct Disponible</th>
+														<th class="centerMiddle">Titular</th>
+														<th class="centerMiddle">Estado</th>
+														<th class="centerMiddle">Region</th>
+														<th class="centerMiddle">Código Producto</th>
+														<th class="centerMiddle">Fecha Inlcuisi&oacute;n</th>
+													</tr>
+												</thead>
+												<tbody class="no-borders selectableBodyTable" *ngFor="let beneficiario of beneficiarios">
+													<tr title="{{!beneficiario.Selected ? 'Click para seleccionar' : ''}}" (click)="!beneficiario.Selected ? seleccionarBeneficiario(beneficiario) : return"
+													 [class.active]="beneficiario.Selected">
+														<td>{{beneficiario.NumeroPersona}}</td>
+														<td>{{beneficiario.NombresApellidos}}</td>
+														<td>{{beneficiario.NombreRelacion}}</td>
+														<td>{{beneficiario.Edad}}</td>
+														<td>{{beneficiario.DescripcionSexo}}</td>
+														<td>{{beneficiario.Maternidad}}</td>
+														<td>{{beneficiario.DescuentoDisponible}}</td>
+														<td>{{beneficiario.DescripcionTitular}}</td>
+														<td>{{beneficiario.NombreEstado}}</td>
+														<td>{{beneficiario.Region}}</td>
+														<td>{{beneficiario.CodigoProducto}}</td>
+														<td>{{beneficiario.FechaInclusion | date: 'dd/MM/yyyy'}}</td>
+													</tr>
+												</tbody>
+												<tfoot *ngIf="beneficiarios.length == 0">
+													<tr>
+														<td colspan="11" style="text-align: center">No existen resultados</td>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--Fin Beneficiarios-->
+				<!--Servicios-->
+				<div *ngIf="showServicios">
+					<div class="col-lg-12  m-t-sm m-b-sm">
+						<button class="btn btn-w-m btn-success btn-w-m btn-sm m-b-sm m-l-sm" (click)="nuevoServicio()">
+							<i class="fa fa-plus-circle"></i> Incluir
+						</button>
+						<button class="btn btn-w-m btn-success btn-w-m btn-sm m-b-sm m-l-sm" (click)="reactivarServicio()">
+							<i class="fa fa-refresh"></i> Reactivar
+						</button>
+						<button class="btn btn-w-m btn-success btn-w-m btn-sm m-b-sm m-l-sm" (click)="excluirServicio()">
+							<i class="fa fa-trash"></i> Excluir
+						</button>
+					</div>
+					<div class="tab-pane" id="servicios" role="tabpanel">
+						<div class="col-lg-12 m-b">
+							<div class="panel panel-success">
+								<div class="panel-heading">
+									<h5 class="panel-title">Servicios Adicionales</h5>
+								</div>
+								<div class="panel-body panelDatos">
+									<div class="m-b col-lg-2">
+										<label class="control-label">{{beneficiarioSeleccionado.Apellidos}}</label>
+									</div>
+									<div class="m-b col-lg-2">
+										<label class="control-label">{{beneficiarioSeleccionado.Nombres}}</label>
+									</div>
+									<div class="m-b col-lg-2">
+										<label class="control-label">{{beneficiarioSeleccionado.NombreRelacion}}</label>
+									</div>
+									<div class="m-b col-lg-2">
+										<label class="control-label">{{beneficiarioSeleccionado.Edad}} Años</label>
+									</div>
+								</div>
+								<div class="panel-body panelDatos">
+									<div class="table-responsive">
+										<table class="table table-striped table-bordered table-hover dataTable">
+											<thead>
+												<tr>
+													<th class="centerMiddle">Código Servicio</th>
+													<th class="centerMiddle">Nombre</th>
+													<th class="centerMiddle">Fecha Inicio</th>
+													<th class="centerMiddle">Fecha Fin</th>
+													<th class="centerMiddle">Precio</th>
+													<th class="centerMiddle">Estado</th>
+													<th class="centerMiddle">Monto Cobertuta</th>
+													<th class="centerMiddle">Nivel Cobertuta</th>
+												</tr>
+											</thead>
+											<tbody class="no-borders selectableBodyTable" *ngFor="let servicio of serviciosAdicionales">
+												<tr title="{{!servicio.Selected ? 'Click para seleccionar' : ''}}" (click)="!servicio.Selected ? seleccionarServicio(servicio, true) : return;"
+												 [class.active]="servicio.Selected">
+													<td>{{servicio.CodigoServicioAnterior}}</td>
+													<td>{{servicio.DescripcionServicio}}</td>
+													<td>{{servicio.FechaInicio | date: 'dd/MM/yyyy'}}</td>
+													<td>{{servicio.FechaFin | date: 'dd/MM/yyyy'}}</td>
+													<td>{{servicio.PrecioServicios | number : '1.2-2'}}</td>
+													<td>{{servicio.NombreEstado}}</td>
+													<td>{{servicio.MontoCobertura | number : '1.2-2'}}</td>
+													<td>{{servicio.NivelCobertura}}</td>
+												</tr>
+											</tbody>
+											<tfoot *ngIf="serviciosAdicionales.length == 0">
+												<tr>
+													<td colspan="9" style="text-align: center;">El beneficiario no cuenta con Servicios</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--Fin Servicios-->
+			</form>
+		</div>
+		<!--Modal Incluir Beneficiario-->
+		<div class="modal inmodal fade" id="modalIncluir" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+		 data-keyboard="false">
+			<div class="modal-dialog modal-lg">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<h5 class="panel-title p-xs">Incluir Beneficiario</h5>
+					</div>
+					<br>
+					<div class="panel-body">
+						<form class="form-horizontal" role="form" name="formBeneficiario" (ngSubmit)="formBeneficiario.form.valid && guardarBeneficiario()"
+						 #formBeneficiario="ngForm" novalidate>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Tipo Documento:</label>
+								<div class="col-sm-4">
+									<select required class="form-select-control m-b m-l-sm" name="tipoIdentificacion" [(ngModel)]="tipoDocumento"
+									 #tipoIdentificacion="ngModel" (change)="seleccionarDocumento()">
+										<option [ngValue]="null">Seleccione...</option>
+										<option [ngValue]="1">Cédula</option>
+										<option [ngValue]="2">Pasaporte</option>
+										<option [ngValue]="3">Sin Documento</option>
+									</select>
+									<div *ngIf="formBeneficiario.submitted && tipoIdentificacion.invalid" class="fields-errors">
+										<div *ngIf="tipoIdentificacion.errors.required">Campo requerido</div>
+									</div>
+								</div>
+								<label class="control-label col-lg-2" *ngIf="activaPasaporte == false">Documento:</label>
+								<div class="col-sm-4" *ngIf="activaPasaporte == false">
+									<input class="heigth25 form-control col-lg-12 m-l-sm" type="text" [(ngModel)]="documento" name="document"
+									 #document="ngModel" (blur)="validaDocumento()" [disabled]="!habilitarCampos" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+								</div>
+
+								<label class="control-label col-lg-2" *ngIf="activaPasaporte == true">Pasaporte:</label>
+								<div class="col-sm-4" *ngIf="activaPasaporte == true">
+									<input class="heigth25 form-control col-lg-12 m-l-sm" type="text" [(ngModel)]="documento" name="document"
+									 #document="ngModel" (blur)="validaDocumento()" [disabled]="!habilitarCampos">
+								</div>
+
+
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Nombres:</label>
+								<div class="col-sm-4">
+									<input class="form-control heigth25 m-l-sm" type="text" placeholder="Nombres beneficiario" [(ngModel)]="beneficiario.Nombres"
+									 name="nombres" #nombres="ngModel" [disabled]="!habilitarCampos" required>
+									<div *ngIf="formBeneficiario.submitted && nombres.invalid" class="fields-errors">
+										<div *ngIf="nombres.errors.required">Campo requerido</div>
+									</div>
+								</div>
+								<label class="control-label col-lg-2">Apellidos:</label>
+								<div class="col-sm-4">
+									<input class="form-control m-l-sm heigth25" type="text" placeholder="Apellidos beneficiario" [(ngModel)]="beneficiario.Apellidos"
+									 name="apellidos" #apellidos="ngModel" [disabled]="!habilitarCampos" required>
+									<div *ngIf="formBeneficiario.submitted && apellidos.invalid" class="fields-errors">
+										<div *ngIf="apellidos.errors.required">Campo requerido</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Relación:</label>
+								<div class="col-sm-4">
+									<select class="form-select-control m-b m-l-sm" name="relacion" [(ngModel)]="beneficiario.CodigoRelacion"
+									 #relacion="ngModel" [disabled]="!habilitarCampos" (change)="habilitarMaternidad()" required>
+										<option [ngValue]="null">Seleccione...</option>
+										<option *ngFor="let relacion of relaciones" [ngValue]="relacion.CodigoRelacion">{{relacion.NombreRelacion}}</option>
+									</select>
+									<div *ngIf="formBeneficiario.submitted && relacion.invalid" class="fields-errors">
+										<div *ngIf="relacion.errors.required">Campo requerido</div>
+									</div>
+								</div>
+								<label class="control-label col-lg-2">Genero:</label>
+								<div class="col-sm-4">
+									<select class="form-select-control m-b m-l-sm" name="genero" [(ngModel)]="beneficiario.SexoPersona" #genero="ngModel"
+									 [disabled]="!habilitarCampos" (change)="calcularPrecios()" required>
+										<option [ngValue]="null" selected>Seleccione...</option>
+										<option [ngValue]="true" selected>Masculino</option>
+										<option [ngValue]="false" selected>Femenino</option>
+									</select>
+									<div *ngIf="formBeneficiario.submitted && genero.invalid" class="fields-errors">
+										<div *ngIf="genero.errors.required">Campo requerido</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Comisiona:</label>
+								<div class="col-sm-4">
+									<select class="form-select-control m-b m-l-sm" name="comisiona" [(ngModel)]="beneficiario.Comisiona"
+									 #comisiona="ngModel" [disabled]="!habilitarCampos" required>
+										<option [ngValue]="null">Seleccione...</option>
+										<option [ngValue]="true">Si</option>
+										<option [ngValue]="false">No</option>
+									</select>
+									<div *ngIf="formBeneficiario.submitted && comisiona.invalid" class="fields-errors">
+										<div *ngIf="comisiona.errors.required">Campo requerido</div>
+									</div>
+								</div>
+								<label class="control-label col-lg-2">Aplica Maternidad:</label>
+								<div class="col-sm-4">
+									<select class="form-select-control m-b m-l-sm" name="aplicaMaternidad" [(ngModel)]="beneficiario.TajetaBeneficiario"
+									 #aplicaMaternidad="ngModel" [disabled]="!esMaternidad" (change)="calcularPrecios()" required>
+										<option [ngValue]="null">Seleccione...</option>
+										<option [ngValue]="true">Si</option>
+										<option [ngValue]="false">No</option>
+									</select>
+									<div *ngIf="formBeneficiario.submitted && aplicaMaternidad.invalid" class="fields-errors">
+										<div *ngIf="aplicaMaternidad.errors.required">Campo requerido</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Vigencia Desde:</label>
+								<div class="col-sm-4">
+									<datetime class="heigth25 col-lg-12 m-b" [(ngModel)]="beneficiario.FechaInclusion" [datepicker]="datepickerOpts"
+									 [timepicker]="false" name="fechaInclusion" #fechaInclusion="ngModel" required>
+									</datetime>
+									<div *ngIf="formBeneficiario.submitted && fechaInclusion.invalid" class="fields-errors">
+										<div *ngIf="fechaInclusion.errors.required">Campo requerido</div>
+									</div>
+								</div>
+								<label class="control-label col-lg-2">Vigencia Hasta:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{beneficiario.FechaExlusion | date: 'dd/MM/yyyy'}}</span>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Fecha Nacimiento:</label>
+								<div class="col-sm-4">
+									<datetime class="heigth25 col-lg-12 m-b" name="fechaNacimiento" #fechaNacimiento="ngModel" [datepicker]="datepickerOpts"
+									 [timepicker]="false" [(ngModel)]="beneficiario.FechaNacimiento" (ngModelChange)="calcularEdad()" required>
+									</datetime>
+									<div *ngIf="formBeneficiario.submitted && fechaNacimiento.invalid" class="fields-errors">
+										<div *ngIf="fechaNacimiento.errors.required">Campo requerido</div>
+									</div>
+								</div>
+								<label class="control-label col-lg-2">Edad:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{beneficiario.Edad}}</span>
+								</div>
+							</div>
+							<div class="m-l-sm">
+								<h2>Precios por Beneficiario</h2>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Precio sugerido:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{beneficiario.PrecioSugerido | number : '1.2-2'}}</span>
+								</div>
+								<label class="control-label col-lg-2">Facturado Hasta:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{FacturadoHasta | date: 'dd/MM/yyyy'}}</span>
+								</div>
+							</div>
+							<div class="col-lg-12 no-padding">
+								<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="submit">Guardar</button>
+								<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="button" (click)="cerrarModal('modalIncluir')">Cancelar</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Modal Cliente Unico-->
+		<div class="modal inmodal fade" id="ActualizaPersona" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+		 data-keyboard="false">
+			<div class="modal-dialog modal-lg">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<h5 class="panel-title">Actualización de Personas</h5>
+					</div>
+					<div class="panel-body">
+						<frmActualizaPersona *ngIf="clienteUnico.NumeroPersona != undefined" [tipoPantalla]="clienteUnico"></frmActualizaPersona>
+						<div class="col-lg-12 m-t-md">
+							<button class="btn btn-w-m btn-success btn-sm" (click)="closeModalClienteUnico()">
+								<i class="fa fa-sign-out"></i>Salir
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Modal Seleccionar Titular-->
+		<div class="modal inmodal fade" id="modalTitular" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+		 data-keyboard="false">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-dialog modal-lg">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h5 class="panel-title p-xs">Seleccione Titular</h5>
+						</div>
+						<br>
+						<div class="panel-body">
+							<form class="form-horizontal" role="form" name="fTitular" (ngSubmit)="fTitular.form.valid && guardarNuevoTitular()"
+							 #fTitular="ngForm" novalidate>
+								<div class="form-group col-lg-12 no-padding">
+									<label class="control-label col-lg-2">Beneficiario:</label>
+									<div class="col-sm-4">
+										<select class="form-select-control m-b m-l-sm" name="bene" [(ngModel)]="beneficiario.NumeroPersona" #bene="ngModel"
+										 [ngClass]="{ 'is-invalid': fTitular.submitted && bene.invalid }" (change)="cambiarTitular(beneficiario)"
+										 required>
+											<option [ngValue]="null">Seleccione...</option>
+											<option *ngFor="let i of beneficiariosAux" [ngValue]="i.NumeroPersona">{{i.NombresApellidos}}</option>
+										</select>
+										<div *ngIf="fTitular.submitted && bene.invalid" class="fields-errors">
+											<div *ngIf="bene.errors.required">Campo requerido</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-12 no-padding">
+									<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="submit">Guardar</button>
+									<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="button" (click)="cerrarModal('modalTitular')">Cancelar</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Modal Relacion-->
+		<div class="modal inmodal fade" id="modalRelacion" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+		 data-keyboard="false">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-dialog modal-lg">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h5 class="panel-title p-xs">Seleccione Titular</h5>
+						</div>
+						<br>
+						<div class="panel-body">
+							<form class="form-horizontal" role="form" name="fRelacion" (ngSubmit)="fRelacion.form.valid && actualizarRelacion()"
+							 #fRelacion="ngForm" novalidate>
+								<div class="form-group col-lg-12 no-padding">
+									<label class="control-label col-lg-2">Relación:</label>
+									<div class="col-sm-4">
+										<select class="form-select-control m-b m-l-sm" name="codRelacion" [(ngModel)]="codigoRelacion" #codRelacion="ngModel"
+										 [ngClass]="{ 'is-invalid': fRelacion.submitted && codRelacion.invalid }" required>
+											<option [ngValue]="null">Seleccione...</option>
+											<option *ngFor="let relacion of relaciones" [ngValue]="relacion.CodigoRelacion">{{relacion.NombreRelacion}}</option>
+										</select>
+										<div *ngIf="fRelacion.submitted && codRelacion.invalid" class="fields-errors">
+											<div *ngIf="codRelacion.errors.required">Campo requerido</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-12 no-padding">
+									<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="submit">Guardar</button>
+									<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="button" (click)="cerrarModal('modalRelacion')">Cancelar</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Modal Servicios Adicionales-->
+		<div class="modal inmodal fade" id="ModalNuevoServicio" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+		 data-keyboard="false">
+			<div class="modal-dialog modal-lg">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<h5 class="panel-title p-xs">Nuevo Servicio</h5>
+					</div>
+					<br>
+					<div class="panel-body">
+						<form class="form-horizontal" role="form" name="formServicios" (ngSubmit)="formServicios.form.valid && guardarServicio()"
+						 #formServicios="ngForm" novalidate>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Contrato:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{beneficiarioSeleccionado.CodigoContrato}}</span>
+								</div>
+								<label class="control-label col-lg-2">Producto:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{beneficiarioSeleccionado.CodigoProducto}}</span>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Persona Número:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{beneficiarioSeleccionado.NumeroPersona}}</span>
+								</div>
+								<label class="control-label col-lg-2">Nro. Póliza:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{servicio.Contador}}</span>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Servicio:</label>
+								<div class="col-sm-4">
+									<select required class="form-select-control m-b" id="codigoServicio" name="codigoServicio" [(ngModel)]="servicio.CodigoServicio"
+									 #codigoServicio="ngModel" (change)="changeServicio()" required>
+										<option [ngValue]="null">Seleccione...</option>
+										<option *ngFor="let s of servicios" [ngValue]="s.CodigoServicio">{{s.DescripcionServicio}}</option>
+									</select>
+									<div>
+										<label class="col-md-12 no-padding fields-error">{{error}}</label>
+									</div>
+									<div *ngIf="formServicios.submitted && codigoServicio.invalid" class="fields-errors">
+										<div *ngIf="codigoServicio.errors.required">Campo requerido</div>
+									</div>
+								</div>
+								<label class="control-label col-lg-2">Buscar por C&oacute;digo Servicio:</label>
+								<div class="col-sm-4">
+									<!-- <span class="m-l-sm">{{servicio.CodigoServicio}}</span> -->
+									<input type="number" placeholder="C&oacute;digo Servicio" [(ngModel)]="buscaCodigoTyped" id="slcCodigoServicio"
+									 #slcCodigoServicio="ngModel" name="slcCodigoServicio" class="heigth25" />
+									<a title="Buscar c&oacute;digo" (click)="buscarCodigo();">
+										<i class="fa fa-search"></i>
+									</a>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Código Servicio Selecionado:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{servicio.CodigoServicio}}</span>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Inicio Servicio:</label>
+								<div class="col-sm-4">
+									<datetime required class="heigth25 col-lg-12 no-padding" id="fechaInicioServicio" name="fechaInicioServicio"
+									 [datepicker]="datepickerOpts" [timepicker]="false" #fechaInicioServicio="ngModel" [(ngModel)]="servicio.FechaInicio"></datetime>
+									<div *ngIf="formServicios.submitted && fechaInicioServicio.invalid" class="fields-errors">
+										<div *ngIf="fechaInicioServicio.errors.required">Campo requerido</div>
+									</div>
+								</div>
+								<label class="control-label col-lg-2">Fin Servicio:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{beneficiarioSeleccionado.FechaExlusion | date: 'dd/MM/yyyy'}}</span>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Edad:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{beneficiarioSeleccionado.Edad}}</span>
+								</div>
+								<label class="control-label col-lg-2">Facturado Hasta:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{FacturadoHasta | date: 'dd/MM/yyyy'}}</span>
+								</div>
+							</div>
+							<div class="form-group col-lg-12 no-padding">
+								<label class="control-label col-lg-2">Precio Servicio:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{servicio.PrecioServicios | number : '1.2-2'}}</span>
+								</div>
+								<label class="control-label col-lg-2">Monto Cobertura:</label>
+								<div class="col-sm-4">
+									<span class="m-l-sm">{{servicio.MontoCobertura | number : '1.2-2'}}</span>
+								</div>
+							</div>
+							<div class="col-lg-12 no-padding">
+								<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="submit" [disabled]="!formServicios.form.valid">
+									Guardar</button>
+								<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="button" (click)="cerrarModal('ModalNuevoServicio')">
+									Cancelar</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Modal Servicios Especiales-->
+		<div class="modal inmodal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<h5 class="panel-title p-xs">{{titulo}}</h5>
+					</div>
+					<div id="divServiciosEspeciales" class="ibox-content">
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover dataTable">
+								<thead>
+									<tr>
+										<th class="centerMiddle">{{subtitulo}}</th>
+										<th class="centerMiddle">Descripción</th>
+										<th class="centerMiddle">Cobertura</th>
+									</tr>
+								</thead>
+								<tbody class="no-borders selectableBodyTable" *ngFor="let servicioEspecial of serviciosEspeciales">
+									<tr title="{{!servicioEspecial.Selected ? 'Click para seleccionar' : ''}}" (click)="!servicioEspecial.Selected ? seleccionarNivel(servicioEspecial) : return;"
+									 [class.active]="servicioEspecial.Selected">
+										<td>{{servicioEspecial.Nivel}}</td>
+										<td>{{servicioEspecial.Descripcion}}</td>
+										<td>{{servicioEspecial.Valor}}</td>
+									</tr>
+								</tbody>
+								<tfoot *ngIf="serviciosEspeciales.length == 0">
+									<tr>
+										<td colspan="3" style="text-align: center;">No existen resultados</td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Modal Seleccionar Fecha Exclusión-->
+		<div class="modal inmodal fade" id="modalFechaExclusion" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+		 data-keyboard="false">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-dialog modal-lg">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h5 class="panel-title p-xs">Fecha exclusión</h5>
+						</div>
+						<br>
+						<div class="panel-body">
+							<form class="form-horizontal" role="form" name="formFecha" (ngSubmit)="formFecha.form.valid && excluirBeneficiario()"
+							 #formFecha="ngForm" novalidate>
+								<div class="form-group col-lg-12 no-padding">
+									<label class="control-label col-lg-2">Fecha:</label>
+									<div class="col-sm-4">
+										<datetime required class="heigth25 col-lg-12 no-padding" id="fechaExclusion" name="fechaExclusion"
+										 [datepicker]="datepickerOpts" [timepicker]="false" #fechaExclusion="ngModel" [(ngModel)]="beneficiarioSeleccionado.FechaExlusion"></datetime>
+										<div *ngIf="formFecha.submitted && fechaExclusion.invalid" class="fields-errors">
+											<div *ngIf="fechaExclusion.errors.required">Campo requerido</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-12 no-padding">
+									<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="submit">Guardar</button>
+									<button class="btn btn-w-m btn-success btn-sm m-b-sm m-l-sm" type="button" (click)="cerrarModal('modalFechaExclusion')">Cancelar</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

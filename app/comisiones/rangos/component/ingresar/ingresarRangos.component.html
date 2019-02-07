@@ -1,0 +1,107 @@
+<div class="wrapper wrapper-content">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div id="divConsultar" class="panel-collapse collapse in">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+              <form #crearSalasForm="ngForm">
+                <div class="form-group col-lg-12 no-padding">
+                    <div class="col-lg-12">
+                      <label class="col-lg-2 control-label" for="region">Region:</label>
+                      <div class="m-b col-lg-4">
+                        <select class="form-control" id="region" [(ngModel)]="rangos.CodigoRegion" name="region" (change)="cargarSucursal($event);"
+                          class="form-control" #region="ngModel" required>
+                          <option [value]="undefined" selected>Seleccione Región</option>
+                          <option *ngFor="let e of listaRegiones" [value]="e.Codigo">{{e.Nombre}}</option>
+                        </select>
+                      </div>
+                      <label class="col-lg-2 control-label"> Sucursal: </label>
+                      <div class="col-lg-4">
+                        <select class="form-control" id="Sucursal" name="Sucursal" [(ngModel)]="rangos.CodigoSucursal" #Sucursal="ngModel" required>
+                          <option *ngFor="let sucursal of sucursalesDeRegion" [value]="sucursal.CodigoSucursal"> {{ sucursal.NombreSucursal }} </option>
+                        </select>
+                      </div>
+                    </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="tipo">Tipo:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="tipo" [(ngModel)]="rangos.CodigoTipo" (change)="cargarSubtipo($event);" name="tipo" class="form-control"
+                        #tipo="ngModel" required>
+                        <option [value]="undefined" selected>Seleccione Tipo</option>
+                        <option *ngFor="let e of listaTipos" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label" for="subtipo">Subtipo:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="subtipo" [(ngModel)]="rangos.CodigoSubtipo" name="subtipo" class="form-control" 
+                      #subtipo="ngModel" required >
+                        <option [value]="undefined" selected>Seleccione Subtipo</option>
+                        <option *ngFor="let e of listaSubtipos" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="canales"> Canales: </label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="canales" [(ngModel)]="rangos.CodigoCanal" name="canales" (change)="cargarNombres();"  class="form-control" #canal="ngModel" required>
+                        <option [value]="undefined" selected>Seleccione Canal</option>
+                        <option *ngFor="let e of listaCanales" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="periodoDesde">Periodo Desde: (meses)</label>
+                    <div class="m-b col-lg-4">
+                      <input type="number" placeholder="Periodo Desde" id="periodoDesde" [(ngModel)]="rangos.PeriodoDesde" name="periodoDesde"
+                        class="form-control" #periodoDesde="ngModel" pattern="\d*" max="9999" required/>
+                      <div [hidden]="periodoDesde.valid || periodoDesde.pristine" class="error">
+                        <p *ngIf="periodoDesde.errors?.pattern">Sólo dígitos</p>
+                        <p *ngIf="periodoDesde.errors?.max">Revise el valor</p>
+                      </div>
+                    </div>
+                    <label class="col-lg-2 control-label" for="periodoHasta">Periodo Hasta: (meses)</label>
+                    <div class="m-b col-lg-4">
+                      <input type="number" placeholder="Periodo Hasta" id="periodoHasta" (keyup)="validacionNombre($event)" [(ngModel)]="rangos.PeriodoHasta"
+                        name="periodoHasta" class="form-control" #periodoHasta="ngModel" pattern="\d*" max="9999" required />
+                      <div [hidden]="periodoHasta.valid || periodoHasta.pristine" class="error">
+                        <p *ngIf="periodoHasta.errors?.pattern">Sólo dígitos</p>
+                        <p *ngIf="periodoDesde.errors?.max">Revise el valor</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                      <label class="col-lg-2 control-label" for="aplicaBonoTransporte">Aplica Bono Transporte</label>
+                      <div class="m-b col-lg-4">
+                        <input type="checkbox"  id="aplicaTransporte" [(ngModel)]="rangos.AplicaTransporte" name="aplicaTransporte"
+                         #aplicaTransporte="ngModel" (change)="checkValue(rangos.AplicaTransporte?true:false)"/>
+                      </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="obsevaciones">Observaciones:</label>
+                    <div>
+                      <textarea rows="5" placeholder="Observaciones. Hasta 255 Caracteres" id="observaciones" name="observaciones" class="form-control" [(ngModel)]="rangos.Descripcion"
+                        style="resize: none;" maxlength="255" #observaciones="ngModel"></textarea>
+                        <div [hidden]="observaciones.valid || observaciones.pristine" class="error">
+                          <p *ngIf="observaciones.errors?.maxlength">Máximo 255 caracteres</p>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 text-center">
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!crearSalasForm.form.valid" (click)="crearRangos();"
+                    [disabled]="estadoNombre">
+                    <i class="fa fa-plus"></i> Crear
+                  </button>
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="salir()">
+                    <i class="fa fa-times"></i> Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

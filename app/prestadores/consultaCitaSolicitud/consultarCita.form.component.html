@@ -1,0 +1,235 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Consultar Cita</h5>
+        </div>
+        <div class="panel-body">
+            <form #consultaPrestadoresVeris="ngForm">
+                <fieldset class="col-lg-12 m-b">
+                    <legend class="info">Filtros de Búsqueda</legend>
+
+                    <label class="col-lg-2 control-label">Agendada Desde:</label>
+                    <datetime class="heigth25 col-lg-4" [timepicker]="false" id="fechaDesde" name="fechaDesde" [(ngModel)]="filter.fechaDesdeTime"
+                        [datepicker]="datepickerOpts"></datetime>
+
+                    <label class="col-lg-2 control-label">Agendada Hasta:</label>
+                    <datetime class="heigth25 col-lg-4" [timepicker]="false" id="fechaHasta" name="fechaHasta" [(ngModel)]="filter.fechaHastaTime"
+                        [datepicker]="datepickerOpts"></datetime>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12 m-b">
+                    <label class="col-lg-2 control-label">Registrado Desde:</label>
+                    <datetime class="heigth25 col-lg-4" [timepicker]="false" id="fechaRegistroDesde" name="fechaRegistroDesde" [(ngModel)]="filter.fechaRegistroDesde"
+                        [datepicker]="datepickerOpts"></datetime>
+
+                    <label class="col-lg-2 control-label">Registrado Hasta:</label>
+                    <datetime class="heigth25 col-lg-4" [timepicker]="false" id="fechaRegistroHasta" name="fechaRegistroHasta" [(ngModel)]="filter.fechaRegistroHasta"
+                        [datepicker]="datepickerOpts"></datetime>
+
+                </fieldset>
+
+
+                <fieldset class="col-lg-12 m-b">
+                    <label class="col-lg-2 control-label" for="accion">Número Paciente:</label>
+                    <div class="col-lg-4">
+                        <input type="text" placeholder="Número del Paciente" [(ngModel)]="filter.numeroPersonaPaciente" id="numeroPaciente" name="numeroPaciente"
+                            class="heigth25 form-control col-lg-12" />
+                    </div>
+
+                    <label class="col-lg-2 control-label" for="accion">Número Titular:</label>
+                    <div class="col-lg-4">
+                        <input type="text" placeholder="Número del Titular" [(ngModel)]="filter.numeroPersonaTitular" id="numeroTitular" name="numeroTitular"
+                            class="heigth25 form-control col-lg-12" />
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-lg-12 m-b">
+                    <label class="col-lg-2 control-label" for="accion">Código Cita:</label>
+                    <div class="col-lg-4">
+                        <input type="text" placeholder="Código de la Cita" [(ngModel)]="filter.codigoCitaPrestador" id="codigoCita" name="codigoCita"
+                            class="heigth25 form-control col-lg-12" />
+                    </div>
+
+                    <label class="col-lg-2 control-label">Médico Destacado:</label>
+                    <div class="col-lg-4">
+                        <select class="form-select-control m-b" id="slcMedicoDestacado" name="slcMedicoDestacado" [(ngModel)]="filter.medicoDestacado"
+                            #slcUsuarioAsignado="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="true">Si</option>
+                            <option [ngValue]="false">No</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-lg-12 m-b">
+
+                    <label class="col-lg-2 control-label" for="accion">Centro Médico:</label>
+                    <div class="col-lg-4">
+                        <select class="form-select-control m-b" id="slcCentroMedico" name="slcCentroMedico" [(ngModel)]="filter.idCentroMedico" #slcCentroMedico="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="20" selected>SaludSA</option>
+                            <option *ngFor="let centros of listaCentroMedico" [ngValue]="centros.idCentroMedico">{{centros.nombreCorto}}</option>
+                        </select>
+                    </div>
+
+                    <label class="col-lg-2 control-label" for="Estado">Estado:</label>
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control m-b" id="slcEstado" name="slcEstado" [(ngModel)]="filter.estadoAtencionId" #slcEstado="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="0" selected>Todos</option>
+                            <option *ngFor="let est of estados" [ngValue]="est.Descripcion">{{est.Nombre}}</option>
+                        </select>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="accion">Tipo Documento:</label>
+                    <div class="m-b col-lg-4">
+                        <select class="form-select-control" id="slcTipoDocumento" name="slcTipoDocumento" [(ngModel)]="tipoDocumento" #slcTipoDocumento="ngModel">
+                            <option [value]="undefined" selected>Seleccione...</option>
+                            <option [value]="1">Cédula</option>
+                            <option [value]="2">Pasaporte</option>
+                        </select>
+                    </div>
+
+                    <label class="col-lg-2 control-label" for="accion">Número Documento:</label>
+                    <div class="col-lg-4">
+                        <input type="text" placeholder="Número del Documento" [(ngModel)]="filter.numeroDocumento" id="numeroDocumento" name="numeroDocumento"
+                            class="heigth25 form-control col-lg-12" />
+                    </div>
+                </fieldset>
+
+                <div class="col-lg-12 m-b">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="buscar();">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
+                    <a (click)="generarReporte();" class="btn btn-w-m btn-success btn-sm">
+                        <i class="fa fa-file-excel-o"></i> Generar Reporte</a>
+                    <a (click)="limpiar();" class="btn btn-w-m btn-success btn-sm">Limpiar</a>
+                </div>
+
+
+                <div class="dataTables_info">{{servicioCitaMedica.paginationConstants.EncabezadoTabla}}</div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable">
+                        <thead>
+                            <tr>
+                                <th class="centerMiddle">Sel</th>
+                                <th class="centerMiddle">
+                                    Centro Médico
+                                    <label (click) ="metodoOrdenamiento('NombreCentroMedico')" id="NombreCentroMedico" *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>                           
+                                    </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Médico
+                                        <label (click) ="metodoOrdenamiento('NombreMedico')" id="NombreMedico"  *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>        
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Código Paciente
+                                        <label (click) ="metodoOrdenamiento('CodidoPaciente')" id="CodidoPaciente" *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Paciente
+                                        <label (click) ="metodoOrdenamiento('NombrePaciente')" id="NombrePaciente" *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Fecha
+                                        <label (click) ="metodoOrdenamiento('FechaHoraInicioCita')" id="FechaHoraInicioCita" *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Fecha Registro
+                                        <label (click) ="metodoOrdenamiento('FechaRegistro')" id="FechaRegistro"  *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Sucursal
+                                        <label (click) ="metodoOrdenamiento('NombreSucursal')" id="NombreSucursal" *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        <label >
+                                                Hora
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Duración
+                                        <label (click) ="metodoOrdenamiento('DuracionCita')" id="DuracionCita" *ngIf="citas.length > 0" >
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Costo
+                                        <label (click) ="metodoOrdenamiento('Costo')" id="Costo" *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Estado
+                                        <label (click) ="metodoOrdenamiento('EstadoAtencion')" id="EstadoAtencion" *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>
+                                        </label>
+                                </th>
+                                <th class="centerMiddle">
+                                        Registrado Por
+                                        <label (click) ="metodoOrdenamiento('RegistradoPor')" id="RegistradoPor" *ngIf="citas.length > 0">
+                                            <i class="fa fa-chevron-down" *ngIf="!tipoOrdenamiento"></i> 
+                                            <i class="fa fa-chevron-up" *ngIf="tipoOrdenamiento"></i>
+                                        </label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="no-borders selectableBodyTable" *ngFor="let cita of citas | paginate: {id : 'citaTable', itemsPerPage: servicioCitaMedica.paginationConstants.pageSize,currentPage: servicioCitaMedica.paginationConstants.pageNumber, totalItems: servicioCitaMedica.paginationConstants.total};">
+                            <tr>
+                                <td class="centerMiddle clickableColumn">
+                                    <i *ngIf="cita.estadoAtencion == 1" class="fa fa-trash" (click)="cancelarCita(cita)"></i>
+                                </td>
+                                <td>{{cita.nombreCentroMedico}}</td>
+                                <td>{{cita.nombreMedico}}</td>
+                                <td>{{cita.codigoPaciente}}</td>
+                                <td>{{cita.nombrePaciente}}</td>
+                                <td>{{cita.fecha | date: 'yyyy-MM-dd'}}</td>
+                                <td>{{cita.fechaRegistro | date: 'yyyy-MM-dd'}}</td>
+                                <td>{{cita.nombreSucursal}}</td>
+                                <td>{{cita.hora}}</td>
+                                <td>{{cita.duracion}}</td>
+                                <td>{{cita.costo}}</td>
+                                <td>{{cita.descripcionEstadoAtencion}}</td>
+                                <td>{{cita.registradoPor}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot *ngIf="servicioCitaMedica.paginationConstants.total == 0">
+                            <tr>
+                                <td colspan="13" style="text-align: center;">No existen resultados</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <pagination-controls id="citaTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="servicioCitaMedica.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

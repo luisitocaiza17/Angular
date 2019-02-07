@@ -1,0 +1,76 @@
+<div class="m-t-sm no-padding">
+    <div class="col-lg-12">
+        <form name="envioEmailFtpForm" role="form" #envioEmailFtpForm="ngForm">
+            <h3 class="alignCenter" style="font-size: 20px">Documentos de Auditoría Médica</h3>
+            <h5 class="panel-title alignCenter">Código Cobertura:{{autorizacion.NumeroAutorizacion}} - Beneficiario:{{autorizacion.NombreBeneficiario}}</h5>
+            <div class="col-md-12 no-padding">
+                <div class="panel panel-default no-padding m-t-md" *ngIf="autorizacion.TipoDocumento == tipoPdf.CUBIERTO || autorizacion.TipoDocumento == tipoPdf.ADENDUM">
+                    <div class="panel-body no-padding">
+                        <div class="col-lg-12 no-padding m-t-sm m-b-sm">
+                            <div class="col-lg-5 radio icheck-primary" style="margin-top: 0!important;padding-left: 15px!important;">
+                                <input type="radio" name="inpDocumento" id="inpDocumentoCarta" [(ngModel)]="autorizacion.TipoDocumento" [value]="tipoPdf.CUBIERTO">
+                                <label class="col-lg-11 control-label" for="inpDocumentoCarta">Carta de Respuesta Cobertura</label>
+                            </div>
+
+                            <div *ngIf="false" class="col-lg-7 radio icheck-primary" style="margin-top: 0!important;padding-left: 15px!important;">
+                                <input type="radio" name="inpDocumento" id="inpDocumentoAdendum" [(ngModel)]="autorizacion.TipoDocumento" [value]="tipoPdf.ADENDUM">
+                                <label class="col-lg-11 control-label" for="inpDocumentoAdendum">Adendum al contrato de prestación de servicios de medicina prepagada</label>
+                            </div>
+
+                            <label class="m-t-md col-lg-2 control-label clearInfo">Observación:</label>
+                            <p class="m-t-md col-lg-10">{{autorizacion.Observaciones}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default no-padding m-t-md">
+                    <div class="panel-body no-padding">
+                        <div class="col-lg-12 m-t-sm m-b-sm no-padding">
+                            <label class="col-lg-2 control-label">Ciudad:</label>
+                            <div class="col-lg-4 m-b-sm">
+                                <select required class="form-select-control heigth25" id="slcCiudad" name="slcCiudad" [(ngModel)]="autorizacion.CiudadAutorizacion"
+                                    #slcCiudad="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let ciu of ciudades" [ngValue]="ciu">{{ciu}}</option>
+                                </select>
+                                <div [hidden]="slcCiudad.valid || slcCiudad.pristine" class="error">
+                                    <p *ngIf="slcCiudad.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+
+                            <label class="col-lg-2 control-label clearInfo">Correo domicilio:</label>
+                            <div class="col-lg-4">
+                                <input email type="text" required id="emailDomicilio" name="emailDomicilio" class="heigth25 form-control" [(ngModel)]="autorizacion.EmailDomicilio"
+                                    #emailDomicilio="ngModel" maxlength="50" />
+                                <div [hidden]="emailDomicilio.valid || emailDomicilio.pristine" class="error">
+                                    <p *ngIf="emailDomicilio.errors?.required">Campo requerido</p>
+                                    <p *ngIf="emailDomicilio.errors?.email">Formato correo incorrecto</p>
+                                </div>
+                            </div>
+
+                            <label class="col-lg-2 control-label">Correo trabajo:</label>
+                            <div class="col-lg-4">
+                                <input email="false" type="text" id="emailTrabajo" name="emailTrabajo" class="heigth25 form-control" [(ngModel)]="autorizacion.EmailTrabajo"
+                                    #emailTrabajo="ngModel" maxlength="50" />
+                                <div [hidden]="emailTrabajo.valid || emailTrabajo.pristine" class="error">
+                                    <p *ngIf="emailTrabajo.errors?.email">Formato correo incorrecto</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 no-padding m-t-md">
+                    <button id="btnGenerar" (click)="view()" [disabled]="autorizacion.CiudadAutorizacion == undefined" class="btn btn-w-m btn-success btn-sm">
+                        <i class="fa fa-refresh"></i> Visualizar
+                    </button>
+                    <button id="btnEmail" (click)="enviarMail()" [disabled]="!envioEmailFtpForm.valid" class="btn btn-w-m btn-success btn-sm"
+                        type="button">
+                        <i class="fa fa-envelope-o" ></i> Email
+                     </button>
+                    <button id="btnFtp" (click)="verificarEnvioFtp()" [disabled]="autorizacion.CiudadAutorizacion == undefined" class="btn btn-w-m btn-success btn-sm">
+                        <i class="fa fa-folder"></i> Ftp
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

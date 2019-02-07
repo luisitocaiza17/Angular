@@ -1,0 +1,128 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Transacciones</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Transacciones</li>
+            <li class="breadcrumb-item active">Transferencia de Remesa</li>
+        </ol>
+    </div>
+    <div id="divConsultarTransferencia" class="panel-collapse collapse in">
+        <div class="col-lg-12 m-t-sm no-padding">
+            <div class="row no-padding">
+                <div class="col-lg-5">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Bancos</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive">
+                                <ng2-smart-table [settings]="tableSettings" [source]="bancos" (userRowSelect)="loadRemesaByBanco($event)"></ng2-smart-table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="divDetallesCotizacion" class="col-lg-7">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Remesa</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th class="centerMiddle">Num Remesa</th>
+                                        <th class="centerMiddle">Fecha Corte </th>
+                                        <th class="centerMiddle">Region</th>
+                                        <th class="centerMiddle">Fecha-Envio</th>
+                                        <th class="centerMiddle">Total Cobrado</th>
+                                        <th class="centerMiddle">Total Remesa</th>
+                                        <th class="centerMiddle">Estado</th>
+
+                                        <th class="centerMiddle"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="no-borders selectableBodyTable" *ngFor="let remesa of remesas" (click)="loadDetalleRemesaByRemesa(remesa)">
+                                    <tr>
+                                        <td> {{remesa.NumeroRemesa}} </td>
+                                        <td>{{remesa.FechaCorte | date: 'dd/MM/yyyy'}}</td>
+                                        <td>{{remesa.Region}}</td>
+                                        <td>{{remesa.FechaEnvio | date: 'dd/MM/yyyy'}}</td>
+                                        <td>{{remesa.TotalCobrado}}</td>
+                                        <td>{{remesa.TotalGeneral}}</td>
+                                        <td>22</td>
+
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-w-m btn-success btn-sm" type="button" data-toggle="modal" data-target="#cierreRemesaShowModal"
+                    data-dismiss="modal" [disabled]="habilitarBoton" >TODOS LOS REGISTROS</button>
+
+
+                <div id="divDetallesCotizacion" class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Detalle Remesa</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <ng2-smart-table [settings]="tableSettings1" [source]="detalleRemesas" (userRowSelect)="inicializarPanelTransferencia($event)"></ng2-smart-table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+    </div>
+    <div class="modal inmodal fade" id="cierreRemesaShowModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="col-lg-12 m-t-sm no-padding">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Cierre Total Remesa</h5>
+                    </div>
+                </div>
+            </div>
+            <div id="divResultadoBusquedaContratos" class="ibox-content" style="border-width:1px 0px 0px 0px;">
+                <div>
+                    <label class="col-lg-2 control-label" for="fechaCorte">Fecha Corte:</label>
+                    <div class="m-b col-lg-4">
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaCorte" name="fechaCorte"
+                            [(ngModel)]="nuevaFechaCorte" [datepicker]="datepickerOpts"></datetime>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="CierreTotal();" data-dismiss="modal">Aceptar</button>
+
+                    <button class="btn btn-w-m btn-success btn-sm" type="button" data-dismiss="modal"> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="" *ngIf="isDesplegar">
+            <div id="divPanelTransacciones" class="panel-collapse collapse">
+                <div class="panel-body" style="padding-top:0px">
+                    <div id="panelTransaccion">
+                        <div class="row">
+                            <div class="col-lg-12 no-padding">
+                                <transferenciaForm></transferenciaForm>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

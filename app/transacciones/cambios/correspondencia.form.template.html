@@ -1,0 +1,146 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Cambio de Dirección de Correspondencias</h5>
+        </div>
+        <div class="panel-body">
+            <form name="upateCorrespondencia" role="form" #upateCorrespondencia="ngForm">
+
+                <fieldset class="col-lg-12 m-b">
+                    <legend class="info">CORRESPONDENCIA ACTUAL</legend>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Dirección:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        {{correspondencia.DireccionCorrespondencia}}
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Barrio:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        {{correspondencia.BarrioCorrespondencia}}
+                    </div>
+                </fieldset>
+                <fieldset class="col-lg-12 m-b">
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Ciudad:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        {{correspondencia.NombreCiudadCorrespondencia}}
+                    </div>
+
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Teléfono:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        {{correspondencia.TelefonoCorrespondencia}}
+                    </div>
+                </fieldset>
+
+
+                <fieldset class="col-lg-12 m-b">
+
+                    <legend class="info">CAMBIAR CORRESPONDENCIA A</legend>
+
+                    <button class="btn btn-success col-lg-2" (click)="actualizarlDomicilio();">
+                        <i class="fa fa-save"></i>Domicilio</button>
+
+                    <button class="btn btn-success col-lg-2" (click)="actualizarTrabajo();">
+                        <i class="fa fa-save"></i>Trabajo</button>
+
+                    <button class="btn btn-success col-lg-2" (click)="actualizarOtro();">
+                        <i class="fa fa-save"></i>Otra Dirección</button>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Dirección:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="filterCorrespondencia.DireccionCorrespondencia" id="direccion" name="direccion" class="heigth25 form-control col-lg-12"
+                            [disabled]="desabilitarComponentes" />
+                    </div>
+
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Ciudad:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4" *ngIf="desabilitarComponentes">
+                        <input type="text" [(ngModel)]="filterCorrespondencia.NombreCiudadCorrespondencia" id="ciudad" name="ciudad" class="heigth25 form-control col-lg-12"
+                            [disabled]="desabilitarComponentes" />
+                    </div>
+
+                    <div class="m-b col-lg-4" *ngIf="!desabilitarComponentes">
+                        <select required class="form-select-control m-b" id="slcCiudad" name="slcCiudad" [(ngModel)]="filterCorrespondencia.CodigoCiudadCorrespondencia"
+                            #slcCiudad="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let ciudad of ciudades" [value]="ciudad.CodigoProgress">{{ciudad.Valor}}</option>
+                        </select>
+                        <div [hidden]="slcCiudad.valid" class="error">
+                            <p *ngIf="slcCiudad.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Teléfono:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="number" [(ngModel)]="filterCorrespondencia.TelefonoCorrespondencia" id="telefono" name="telefono" class="heigth25 form-control col-lg-12"
+                            [disabled]="desabilitarComponentes" />
+                    </div>
+
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Barrio:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="filterCorrespondencia.BarrioCorrespondencia" id="barrio" name="barrio" class="heigth25 form-control col-lg-12"
+                            [disabled]="desabilitarComponentes" />
+                    </div>
+                </fieldset>
+
+                <div class="col-lg-12 m-t-md">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="guardarCambios();" [disabled]="!upateCorrespondencia.form.valid && filterCorrespondencia.EnvioCorrespondencia == 3">
+                        <i class="fa fa-save"></i>Guardar</button>
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <div class="modal inmodal fade" id="ActualizaPersona" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+            data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Actualización de Personas</h5>
+                    </div>
+                    <div class="panel-body">
+                        <frmActualizaPersona [tipoPantalla]="pantallaClienteUnico"></frmActualizaPersona>
+                        <div class="col-lg-12 m-t-md">
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="salir();">
+                                <i class="fa fa-sign-out"></i>Salir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

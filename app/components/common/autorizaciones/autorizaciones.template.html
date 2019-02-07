@@ -1,0 +1,175 @@
+<div class="col-lg-12 m-t-sm no-padding">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Listado de Autorizaciones</h5>
+        </div>
+        <div class="panel-body panelDatos" id="divListaAutorizacion">
+            <div class="dataTables_info">{{autorizacionService.paginationConstants.EncabezadoTablaAllResults}}</div>
+            <div class="table-responsive col-md-12">
+                <table id="tablaAutorizacion" class="table table-bordered dataTable tableFixed" [ngStyle]="{'width': width, 'max-width': maxWidth}">
+                    <thead>
+                        <tr>
+                            <th *ngIf="permitirExportar" class="centerMiddle no-left-border">
+                                <p class="columnW60 fixedTableCell">Exportar</p>
+                            </th>
+                            <th class="centerMiddle no-left-border">
+                                <p class="second-column fixedTableCell">Cod Cobertura</p>
+                            </th>
+                            <th class="centerMiddle no-left-border">
+                                <p class="columnW90 fixedTableCell">Autorizado</p>
+                            </th>
+                            <th class="centerMiddle">
+                                <p class="second-column fixedTableCell">Fecha Creación</p>
+                            </th>
+                            <th class="centerMiddle">
+                                <p class="columnW150 fixedTableCell">Fecha Hospitalización</p>
+                            </th>
+                            <th class="centerMiddle">
+                                <p class="second-column fixedTableCell">Fecha Autorización</p>
+                            </th>
+                            <th class="centerMiddle">
+                                <p class="second-column fixedTableCell">Fecha Anulación</p>
+                            </th>
+                            <th class="centerMiddle">
+                                <p class="columnW120 fixedTableCell">Estado</p>
+                            </th>
+                            <th class="centerMiddle no-right-border">
+                                <p class="columnW90 fixedTableCell">Canal</p>
+                            </th>
+                            <th class="centerMiddle no-right-border">
+                                <p class="columnW90 fixedTableCell">Cobertura</p>
+                            </th>
+                            <th class="no-left-border no-right-border"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyAutorizacion" class="no-borders fixedBodyHeight240 selectableBodyTable" style="max-height: 200px!important;">
+                        <tr id="autorizacion{{i}}" title="{{!autorizacion.Selected ? 'Click para seleccionar' : ''}}" (click)="!autorizacion.Selected ? seleccionar(autorizacion) : return;"
+                            [class.active]="autorizacion.Selected" *ngFor="let autorizacion of autorizaciones; let i = index">
+                            <td *ngIf="permitirExportar" class="centerMiddle no-left-border" title="Click para exportar Carta" (click)="generarPdf(autorizacion,$event)">
+                                <p class="columnW60 fixedTableCell">
+                                    <a *ngIf="autorizacion.Id > 0">
+                                        <img height="25px" src="./assets/img/pdf_icon.png" />
+                                    </a>
+                                </p>
+                            </td>
+                            <td class="centerMiddle no-left-border">
+                                <p class="second-column fixedTableCell">{{autorizacion.NumeroAutorizacion}}</p>
+                            </td>
+                            <td class="centerMiddle">
+                                <p class="columnW90 fixedTableCell">{{autorizacion.AutorizadoPor}}</p>
+                            </td>
+                            <td class="centerMiddle">
+                                <p class="second-column fixedTableCell">{{autorizacion.FechaCreacion | date: 'dd/MM/yyyy'}}</p>
+                            </td>
+                            <td class="centerMiddle">
+                                <p class="columnW150 fixedTableCell">{{autorizacion.FechaHospitalizacion | date: 'dd/MM/yyyy'}}</p>
+                            </td>
+                            <td class="centerMiddle">
+                                <p class="second-column fixedTableCell">{{autorizacion.FechaAutorizacion | date: 'dd/MM/yyyy'}}</p>
+                            </td>
+                            <td class="centerMiddle">
+                                <p class="second-column fixedTableCell">{{autorizacion.FechaAnulacion | date: 'dd/MM/yyyy'}}</p>
+                            </td>
+                            <td class="centerMiddle">
+                                <p class="columnW120 fixedTableCell">{{autorizacion.Estado.Valor}}</p>
+                            </td>
+                            <td class="alignR centerMiddle">
+                                <p class="columnW90 fixedTableCell">{{autorizacion.Canal}}</p>
+                            </td>
+                            <td class="alignR centerMiddle">
+                                <p class="columnW90 fixedTableCell">{{autorizacion.EstadoCobertura}}</p>
+                            </td>
+                        </tr>
+                        <tr *ngIf="autorizaciones.length == 0">
+                            <td colspan="7" style="text-align: center;width:1050px;">No existen resultados</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12 m-t-md">
+                <div class="panel panel-success">
+                    <div class="panel-heading" style="padding: 10px !important;">
+                        <h5 class="panel-title">Detalle</h5>
+                    </div>
+                    <div class="panel-body panelDatos" id="divLDetalleAutorizacion" style="padding: 10px !important;">
+                        <div class="col-md-12 no-padding">
+                            <div class="col-md-4">
+                                <label class="col-md-6 clearInfo">Auditor:</label>
+                                <span class="col-md-6">{{autorizacionSelected.AutorizadoPor}}</span>
+                                <label class="col-md-6 clearInfo">Tipo Solicitud:</label>
+                                <span class="col-md-6">{{autorizacionSelected.TipoSolicitud}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-5 clearInfo">Nombre Empresa:</label>
+                                <span class="col-md-7">{{autorizacionSelected.NombreEmpresa}}</span>
+                                <label class="col-md-5 clearInfo">Sucursal:</label>
+                                <span class="col-md-7">{{autorizacionSelected.SucursalEmpresa}}</span>
+                                <label class="col-md-5 clearInfo">Médico:</label>
+                                <span class="col-md-7">{{autorizacionSelected.NombrePrestador}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-4 clearInfo">Prestador:</label>
+                                <span class="col-md-8">{{autorizacionSelected.NombrePrestadorEmpresa}}</span>
+                                <label class="col-md-4 clearInfo">Porcentaje:</label>
+                                <span class="col-md-8">{{autorizacionSelected.PorcentajeCobertura}}</span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="col-md-2 clearInfo">Observaciones:</label>
+                                <span class="col-md-10">{{autorizacionSelected.Observaciones}}</span>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="col-md-2 clearInfo">Historia Clínica (Interno):</label>
+                                <span class="col-md-10">{{autorizacionSelected.ObservacionHistoriaClinica}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 m-t-md m-b-sm">
+                            <div style="border-bottom: 1px solid #d1d5d9;"></div>
+                        </div>
+                        <h5 class="panel-title padB5">Listado de Diagnósticos</h5>
+                        <div class="table-responsive col-md-12 padT6">
+                            <table id="tblDiagnosticosSeleccionados" class="table table-bordered dataTable ">
+                                <thead>
+                                    <tr>
+                                        <th class="centerMiddle">
+                                            <p>Preexistencia</p>
+                                        </th>
+                                        <th class="centerMiddle">
+                                            <p class="fixedTableCell">Tipo</p>
+                                        </th>
+                                        <th class="centerMiddle no-left-border">
+                                            <p class="fixedTableCell">Cod Diagnóstico</p>
+                                        </th>
+                                        <th class="centerMiddle">
+                                            <p class="fixedTableCell">Diagnóstico</p>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tblBdDiagnosticosSeleccionados" class="no-borders ">
+                                    <tr id="d{{i}}" *ngFor="let d of autorizacionSelected.Diagnosticos; let i = index">
+                                        <td class="centerMiddle">
+                                            <p class="general-column">{{d.Preexistencia?'SI':'NO'}}</p>
+                                        </td>
+                                        <td class="centerMiddle">
+                                            <p class="fixedTableCell">{{d.Tipo}}</p>
+                                        </td>
+                                        <td class="centerMiddle no-left-border">
+                                            <p class="column-value-xs fixedTableCell">{{d.CodigoDiagnostico}}</p>
+                                        </td>
+                                        <td class="centerMiddle">
+                                            <p class="fixedTableCell">{{d.Diagnostico}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="autorizacionSelected.Diagnosticos == undefined || autorizacionSelected.Diagnosticos.length == 0">
+                                        <td colspan="5" style="text-align: center;width:532px;">No existen resultados</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

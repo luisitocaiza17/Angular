@@ -1,0 +1,82 @@
+<div class="col-lg-12 no-padding">
+    <div class="row no-padding">
+        <div class="col-lg-12  m-t-sm">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Listado de Planes</h5>
+                </div>
+                <div class="panel-body panelDatos">
+                    <div id="divResultadoBusquedaPlanes">
+                        <div class="dataTables_info">{{planService.paginationConstants.EncabezadoTabla}}</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th class="centerMiddle">Versión</th>
+                                        <th class="centerMiddle">Código Plan </th>
+                                        <th class="centerMiddle">Código Producto</th>
+                                        <th class="centerMiddle">Fecha Inicio</th>
+                                        <th class="centerMiddle">Fecha Fin</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="no-borders selectableBodyTable">
+                                    <tr title="{{!plan.Selected ? 'Click para seleccionar' : ''}}" (click)="!plan.Selected ? seleccionar(plan, true) : return;"
+                                        [class.active]="plan.Selected" *ngFor="let plan of planes | paginate: {id : 'planesTable', itemsPerPage: planService.paginationConstants.pageSize,currentPage: planService.paginationConstants.pageNumber, totalItems: planService.paginationConstants.total};">
+                                        <td class="centerMiddle">{{plan.CodigoVersion}}</td>
+                                        <td class="centerMiddle">{{plan.CodigoPlan}}</td>
+                                        <td class="centerMiddle">{{plan.CodigoProducto}}</td>
+                                        <td class="centerMiddle">{{plan.FechaInicio}}</td>
+                                        <td class="centerMiddle">{{plan.FechaFin}}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot *ngIf="planService.paginationConstants.total == 0">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center;">No existen resultados</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <pagination-controls id="planesTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="planService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="divCoberturaPlan" class="col-lg-12  m-t-sm">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Coberturas</h5>
+                </div>
+                <div class="panel-body panelDatos">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle">Código</th>
+                                    <th class="centerMiddle">Cobertura</th>
+                                    <th class="centerMiddle">Monto</th>
+                                    <th class="centerMiddle">Tipo</th>
+                                    <th class="centerMiddle">Meses</th>
+                                </tr>
+                            </thead>
+                            <tbody class="no-borders ">
+                                <tr *ngFor="let cobertura of coberturas ">
+                                    <td>{{cobertura.CodigoCobertura}}</td>
+                                    <td>{{cobertura.Nombre}}</td>
+                                    <td class="alignR">&#36;{{cobertura.Monto | number : '1.2-2'}}</td>
+                                    <td class="centerMiddle">{{cobertura.Tipo}}</td>
+                                    <td class="centerMiddle">{{cobertura.MesesReposicion}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot *ngIf="coberturas == undefined || coberturas.length  == 0">
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">No existen resultados</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

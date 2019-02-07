@@ -1,0 +1,246 @@
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <form #formularioCrear="ngForm">
+            <div class="form-group col-lg-12">
+                <form #formularioCabecera="ngForm" class="col-lg-12">
+                    <label class="col-lg-1 control-label" for="mes">Nombre:</label>
+                    <div class="m-b col-lg-3">
+                        <input required type="text" placeholder="Nombre" id="nombre"
+                            [(ngModel)]="bonoNuevo.Nombre" name="nombre" class="form-control" #nombre="ngModel"/>
+                    </div>
+                    <label class="col-lg-1 control-label" for="anio">Tipo Bono:</label>
+                    <div class="m-b col-lg-3">
+                        <select required class="form-control" [(ngModel)]="bonoNuevo.Tipo" name="tipoBono" #tipoBono="ngModel">
+                            <option [ngValue]="undefined">Seleccione</option>
+                            <option *ngFor="let i of constCom.TIPOS_BONO" [ngValue]="i.Id">{{i.Nombre}}</option>
+                        </select>
+                    </div>
+                    <label *ngIf="operacion == 'EDITAR'" class="col-lg-1 control-label" for="anio">Estado:</label>
+                    <div class="m-b col-lg-3">
+                        <select required *ngIf="operacion == 'EDITAR'" class="form-control" [(ngModel)]="bonoNuevo.Estado" name="estado" #estado="ngModel">
+                            <option [ngValue]="undefined">Seleccione</option>
+                            <option [ngValue]="true">Activo</option>
+                            <option [ngValue]="false">Inactivo</option>
+                        </select>
+                    </div>
+                </form>
+                <div class="col-lg-12 text-center">
+                    <div class="alert alert-info" role="alert">
+                        Añada al menos una Agencia a la cual se va a ligar el Bono
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <label class="col-lg-1 control-label" for="region">Región:</label>
+                    <div class="col-lg-2">
+                        <select class="form-control" [(ngModel)]="codigoRegion" id="region" name="region"
+                        #region="ngModel" (change)="cargarSucursal()">
+                            <option [ngValue]="null">Seleccione</option>
+                            <option *ngFor="let r of listaRegiones" [ngValue]="r.Codigo">{{r.Nombre}}</option>
+                        </select>
+                    </div>
+                    <label class="col-lg-1 control-label" for="sucursal">Sucursal:</label>
+                    <div class="col-lg-2">
+                        <select class="form-control" id="Sucursal" name="Sucursal" [(ngModel)]="sucursalSelected"
+                        #Sucursal="ngModel" >
+                        <option [ngValue]="undefined">Seleccione</option>
+                        <option *ngFor="let sucursal of sucursalesDeRegion" [ngValue]="sucursal">
+                            {{sucursal.NombreSucursal }} </option>
+                        </select>
+                    </div>
+                    <!-- <label class="col-lg-1 control-label" for="agenciaEstado">Estado:</label>
+                    <div class="m-b col-lg-2">
+                        <select class="form-control" [(ngModel)]="estadoAgencia" name="agenciaEstado" #agenciaEstado="ngModel">
+                            <option [ngValue]="undefined">Seleccione</option>
+                            <option [ngValue]="true">Activo</option>
+                            <option [ngValue]="false">Inactivo</option>
+                        </select>
+                    </div> -->
+                    <div class="col-lg-3">
+                        <button [disabled]="estadoAgencia == undefined || sucursalSelected == undefined" class="btn btn-primary" (click)="agregarAgencia();"> Agregar Agencia </button>
+                    </div>
+                </div>
+                <div class="col-lg-12 m-t-lg">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle"> Acciones </th>
+                                    <!-- <th class="centerMiddle">Id Sucursal </th> -->
+                                    <th class="centerMiddle">Nombre Sucursal</th>
+                                    <th class="centerMiddle">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody class="no-borders selectableBodyTable" *ngFor="let i of bonoNuevo.Agencias">
+                                <tr>
+                                    <td class="centerMiddle clickableColumn">
+                                        <a *ngIf="i.Estado == false" title="Habilitar">
+                                            <i (click)="cambiarEstadoAgencia(i);" class="fa fa-check"></i>
+                                        </a>
+                                        <a *ngIf="i.Estado == true" title="Inhabilitar">
+                                            <i (click)="cambiarEstadoAgencia(i);" class="fa fa-ban"></i>
+                                        </a>
+                                    </td>
+                                    <!-- <td class="centerMiddle"> {{i.IdSucursal}} </td> -->
+                                    <td class="centerMiddle"> {{i.NombreSucursal}} </td>
+                                    <td class="centerMiddle"> {{i.Estado == true ? 'Activo' : 'Inactivo'}} </td>
+                                </tr>
+                            </tbody>
+                            <tfoot *ngIf="bonoNuevo.Agencias.length == 0">
+                                <tr>
+                                    <td colspan="14" style="text-align: center;">No hay Agencias</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>                      
+                </div>  
+                <div class="col-lg-12 text-center">
+                    <div class="alert alert-info" role="alert">
+                        Añada al menos un detalle del Bono 
+                    </div>
+                </div>
+                <form #formularioDetalle="ngForm">
+                    <div class="col-lg-12">
+                        <label class="col-lg-1 control-label" for="tipo">Tipo agente:</label>
+                        <div class="m-b col-lg-3">
+                            <select disabled required class="form-control" id="tipo" name="tipo" class="form-control" [(ngModel)]="idtipo">
+                                <option [value]="undefined" selected>Seleccione</option>
+                                <option *ngFor="let e of listaTipos" [value]="e.Codigo">{{e.Nombre}}</option>
+                            </select>
+                        </div>
+                        <label class="col-lg-1 control-label" for="subtipo">Subtipo:</label>
+                        <div class="m-b col-lg-3">
+                            <select required class="form-control" [(ngModel)]="idsubtipo" id="subtipo" name="subtipo" #subtipo="ngModel" class="form-control">
+                                <option [ngValue]="undefined">Seleccione</option>
+                                <option *ngFor="let e of listaSubtipos" [value]="e.Codigo">{{e.Nombre}}</option>
+                            </select>
+                        </div>
+                        <!-- <label class="col-lg-1 control-label" for="detalleEstado">Estado:</label>
+                        <div class="m-b col-lg-3">
+                            <select required class="form-control" [(ngModel)]="estadoDetalle" name="detalleEstado" #detalleEstado="ngModel">
+                                <option [ngValue]="undefined">Seleccione</option>
+                                <option [ngValue]="true">Activo</option>
+                                <option [ngValue]="false">Inactivo</option>
+                            </select>
+                        </div>     -->
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="col-lg-1 control-label" for="sucursal">Desde:</label>
+                        <div class="col-lg-3">
+                            <input required type="text" placeholder="Desde" id="desde"
+                                [(ngModel)]="mesesDesde" name="desde" class="form-control" #desde="ngModel"/>
+                        </div>
+                        <label class="col-lg-1 control-label" for="hasta">Hasta:</label>
+                        <div class="col-lg-3">
+                            <input required type="text" placeholder="Hasta" id="hasta"
+                                [(ngModel)]="mesesHasta" name="hasta" class="form-control" #hasta="ngModel"/>
+                        </div>
+                            <label class="col-lg-1 control-label" for="sucursal">Valor:</label>
+                        <div class="col-lg-3">
+                            <input required type="text" placeholder="valor" id="valor"
+                                [(ngModel)]="valorDetalle" name="valor" class="form-control" #valor="ngModel"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 m-t-lg text-center">
+                        <button [disabled]="!formularioDetalle.form.valid"
+                        class="btn btn-primary" (click)="agregarDetalle();"> Agregar Detalle </button>
+                    </div>
+                </form>
+                <div class="col-lg-12 m-t-lg">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle"> Acciones </th>
+                                    <th class="centerMiddle"> Subtipo </th>
+                                    <th class="centerMiddle"> Desde </th>
+                                    <th class="centerMiddle"> Hasta </th>
+                                    <th class="centerMiddle"> Valor </th>
+                                    <th class="centerMiddle"> Estado </th>
+                                </tr>
+                            </thead>
+                            <tbody class="no-borders selectableBodyTable" *ngFor="let i of bonoNuevo.Detalles">
+                                <tr>
+                                    <td class="centerMiddle clickableColumn">
+                                        <a *ngIf="i.Estado == false" title="Habilitar">
+                                            <i (click)="cambiarEstadoDetalle(i);" class="fa fa-check"></i>
+                                        </a>
+                                        <a *ngIf="i.Estado == true" title="Inhabilitar">
+                                            <i (click)="cambiarEstadoDetalle(i);" class="fa fa-ban"></i>
+                                        </a>
+                                        <a title="Editar">
+                                            <i (click)="openModal('#modalEditarDetalle', i);" class="fa fa-pencil-square-o"></i>
+                                        </a>
+                                    </td>
+                                    <td class="centerMiddle"> {{ ObtenerNombreSutbipo(i.IdSubtipo) }} </td>
+                                    <td class="centerMiddle"> {{i.Desde}} </td>
+                                    <td class="centerMiddle"> {{i.Hasta}} </td>
+                                    <td class="centerMiddle"> {{i.Valor}} </td>
+                                    <td class="centerMiddle"> {{i.Estado == true ? 'Activo' : 'Inactivo'}} </td>
+                                </tr>
+                            </tbody>
+                            <tfoot *ngIf="bonoNuevo.Detalles.length == 0">
+                                <tr>
+                                    <td colspan="14" style="text-align: center;">No hay Detalles</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>                      
+                </div>                                            
+            </div>
+            <div class="col-lg-12 text-center">
+                <button (click)="insertarBono();" *ngIf="operacion == 'CREAR'" class="btn btn-w-m btn-success btn-sm"
+                    [disabled]="!formularioCabecera.form.valid || bonoNuevo.Agencias.length &lt; 1 || bonoNuevo.Detalles.length &lt; 1">
+                    <i class="fa fa-plus"></i> Crear
+                </button>
+                <button (click)="actualizarBono();" *ngIf="operacion == 'EDITAR'" class="btn btn-w-m btn-success btn-sm"
+                    [disabled]="!formularioCabecera.form.valid || bonoNuevo.Agencias.length &lt; 1 || bonoNuevo.Detalles.length &lt; 1">
+                    <i class="fa fa-save"></i> Editar
+                </button>
+                <a *ngIf="operacion == 'CREAR'" (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">
+                    <i class="fa fa-eraser"></i> Limpiar 
+                </a>
+                <button class="btn btn-w-m btn-success btn-sm" (click)="salir()">
+                    <i class="fa fa-times"></i> Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Editar Detalle -->
+<div class="modal inmodal fade" id="modalEditarDetalle" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title"> Modificar Detalle Bono </h5>
+            </div>
+            <div class="panel-body">
+                <form role="form" name="editarDetalleForm" #editarDetalleForm="ngForm">
+                    <div class="col-lg-12">
+                        <label class="col-lg-1 control-label" for="sucursal">Desde:</label>
+                        <div class="col-lg-3">
+                            <input required type="text" placeholder="Desde" id="desdeEditar"
+                                [(ngModel)]="detalleSelected.Desde" name="desdeEditar" class="form-control" #desdeEditar="ngModel"/>
+                        </div>
+                        <label class="col-lg-1 control-label" for="hasta">Hasta:</label>
+                        <div class="col-lg-3">
+                            <input required type="text" placeholder="Hasta" id="hastaEditar"
+                                [(ngModel)]="detalleSelected.Hasta" name="hastaEditar" class="form-control" #hastaEditar="ngModel"/>
+                        </div>
+                            <label class="col-lg-1 control-label" for="sucursal">Valor:</label>
+                        <div class="col-lg-3">
+                            <input required type="text" placeholder="Valor" id="valorEditar"
+                                [(ngModel)]="detalleSelected.Valor" name="valorEditar" class="form-control" #valorEditar="ngModel"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 text-center m-t-lg">
+                        <button [disabled]="!editarDetalleForm.form.valid" 
+                            (click)="salirModal('#modalEditarDetalle')" class="btn btn-w-m btn-success btn-sm">
+                            <i class="fa fa-save"></i> Editar 
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

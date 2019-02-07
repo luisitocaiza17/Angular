@@ -1,0 +1,42 @@
+<div class="col-md-12 no-padding">
+    <fieldset>
+        <legend class="info">Observaciones (Carta)</legend>
+        <label class="col-lg-3 control-label" for="inpObservaciones">Título Observación:</label>
+        <div class="col-lg-9 ">
+            <select style="width: 100%;" (change)="onChangeSelection() " class="form-select-control heigth25" id="slcObservaciones" name="slcObservaciones"
+                [(ngModel)]="autorizacion.NumeroObservacion" #slcObservaciones="ngModel" disabled="{{autorizacion.Id!=undefined && autorizacion.Id!=0 || !autorizacion.isEditable}}">
+            <option [ngValue]="undefined" selected>Seleccione...</option>
+            <option *ngFor="let obs of observacionesCompletas" [ngValue]="obs.Numero">{{obs.Titulo}}</option>
+        </select>
+        </div>
+        <div class="col-lg-12 m-t-sm">
+            <textarea rows="8" placeholder="Observaciones" id="inpObservaciones" name="inpObservaciones" class="form-control" [(ngModel)]="autorizacion.Observaciones"
+                #inpObservaciones="ngModel" minlength="10" maxlength="1000" style="resize: none;" disabled="{{!autorizacion.isEditable}}">
+            </textarea>
+            <div [hidden]="inpObservaciones.valid || inpObservaciones.pristine" class="error">
+                <p *ngIf="inpObservaciones.errors?.minlength">Mínimo 10 caracteres</p>
+                <p *ngIf="inpObservaciones.errors?.maxlength">Máximo 1000 caracteres</p>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div class="col-md-12 no-padding m-t-md">
+    <fieldset>
+        <legend class="info">Historia Clínica (Interno)
+            <a title="Detalles" (click)="textoHistoria()" [class.disabled]="!autorizacion.isEditable" title="Click para agregar Plantilla de cabeceras para análisis de Cobertura">
+                <i class="fa fa-file-text-o" style="vertical-align: middle;"></i>
+            </a>
+        </legend>
+        <div class="col-lg-12">
+            <textarea rows="5" placeholder="Historia Clínica" id="inpHistoriaClinica" name="inpHistoriaClinica" class="form-control"
+                [(ngModel)]="autorizacion.ObservacionHistoriaClinica" #inpHistoriaClinica="ngModel" style="resize: none;color: #0000ff;"
+                disabled="{{!autorizacion.isEditable}}" minlength="10" maxlength="2500">
+            </textarea>
+            <div [hidden]="inpHistoriaClinica.valid || inpHistoriaClinica.pristine" class="error">
+                <p *ngIf="inpHistoriaClinica.errors?.minlength">Mínimo 10 caracteres</p>
+                <p *ngIf="inpHistoriaClinica.errors?.maxlength">Máximo 2500 caracteres</p>
+            </div>
+        </div>
+    </fieldset>
+</div>

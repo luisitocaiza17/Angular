@@ -1,0 +1,282 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Ejecutivos Comerciales</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Ejecutivos Comerciales</li>
+            <li class="breadcrumb-item active">Listado Directores</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-body no-padding">
+            <div class="panel-heading" (click)="colapsarTab()">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+
+                    <div id="divResultadoBusquedaContratos" class="ibox-content" style="border-width:1px 0px 0px 0px;">
+                        <form name="asignardirectorsForm" role="form" #asignardirectorsForm="ngForm">
+                            <fieldset class="col-lg-12">
+                                <legend class="info">Busqueda de Directores</legend>
+
+                                <div class="m-b col-lg-2">
+                                    <label class="control-label no-padding-left">Código Director:</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="text" placeholder="Código de Director" [(ngModel)]="directorFilter.CodigoDirector" id="codigoDirector" name="codigoDirector"
+                                        class="heigth25 form-control col-lg-12" />
+                                </div>
+
+                                <div class="m-b col-lg-2">
+                                    <label class="control-label no-padding-left">Nombres:</label>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="text" placeholder="Nombres del Director" [(ngModel)]="directorFilter.Apellidos" id="nombresDirector" name="nombresDirector"
+                                        class="heigth25 form-control col-lg-12" />
+                                </div>
+
+                            </fieldset>
+
+                            <fieldset class="col-lg-12">
+                                <div class="m-b col-lg-2">
+                                    <label class="control-label no-padding-left">Región:</label>
+                                </div>
+
+                                <div class="m-b col-lg-4">
+                                    <select required class="form-select-control m-b" id="slcRegion" name="slcRegion" [(ngModel)]="directorFilter.Region" #slcRegion="ngModel">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let region of listaRegiones" [value]="region.Id">{{region.Nombre}}</option>
+                                    </select>
+                                </div>
+
+                                <div class="m-b col-lg-2">
+                                    <label class="control-label no-padding-left">Estado:</label>
+                                </div>
+
+                                <div class="m-b col-lg-4">
+                                    <select required class="form-select-control m-b" id="slcEstado" name="slcEstado" [(ngModel)]="directorFilter.Estado" #slcRegion="ngModel">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option [ngValue]="constCom.ACTIVO" selected>Activo</option>
+                                        <option [ngValue]="constCom.INACTIVO" selected>Inactivo</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+
+
+                            <div class="col-lg-12 m-b text-center">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="loadDirectores();">
+                                    <i class="fa fa-search"></i> Buscar
+                                </button>
+                                <a (click)="limpiar();" class="btn btn-w-m btn-success btn-sm">Limpiar</a>
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="inicializarPanelDirectores(undefined, constCom.TIPO_TRANSACCION_INGRESAR);">
+                                    <i class="fa fa-plus"></i> Nuevo
+                                </button>
+                            </div>
+
+                            <div class="dataTables_info">{{ventasService.paginationConstants.EncabezadoTabla}}</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Sel:</th>
+                                            <th class="centerMiddle">Código Agente</th>
+                                            <th class="centerMiddle">Nombre</th>
+                                            <th class="centerMiddle">Estado</th>
+                                            <th class="centerMiddle">Fecha Ingreso</th>
+                                            <th class="centerMiddle">Fecha Salida</th>
+                                            <th class="centerMiddle">Usuario</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-borders selectableBodyTable" *ngFor="let director of listaDirectores | paginate: {id : 'directoresTable', itemsPerPage: ventasService.paginationConstants.pageSize,currentPage: ventasService.paginationConstants.pageNumber, totalItems: ventasService.paginationConstants.total};">
+                                        <tr>
+                                            <td class="centerMiddle clickableColumn">
+                                                <a title="Clic para Administrar Vendedores">
+                                                    <i class="fa fa-file-text" (click)="irAVendedores(director)"></i>
+                                                </a>
+                                                <a title="Clic para Actualizar Director">
+                                                    <i class="fa fa-edit" (click)="inicializarPanelDirectores(director, constCom.TIPO_TRANSACCION_ACTUALIZAR)"></i>
+                                                </a>
+                                                <a title="Clic para Reingresar" *ngIf="director.Estado == constCom.INACTIVO || director.Estado == constCom.INDEFINIDO">
+                                                    <i (click)="modalReingresarDirector(director);" class="fa fa-thumbs-o-up" data-target="#confirmacionShowModal"></i>
+                                                </a>
+                                                <a title="Clic para Anular" *ngIf="director.Estado == constCom.ACTIVO">
+                                                    <i (click)="modalAnularDirector(director);" class="fa fa-thumbs-o-down"></i>
+                                                </a>
+                                            </td>
+                                            <td class="centerMiddle">{{director.Codigo}}</td>
+                                            <td>{{director.Nombre}}</td>
+                                            <td class="centerMiddle" *ngIf="director.Estado == constCom.ACTIVO">Activo</td>
+                                            <td class="centerMiddle" *ngIf="director.Estado == constCom.INACTIVO">Inactivo</td>
+                                            <td class="centerMiddle" *ngIf="director.Estado == constCom.INDEFINIDO">Indefinido</td>
+                                            <td class="centerMiddle">{{director.FechaIngreso | date: 'dd/MM/yyyy'}}</td>
+                                            <td class="centerMiddle">{{director.FechaSalida | date: 'dd/MM/yyyy'}}</td>
+                                            <td class="centerMiddle">{{director.UsuarioDirectorioActivo}}</td>
+                                        </tr>
+
+                                    </tbody>
+                                    <tfoot *ngIf="ventasService.paginationConstants.total == 0">
+                                        <tr>
+                                            <td colspan="14" style="text-align: center;">No hay Directores</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <pagination-controls id="directoresTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="ventasService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="" *ngIf="isDirector">
+                <div id="divPanelDirectores" class="panel-collapse collapse">
+                    <div class="panel-body" style="padding-top:0px">
+                        <div id="panelSobres">
+                            <div class="row">
+                                <div class="col-lg-12 no-padding">
+                                    <agregarEditarDirectorForm></agregarEditarDirectorForm>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Anular Director-->
+<div id="myModalAnularDiv">
+    <div class="modal inmodal fade" id="myModalAnular" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Anular Director</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+
+                            <legend class="info">Escoja una fecha de Salida</legend>
+
+                            <div class="m-b col-lg-6">
+                                <label class="control-label no-padding-left">Fecha Salida:</label>
+                            </div>
+                            <div class="m-b col-lg-6">
+                                <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaSalida" name="fechaSalida" [(ngModel)]="fechaSalida"
+                                    [datepicker]="datepickerOpts"></datetime>
+                            </div>
+
+                            <div class="col-lg-12 no-padding text-center">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="anularDirector();">
+                                    <i class="fa fa-search"></i> Anular</button>
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="salirModalAnularDirector();">
+                                    <i class="fa fa-plus"></i> Salir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Reingresar Director-->
+<div id="myModalAnularDiv">
+    <div class="modal inmodal fade" id="modalReingresar" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Reingresar Director</h5>
+                        </div>
+
+                        <div class="panel-body panelDatos">
+                            <div class="m-b col-lg-12 text-center">
+                                <h3>Está seguro que desea reingresar al director {{directorSelected.Nombre}} </h3>
+                            </div>
+                            <fieldset class="col-lg-12">
+                                <label class="col-lg-1 control-label" for="codigoRegion">Región:</label>
+                                <div class="m-b col-lg-3">
+                                    <select class="form-control" [(ngModel)]="filter.Region" id="region" name="region" #region="ngModel" (change)="cargarSucursal($event);">
+                                        <option [value]="undefined" selected>Seleccione región</option>
+                                        <option *ngFor="let r of regiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                                    </select>
+                                </div>
+                                <label class="col-lg-1 control-label" for="sucursal">Sucursal:</label>
+                                <div class="m-b col-lg-3">
+                                    <select class="form-control" id="Sucursal" name="Sucursal" [(ngModel)]="filter.CodigoSucursal" #Sucursal="ngModel" (change)="loadSalas($event);">
+                                        <option *ngFor="let sucursal of sucursalesDeRegion" [value]="sucursal.CodigoSucursal"> {{ sucursal.NombreSucursal }} </option>
+                                    </select>
+                                </div>
+
+                                <label class="col-lg-1 control-label">Sala:</label>
+                                <div class="m-b col-lg-3">
+                                    <select required class="form-select-control m-b" id="slcSala" name="slcSala" [(ngModel)]="directorSelected.CodigoSala" #slcSala="ngModel">
+                                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                                        <option *ngFor="let sala of listaSalas" [value]="sala.Codigo">{{sala.Nombre}}</option>
+                                    </select>
+                                    <div [hidden]="slcSala.valid" class="error">
+                                        <p *ngIf="slcSala.errors?.required">Campo Requerido</p>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <div class="col-lg-12 no-padding text-center">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="verificarSiSalaTieneDirector();">
+                                    <i class="fa fa-search"></i> Reingresar </button>
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="salirModalReingresarDirector();">
+                                    <i class="fa fa-plus"></i> Salir </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Despacha Director-->
+<div id="myModalAnularDiv">
+    <div class="modal inmodal fade" id="modalDespachaDirector" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title"> Sala tiene asigando un Director</h5>
+                        </div>
+
+                        <div class="panel-body panelDatos">
+                            <div class="m-b col-lg-12 text-center">
+                                <h3> La sala seleccionada tiene un Director asigando, desea anular al director {{directorSiSalaLoTiene.Nombre}},
+                                    para asignar la sala al director {{directorSelected.Nombre}}</h3>
+                            </div>
+
+                            <div class="col-lg-12 no-padding text-center">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="reingresarDirectorSiSalaEstaOcupada();">
+                                    <i class="fa fa-search"></i> Si </button>
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="salirDespacharDirectorModal()">
+                                    <i class="fa fa-plus"></i> No </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

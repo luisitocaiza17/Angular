@@ -1,0 +1,57 @@
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0; background-image: url('./assets/img/background_armonixLogin.png'); ">
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2  padR10  btn-hamburguesa" (click)="toggleNavigation()">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div>
+        <ul class="nav navbar-top-links navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                    <i *ngIf="authService.numeroNotificaciones > 0" class="fa fa-bell"></i>
+                    <i *ngIf="authService.numeroNotificaciones == 0" class="fa fa-bell-o"></i>
+
+                    <span class="label label-info" *ngIf="authService.numeroNotificaciones > 0">{{authService.numeroNotificaciones}}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-alerts">
+                    <li *ngIf="authService.numeroNotificaciones > 0">
+                        <a [routerLink]="['/retencion/descuento/reportes']">
+                            <div>
+                                <i class="fa fa-money fa-fw"></i> Aprobaciones Pendientes
+                                <span class="pull-right text-muted small">Retención ({{authService.numeroNotificaciones}})</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a *ngIf="authService.numeroNotificaciones == 0">
+                            <div>
+                                <i class="fa fa-check-square-o"></i> Has leído todas las notificaciones.
+                            </div>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <div class="text-center link-block">
+                            <a>
+                                <strong>Armonix</strong>
+                                <span class="pull-right text-muted small">Plataforma de innovación</span>   
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li class="float_right">
+                <a [routerLink]="['/login']" (click)="logout()">
+                    <i class="fa fa-sign-out"></i> Salir
+                </a>
+            </li>
+        </ul>
+        <ul class="nav navbar-top-links navbar-right">
+            <li class="float_right">
+                <a [routerLink]="['/mainView']">
+                    <strong>{{authService.nombreCompleto}}</strong>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

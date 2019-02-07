@@ -1,0 +1,289 @@
+<div class="col-lg-12 m-t-sm no-padding">
+    <div class="row no-padding">
+        <div class="col-lg-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Listado de Sobres</h5>
+                </div>
+                <div class="panel-body panelDatos">
+                    <div id="divResultadoBusquedaSobres">
+                        <div class="dataTables_info">{{sobreReembolsoService.paginationConstants.EncabezadoTabla}}</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="centerMiddle"> No. Sobre </th>
+                                        <th class="centerMiddle"> Esado Sobre </th>
+                                        <th class="centerMiddle"> Establecimiento/Clínica</th>
+                                        <th class="centerMiddle"> Region </th>
+                                        <th class="centerMiddle"> Producto </th>
+                                        <th class="centerMiddle"> Persona Contacto </th>
+                                        <th class="centerMiddle"> Celular </th>
+                                        <th class="centerMiddle"> Usuario Asignado </th>
+                                        <th class="centerMiddle"> Ingresado por </th>
+                                        <th class="centerMiddle"> Valor Presentado</th>
+                                        <th class="centerMiddle"> Fecha Recepcion </th>
+                                        <th class="centerMiddle"> Fecha Sobre </th>
+                                        <th class="centerMiddle"> Fecha Digitacion </th>
+                                        <th class="centerMiddle"> Codigo Contrato </th>
+                                        <th class="centerMiddle"> No. Contrato </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="no-borders selectableBodyTable" *ngFor="let sobre of sobresReembolso | paginate: {id : 'sobresTable', itemsPerPage: sobreReembolsoService.paginationConstants.pageSize,currentPage: sobreReembolsoService.paginationConstants.pageNumber, totalItems: sobreReembolsoService.paginationConstants.total};">
+                                    <tr title="{{!sobre.Selected ? 'Click para seleccionar' : ''}}" (click)="!sobre.Selected ? seleccionar(sobre, true) : return;"
+                                        [class.active]="sobre.Selected">
+                                        <td class="centerMiddle">
+                                            <button class="btn btn-light fa fa-eye" (click)="abrirModalDetalles(sobre);"
+                                                mdbWavesEffect></button>
+                                        </td>
+                                        <td class="centerMiddle">{{ sobre.NumeroSobre }}</td>
+                                        <td class="centerMiddle">{{ sobre.NombreEstadoSobre }}</td>
+                                        <td class="centerMiddle" *ngIf="sobre.TipoDocumento == constantesSobres.ID_TIPO_DOCUMENTO_SOBRE">{{ sobre.NombreEstablecimiento }}</td>
+                                        <td class="centerMiddle" *ngIf="sobre.TipoDocumento != constantesSobres.ID_TIPO_DOCUMENTO_SOBRE">{{ sobre.Clinica }}</td>
+                                        <td class="centerMiddle">{{ sobre.CodigoRegion }}</td>
+                                        <td class="centerMiddle">{{ sobre.CodigoProducto }}</td>
+                                        <td class="centerMiddle">{{ sobre.PersonaContacto }}</td>
+                                        <td class="centerMiddle">{{ sobre.Celular }}</td>
+                                        <td class="centerMiddle">{{ sobre.UsuarioAsignado != null ?
+                                            sobre.UsuarioAsignado : 'NA'}}</td>
+                                        <td class="centerMiddle">{{ sobre.IngresadoPor }}</td>
+                                        <td class="centerMiddle">&#36;{{ sobre.ValorPresentado | number : '1.2-2' }}</td>
+                                        <td class="centerMiddle">{{ sobre.FechaRecepcion | date: 'dd/MM/yyyy' }}</td>
+                                        <td class="centerMiddle">{{ sobre.FechaSobre | date: 'dd/MM/yyyy' }}</td>
+                                        <td class="centerMiddle">{{ sobre.FechaDigitacion | date: 'dd/MM/yyyy' }}</td>
+                                        <td class="centerMiddle">{{ sobre.CodigoContrato }}</td>
+                                        <td class="centerMiddle">{{ sobre.NumeroContrato }}</td>
+                                    </tr>
+
+                                </tbody>
+                                <tfoot *ngIf="sobreReembolsoService.paginationConstants.total == 0">
+                                    <tr>
+                                        <td colspan="14" style="text-align: center;">No existen resultados</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <pagination-controls id="sobresTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true"
+                            (pageChange)="sobreReembolsoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 m-t-sm" *ngIf="historia != null && historia.length > 0">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Seguimientos de Sobre</h5>
+                </div>
+                <div class="panel-body panelDatos">
+                    <div id="divResultadoSeguimientoSobres">
+                        <div class="dataTables_info">Listado de Seguimientos del Sobre
+                            {{this.sobreReembolsoSelected.NumeroSobre}}</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="centerMiddle"> Accion </th>
+                                        <th class="centerMiddle"> Usuario </th>
+                                        <th class="centerMiddle"> Fecha Modificacion</th>
+                                        <th class="centerMiddle"> Hora Modificacion</th>
+                                        <th class="centerMiddle"> No. Sobre </th>
+                                        <th class="centerMiddle"> Estado Sobre </th>
+                                        <th class="centerMiddle"> Establecimiento/Clínica</th>
+                                        <th class="centerMiddle"> Region </th>
+                                        <th class="centerMiddle"> Producto </th>
+                                        <th class="centerMiddle"> Persona Contacto </th>
+                                        <th class="centerMiddle"> Celular </th>
+                                        <th class="centerMiddle"> Usuario Asignado </th>
+                                        <th class="centerMiddle"> Ingresado por </th>
+                                        <th class="centerMiddle"> Valor Presentado</th>
+                                        <th class="centerMiddle"> Fecha Recepcion </th>
+                                        <th class="centerMiddle"> Fecha Sobre </th>
+                                        <th class="centerMiddle"> Fecha Digitacion </th>
+                                        <th class="centerMiddle"> Codigo Contrato </th>
+                                        <th class="centerMiddle"> No. Contrato </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="no-borders selectableBodyTable">
+                                    <tr *ngFor="let sobre of historialSobre;">
+                                        <td class="centerMiddle">
+                                            <button class="btn btn-light fa fa-eye" (click)="abrirModalDetalles(sobre);"
+                                                mdbWavesEffect></button>
+                                        </td>
+                                        <td class="centerMiddle">{{ sobre.Accion!= null ? sobre.Accion : 'NA' }}</td>
+                                        <td class="centerMiddle">{{ sobre.UsuarioModificacion != null ? sobre.UsuarioModificacion : 'NA' }}</td>
+                                        <td class="centerMiddle">{{ sobre.FechaModificacion | date: 'dd/MM/yyyy'}}</td>
+                                        <td class="centerMiddle">{{ sobre.HoraModificacion != null ? sobre.HoraModificacion : 'NA' }}</td>
+                                        <td class="centerMiddle">{{ sobre.NumeroSobre }}</td>
+                                        <td class="centerMiddle">{{ sobre.NombreEstadoSobre }}</td>
+                                        <td class="centerMiddle" *ngIf="sobre.TipoDocumento == constantesSobres.ID_TIPO_DOCUMENTO_SOBRE">{{ sobre.NombreEstablecimiento }}</td>
+                                        <td class="centerMiddle" *ngIf="sobre.TipoDocumento != constantesSobres.ID_TIPO_DOCUMENTO_SOBRE">{{ sobre.Clinica }}</td>
+                                        <td class="centerMiddle">{{ sobre.CodigoRegion }}</td>
+                                        <td class="centerMiddle">{{ sobre.CodigoProducto }}</td>
+                                        <td class="centerMiddle">{{ sobre.PersonaContacto }}</td>
+                                        <td class="centerMiddle">{{ sobre.Celular }}</td>
+                                        <td class="centerMiddle">{{ sobre.UsuarioAsignado != null ?
+                                            sobre.UsuarioAsignado : 'NA'}}</td>
+                                        <td class="centerMiddle">{{ sobre.IngresadoPor }}</td>
+                                        <td class="centerMiddle">&#36;{{ sobre.ValorPresentado | number : '1.2-2' }}</td>
+                                        <td class="centerMiddle">{{ sobre.FechaRecepcion | date: 'dd/MM/yyyy' }}</td>
+                                        <td class="centerMiddle">{{ sobre.FechaSobre | date: 'dd/MM/yyyy' }}</td>
+                                        <td class="centerMiddle">{{ sobre.FechaDigitacion | date: 'dd/MM/yyyy' }}</td>
+                                        <td class="centerMiddle">{{ sobre.CodigoContrato }}</td>
+                                        <td class="centerMiddle">{{ sobre.NumeroContrato }}</td>
+
+                                    </tr>
+                                </tbody>
+                                <tfoot *ngIf="historia == null && historia.length == 0 ">
+                                    <tr>
+                                        <td colspan="13" style="text-align: center;">No existen resultados</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Nuevo Modal Detalles-->
+<div class="modal inmodal fade" id="ModalDetalles" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="col-lg-12">
+                <div class="panel panel-success">
+                    <ul class="nav nav-pills">
+                        <li *ngFor="let detalle of detallesSobres;let i = index">
+                            <a href="#{{i}}" data-toggle="tab" (click)="cambiarBeneficiario(i);">{{detalle.NombreBeneficiario}}</a>
+                        </li>
+                    </ul>
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Detalle del Sobre</h5>
+                    </div>
+                    <div class="panel-body panelDatos">
+                        <fieldset class="col-lg-12 m-b">
+                            <legend class="info">DETALLE DEL SOBRE</legend>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Código:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="descripcionEstado" name="descripcionEstado" class="heigth25 form-control col-lg-12"
+                                    [disabled]="true" [(ngModel)]="detalleSobreSelected.NumeroSolicitudDetalle" />
+                            </div>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Valor:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="valorPresentado" name="valorPresentado" [(ngModel)]="detalleSobreSelected.ValorPresentadoDetalle"
+                                    class="heigth25 form-control col-lg-12" [disabled]="true" />
+                            </div>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Estado:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="descripcionEstado" name="descripcionEstado" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionEstado" [disabled]="true" />
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Cobertura:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="descripcionTipoCobertura" name="descripcionTipoCobertura" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionTipoCobertura" [disabled]="true" />
+                            </div>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Novedad:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="numeroSolicitudDetalle" name="numeroSolicitudDetalle" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionNovedad" [disabled]="true" />
+                            </div>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label ">Número Qpra:</label>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <input type="text" id="numeroQpra" name="numeroQpra" class="heigth25 form-control col-lg-12"
+                                     [(ngModel)]="detalleSobreSelected.NumeroQpra" [disabled]="true" />
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Observaciones:</label>
+                            </div>
+                            <div class="col-lg-11" style="padding-left:33px !important">
+                                <input type="text" id="codigoSobrePersona" name="codigoSobrePersona" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.ObservacionesConsultor" [disabled]="true" />
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <legend class="info">DEVOLUCIÓN</legend>
+                            <div class="col-lg-2" style="padding-left:10px !important">
+                                <label class="control-label">Tipo de devolución:</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="text" id="descripcionTipoDevolucion" name="descripcionTipoDevolucion"
+                                    class="heigth25 form-control col-lg-12" [(ngModel)]="detalleSobreSelected.DescripcionTipoDevolucion"
+                                    [disabled]="true" />
+                            </div>
+                            <div class="col-lg-2" style="padding-left:10px !important">
+                                <label class="control-label">Tipo de Carta:</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="text" id="descripcionTipoCarta" name="descripcionTipoCarta" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionTipoCarta" [disabled]="true" />
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-2" style="padding-left:10px !important">
+                                <label class="control-label">Motivo Devolucion:</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <textarea rows="3" id="descripcionMotivoDevolucion" name="descripcionMotivoDevolucion"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionMotivoDevolucion" class="form-control"
+                                    [disabled]="true"></textarea>
+                            </div>
+                            <div class="col-lg-2" style="padding-left:10px !important">
+                                <label class="control-label">Motivo Negativa:</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <textarea rows="3" id="descripcionMotivoGestion" name="descripcionMotivoGestion" class="form-control"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionMotivoNegativa" [disabled]="true"></textarea>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-6" style="padding-left:10px !important">
+                                <legend class="info">DETALLE 1</legend>
+                                <textarea rows="5" placeholder="Detalle de devolución y cláusula del contrato." id="motivoDevolucion2"
+                                    [(ngModel)]="detalleSobreSelected.ClausulaDevolucion" name="motivoDevolucion2"
+                                    class="form-control" [disabled]="true">
+                                    </textarea>
+                            </div>
+
+                            <div class="col-lg-6" style="padding-left:10px !important">
+                                <legend class="info">DETALLE 2</legend>
+                                <textarea rows="5" placeholder="Detalle de la negativa y cláusula del contrato." id="observacionesSobre"
+                                    [(ngModel)]="detalleSobreSelected.ClausulaNegativa" name="observacionesSobre"
+                                    class="form-control" [disabled]="true">
+                                    </textarea>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-4"></div>
+                            <div class="col-lg-4" style="padding-left: 129px !important;">
+                                <button type="button" (click)="cerrarModal('ModalDetalles');" class="btn btn-danger">Cerrar</button>
+                            </div>
+                            <div class="col-lg-4"></div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

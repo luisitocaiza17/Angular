@@ -1,0 +1,144 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Modificar Representante Legal</h5>
+        </div>
+        <div class="panel-body">
+            <form name="updateRepresentanteLegal" role="form" #updateRepresentanteLegal="ngForm">
+
+                <fieldset class="col-lg-12 m-b">
+                    <legend class="info">REPRESENTANTE LEGAL</legend>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+
+                    <label class="col-lg-1 control-label no-padding-left" for="slcPlan">Cédula:</label>
+                    <span class="col-lg-3">{{corporativokey.CedulaRepresentante}}</span>
+                    <label class="col-lg-1 control-label no-padding-left" for="slcPlan">Nombre:</label>
+                    <span class="col-lg-3">{{corporativokey.NombresRepresentante}}</span>
+                    <label class="col-lg-1 control-label no-padding-left" for="slcPlan">Apellido:</label>
+                    <span class="col-lg-3">{{corporativokey.ApellidosRepresentante}}</span>
+                </fieldset>
+
+                <fieldset class="col-lg-12 m-b">
+
+                    <label class="col-lg-1 control-label no-padding-left" for="slcPlan">Email:</label>
+                    <span class="col-lg-3">{{corporativokey.Email}}</span>
+                    <label class="col-lg-1 control-label no-padding-left" for="slcPlan">Cargo:</label>
+                    <span class="col-lg-3">{{corporativokey.CargoRepresentante}}</span>
+                    <label class="col-lg-1 control-label no-padding-left" for="slcPlan">Celular:</label>
+                    <span class="col-lg-3">{{corporativokey.Telefono}}</span>
+
+
+                </fieldset>
+
+
+                <fieldset class="col-lg-12 m-b">
+
+                    <legend class="info">CAMBIAR REPRESENTANTE LEGAL A</legend>
+
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Cédula:</label>
+                    </div>
+                    <div class="m-b col-lg-2">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Cédula" id="CedulaRepresentante" [(ngModel)]="corporativofilter.CedulaRepresentante"
+                            name="CedulaRepresentante" class="form-control" #CedulaRepresentante="ngModel" pattern="\d*" minlength="0"
+                            maxlength="22" />
+                        <div [hidden]="CedulaRepresentante.valid || CedulaRepresentante.pristine" class="error">
+                            <p *ngIf="CedulaRepresentante.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="CedulaRepresentante.errors?.maxlength">Maximo 22 dígitos</p>
+                        </div>
+                    </div>
+
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Nombre:</label>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Nombre" id="NombresRepresentante" [(ngModel)]="corporativofilter.NombresRepresentante"
+                            name="NombresRepresentante" class="form-control" #NombresRepresentante="ngModel" minlength="0" maxlength="90"
+                        />
+                        <div [hidden]="NombresRepresentante.valid || NombresRepresentante.pristine" class="error">
+                            <p *ngIf="NombresRepresentante.errors?.maxlength">Maximo 90 caracteres</p>
+                        </div>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Apellido:</label>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Apellidos" id="ApellidosRepresentante" [(ngModel)]=" corporativofilter.ApellidosRepresentante"
+                            name="ApellidosRepresentante" class="form-control" #ApellidosRepresentante="ngModel" minlength="0"
+                            maxlength="80" />
+                        <div [hidden]="ApellidosRepresentante.valid || ApellidosRepresentante.pristine" class="error">
+                            <p *ngIf="ApellidosRepresentante.errors?.maxlength">Maximo 80 caracteres</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Email:</label>
+                    </div>
+                    <div class="m-b col-lg-2">
+                        <input type="email" placeholder="Email" id="RepresentanteMail" [(ngModel)]="corporativofilter.RepresentanteMail" name="RepresentanteMail"
+                            class="form-control" #RepresentanteMail="ngModel" minlength="0" maxlength="200" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                        />
+                        <div [hidden]="RepresentanteMail.valid || RepresentanteMail.pristine" class="error">
+                            <p *ngIf="RepresentanteMail.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="RepresentanteMail.errors?.maxlength">Maximo 200 dígitos</p>
+                        </div>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Cargo:</label>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Cargo del Representante" id="CargoRepresentante" [(ngModel)]=" corporativofilter.CargoRepresentante"
+                            name="CargoRepresentante" class="form-control" #CargoRepresentante="ngModel" minlength="0" maxlength="60"
+                        />
+                        <div [hidden]="CargoRepresentante.valid || CargoRepresentante.pristine" class="error">
+                            <p *ngIf="CargoRepresentante.errors?.maxlength">Maximo 60 caracteres</p>
+                        </div>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="RepresentanteCelular">Célular:</label>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Teléfono" id="RepresentanteCelular" [(ngModel)]="corporativofilter.RepresentanteCelular"
+                            name="RepresentanteCelular" class="form-control" #RepresentanteCelular="ngModel" pattern="\d*" minlength="0"
+                            maxlength="24" />
+                        <div [hidden]="RepresentanteCelular.valid || RepresentanteCelular.pristine" class="error">
+                            <p *ngIf="RepresentanteCelular.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="RepresentanteCelular.errors?.maxlength">Maximo 24 dígitos</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+
+
+
+
+                <div class="col-lg-12 m-t-md">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="guardarCambios();">
+                        <i class="fa fa-save"></i>Guardar</button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,118 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Polizas</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div id="polizasSearch" class="ibox-title">
+            <form>
+                <div class="row" *ngIf="proveedores !== null">
+                    <div class="col-lg-1">
+                        <label class="control-label" for="proveedorSelect">Proveedor:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <select id="proveedorSelect" class="form-control" [disabled]="formularioActivo"
+                                (change)="seleccionarProveedor($event)">
+                            <option [ngValue]="null">Seleccione un proveedor</option>
+                            <option *ngFor="let prv of proveedores" [value]="prv.Id">{{prv.Nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-8">
+                        <button id="editarProveedorBtn" class="btn btn-default"
+                                [disabled]="proveedor === null || formularioActivo"
+                                (click)="editarProveedor();">Editar
+                        </button>
+                        <button id="nuevoProveedorBtn" class="btn btn-default" [disabled]="formularioActivo"
+                                (click)="nuevoProveedor();">Nuevo
+                        </button>
+                        <button id="cancelarBtn" class="btn btn-default" [disabled]="!formularioActivo"
+                                (click)="cancelar();">Cancelar
+                        </button>
+                        <button id="guardarBtn" class="btn btn-default" [disabled]="!formularioActivo"
+                                (click)="guardar();">Guardar
+                        </button>
+                    </div>
+                </div>
+                <div class="row m-t-md" *ngIf="proveedor !== null">
+                    <div class="col-lg-3">
+                        <label class="control-label" for="nombreProveedorTxt">Nombre proveedor</label>
+                    </div>
+                    <div class="col-lg-7">
+                        <input id="nombreProveedorTxt" name="nombreProveedorTxt" type="text" class="form-control"
+                               [disabled]="!formularioActivo"
+                               [(ngModel)]="proveedor.Nombre"/>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <label class="control-label" for="contactoProveedorTxt">Persona contacto</label>
+                    </div>
+                    <div class="col-lg-7">
+                        <input id="contactoProveedorTxt" name="contactoProveedorTxt" type="text" class="form-control"
+                               [disabled]="!formularioActivo"
+                               [(ngModel)]="proveedor.PersonaContacto"/>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <label class="control-label" for="fechaConvenioTxt">Fecha de convenio</label>
+                    </div>
+                    <div class="col-lg-7">
+                        <datetime id="fechaConvenioTxt" name="fechaConvenioTxt" [(ngModel)]="proveedor.FechaConvenio"
+                                  [datepicker]="datePickerOpts"
+                                  [timepicker]="false" [disabled]="!formularioActivo"></datetime>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <label class="control-label" for="mailContactoTxt">Mail de contacto</label>
+                    </div>
+                    <div class="col-lg-7">
+                        <input id="mailContactoTxt" name="mailContactoTxt" type="email" class="form-control"
+                               [disabled]="!formularioActivo"
+                               [(ngModel)]="proveedor.CorreoElectronicoContacto"/>
+                    </div>
+                </div>
+                <div class="row m-t-md">
+                    <div class="col-lg-12" *ngIf="proveedor !== null">
+                        <div style="text-align: right">
+                            <a class="btn btn-default" [routerLink]="['/srvAdicAdmin/poliza']">Agregar</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="polizasTable" class="table table-striped table-bordered table-hover dataTable">
+                                <thead class="no-borders">
+                                <tr>
+                                    <th class="centerMiddle">N&uacute;mero</th>
+                                    <th class="centerMiddle">Servicio adicional</th>
+                                    <th class="centerMiddle">&Uacute;ltima versi&oacute;n</th>
+                                    <th class="centerMiddle">Fecha versi&oacute;n</th>
+                                    <th class="centerMiddle">D&iacute;a corte</th>
+                                    <th class="centerMiddle">D&iacute;a de proceso</th>
+                                    <th class="centerMiddle">&nbsp;</th>
+                                </tr>
+                                </thead>
+                                <tbody class="no-borders">
+                                <tr *ngFor="let plz of polizas">
+                                    <td>{{plz.NumeroPoliza}}</td>
+                                    <td>{{plz.Servicio}}</td>
+                                    <td>{{plz.Version}}</td>
+                                    <td>{{plz.VersionFecha | date:'dd-MM-yyyy'}}</td>
+                                    <td>{{plz.DiaCorte}}</td>
+                                    <td>{{plz.DiaProcesamiento}}</td>
+                                    <td><a [routerLink]="['/srvAdicAdmin/poliza/'.concat(plz.Id.toString())]"><i
+                                            class="fa fa-chevron-circle-right fa-lg"></i></a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

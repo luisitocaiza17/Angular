@@ -1,0 +1,148 @@
+<div class="row no-padding">
+    <div class="col-lg-12 ">
+        <div class="panel-group" id="accordionOdas">
+            <div>
+                <h5 class="panel-title">
+                    <div class="col-lg-12 m-b-sm no-padding">
+                        <div class="col-md-12 alignCenter">
+                            <label class="col-md-12 no-padding m-t-sm" style="color: #ff0000">{{msgEstadoContato}}</label>
+                        </div>
+                        <form (ngSubmit)="loadOdasList();" #consultaOdaForm="ngForm">
+                            <div class=" col-lg-12 no-padding">
+                                <div class=" col-lg-12 no-padding" *ngIf="!mostrarFormIncluir  && !mostrarFormEmail">
+                                    <label class="col-md-2">Número Contrato:</label>
+                                    <span class="col-md-4">{{filter.NumeroContrato}}</span>
+                                    <label class="col-md-2">Nivel Plan:</label>
+                                    <span class="col-md-4">{{contratoKey.NivelReferencia}}</span>
+                                </div>
+                                <div class="col-md-12 m-t-sm m-b-md" *ngIf="!mostrarFormIncluir && !mostrarFormEmail">
+                                    <div style="border-bottom: 1px solid #d1d5d9;"></div>
+                                </div>
+                                <div class=" col-lg-12 no-padding" *ngIf="!mostrarFormIncluir && !mostrarFormEmail">
+                                    <label class="col-lg-2 control-label" for="slcBeneficiario">Paciente:</label>
+                                    <div class="m-b col-lg-4">
+                                        <select style="font-weight: 100 !important;" required class="form-select-control heigth25" id="slcBeneficiario" name="slcBeneficiario"
+                                            [(ngModel)]="filter.NumeroPersona" #slcBeneficiario="ngModel" (ngModelChange)="loadOdasList()">
+                                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                                            <option *ngFor="let beneficiario of beneficiarios" [value]="beneficiario.NumeroPersona">{{beneficiario.NombreCompleto}}</option>
+                                        </select>
+                                    </div>
+
+                                    <label class="col-lg-2 control-label" for="slcEstado">Estado:</label>
+                                    <div class="m-b col-lg-4">
+                                        <select style="font-weight: 100 !important;" required class="form-select-control heigth25" id="slcEstado" name="slcEstado"
+                                            [(ngModel)]="filter.NumeroEstado" #slcEstado="ngModel" (ngModelChange)="loadOdasList()">
+                                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                                            <option *ngFor="let estado of estadosReclamo" [value]="estado.NumeroEstado">{{estado.NombreEstado}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <a (click)="limpiar()" *ngIf="!mostrarFormIncluir && !mostrarFormEmail" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-eraser" ></i> Limpiar</a>
+                                    <button *ngIf="!mostrarFormIncluir && !mostrarFormEditar && !mostrarFormEmail " [disabled]="!habilitarNuevo" class="btn btn-w-m btn-success btn-sm"
+                                        id="btnNuevo" data-toggle="collapse" data-parent="#accordionOdas" (click)="nuevo($event)">
+                                        <i class="fa fa-plus-circle"></i> Nuevo
+                                    </button>
+                                    <!-- <a *ngIf="!mostrarFormIncluir && !mostrarFormEditar && !mostrarFormEmail " [disabled]="habilitarNuevo" id="btnNuevo" data-toggle="collapse"
+                                        data-parent="#accordionOdas" (click)="nuevo($event)" class="btn btn-w-m btn-success btn-sm">
+                                        <i class="fa fa-plus-circle"></i> Nuevo
+                                    </a>-->
+                                    <a *ngIf="mostrarFormIncluir || mostrarFormEditar || mostrarFormEmail" id="btnListado" data-toggle="collapse" data-parent="#accordionOdas"
+                                        href="#divListaOdas" (click)="verListado()" class="btn btn-w-m btn-success btn-sm">
+                                        <i class="fa fa-list"></i> Listado
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </h5>
+            </div>
+            <div class="panel-body panelDatos" class="panel-collapse collapse in" id="divListaOdas">
+                <div id="divResultadoBusquedaOdas" class="ibox-content" style="border-width:1px 0px 0px 0px;padding-bottom: 0;">
+                    <div class="dataTables_info">{{reclamoService.paginationConstants.EncabezadoTabla}}</div>
+                    <div class="table-responsive">
+                        <table id="tablaReclamos" class="table table-bordered dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle">Sel</th>
+                                    <th class="centerMiddle no-left-border">Número ODA</th>
+                                    <th class="centerMiddle">Fecha Emisión</th>
+                                    <th class="centerMiddle">Fecha Vencimiento</th>
+                                    <th class="centerMiddle">Estado</th>
+                                    <th class="centerMiddle">Paciente</th>
+                                    <th class="centerMiddle">Médico</th>
+                                    <th class="centerMiddle">Especialidad</th>
+                                    <th class="centerMiddle no-right-border">Total Pagar</th>
+                                    <th class="centerMiddle no-right-border">Total Consulta</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyReclamos" class="no-borders ">
+                                <tr *ngFor="let reclamo of reclamos  | paginate: {id : 'odasTable', itemsPerPage: reclamoService.paginationConstants.pageSize,currentPage: reclamoService.paginationConstants.pageNumber, totalItems: reclamoService.paginationConstants.total};">
+                                    <td class="centerMiddle general-column">
+                                        <a data-toggle="modal" (click)="seleccionar(reclamo)" data-target="#anularViewModal" title="Clic para anular ODA" *ngIf="reclamo.EstadoReclamo != 'Anulado' " >
+                                            <i class="fa fa-ban" ></i>
+                                        </a>
+                                        <a data-toggle="collapse" data-parent="#accordionOdas" href="#divListaOdas" title="Clic para enviar mail" (click)="sendLetter(reclamo)" *ngIf="reclamo.EstadoReclamo != 'Anulado'" >
+                                            <i class="fa fa-envelope-o"></i>
+                                        </a>
+                                    </td>
+                                    <td class="centerMiddle no-left-border">{{reclamo.NumeroReclamo}}</td>
+                                    <td class="centerMiddle second-column">{{reclamo.FechaEmision}}</td>
+                                    <td class="centerMiddle">{{reclamo.FechaVencimiento}}</td>
+                                    <td class="centerMiddle">{{reclamo.EstadoReclamo}}</td>
+                                    <td class="centerMiddle">{{reclamo.NombreBeneficiario}}</td>
+                                    <td class="centerMiddle">{{reclamo.Medico}}</td>
+                                    <td class="centerMiddle">{{reclamo.Especialidad}}</td>
+                                    <td class="alignR centerMiddle">&#36;{{reclamo.MontoGastoAdministrativo + reclamo.MontoCopago | number : '1.2-2'}}</td>
+                                    <td class="alignR centerMiddle">&#36;{{reclamo.MontoCubierto | number : '1.2-2'}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot *ngIf="reclamos.length == 0">
+                                <tr>
+                                    <td colspan="10" style="text-align: center;">No existen resultados</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <pagination-controls id="odasTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="reclamoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                </div>
+            </div>
+        </div>
+        <div id="divFormOdas" *ngIf="mostrarFormIncluir">
+            <div class="panel-body no-padding">
+                <odaForm></odaForm>
+            </div>
+        </div>
+        <div id="clpEmailFtpFormOdas" *ngIf="mostrarFormEmail">
+            <div class="panel-body no-padding">
+                <emailForm></emailForm>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Anular-->
+<div id="anularModalDiv">
+    <div class="modal inmodal fade" id="anularViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width: 478px">
+            <div class="modal-content">
+                <div class="panel-body">
+                    <div class="col-lg-12 no-padding confirmationPanel">
+                        <div class="sa-icon sa-warning pulseWarning">
+                            <span class="sa-body pulseWarningIns"></span>
+                            <span class="sa-dot pulseWarningIns"></span>
+                        </div>
+                        <h2>¿Está seguro?</h2>
+                        <p>Va a ANULAR la ODA!</p>
+                        <div class="alignCenter">
+                            <div class="col-lg-12 no-padding">
+                                <button class="cancel" data-dismiss="modal" tabindex="2" style="display: inline-block; box-shadow: none;">Cancelar</button>
+                                <button (click)="anular()" class="confirm" tabindex="1">Aceptar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

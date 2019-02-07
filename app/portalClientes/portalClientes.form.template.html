@@ -1,0 +1,284 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Portal Clientes</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Autenticación</a>
+            </li>
+            <li class="breadcrumb-item">Clientes</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Lista Usuarios" data-parent="#accordion" href="#clpListaUsuarios">
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+            <div id="clpListaUsuarios" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                        <div class="row">
+                            <form (ngSubmit)="buscar();" #listadoClientesForm="ngForm">
+                                <div class="form-group col-lg-12 no-padding">    
+                                    <fieldset class="col-lg-12">
+                                        <legend class="info">Búsqueda de Usuarios</legend>
+                                        <div class="col-lg-12">
+                                            <label class="col-lg-2 control-label" for="documentoIdentificacion">Documento Identificación:</label>
+                                            <div class="m-b col-lg-4">
+                                                <input type="text" placeholder="Documento Identificación" id="documentoIdentificacion" name="documentoIdentificacion" class="form-control" [(ngModel)]="filter.DocumentoIdentificacion"/>
+                                                
+                                            </div>
+                                            <label class="col-lg-2 control-label" for="nombres">Nombres:</label>
+                                            <div class="m-b col-lg-4">
+                                                <input type="text" placeholder="Nombres" id="nombres" name="nombres" [(ngModel)]="filter.Nombres" class="form-control" />
+                                           </div>   
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <label class="col-lg-2 control-label" for="apellidoPaterno">Apellido Paterno:</label>
+                                            <div class="m-b col-lg-4">
+                                                <input type="text" placeholder="Apellido Paterno" id="apellidoPaterno" name="apellidoPaterno" [(ngModel)]="filter.ApellidoPaterno" class="form-control" />
+                                                
+                                            </div>
+                                            <label class="col-lg-2 control-label" for="Apellido Materno">Apellido Materno:</label>
+                                            <div class="m-b col-lg-4">
+                                                <input type="text" placeholder="Apellido Materno" id="apellidoMaterno" name="apellidoMaterno" [(ngModel)]="filter.ApellidoMaterno" class="form-control" />
+                                               
+                                            </div>  
+                                        </div> 
+                                    </fieldset>                                      
+                                </div>
+                                <div class="col-lg-12">
+                                    <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!listadoClientesForm.form.valid">
+                                        <i class="fa fa-search"></i> Buscar
+                                    </button>
+                                    <a  (click)="limpiar()" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-eraser" ></i> Limpiar</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div id="divResultadoBusquedaListas" class="ibox-content " style="border-width:1px 0px 0px 0px;">
+                        <div class="dataTables_info">{{clienteService.paginationConstants.EncabezadoTabla}}</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th> Acciones </th>
+                                        <th> Documento Identificación </th>
+                                        <th> Nombres </th>
+                                        <th> Apellido Paterno</th>
+                                        <th> Apellido Materno </th>
+                                        <th> Usuario </th>
+                                        <th> Teléfono Fijo </th>
+                                        <th> Teléfono Móvil </th>
+                                        <th> Email </th>
+                                        <th> Fecha Nacimiento </th>
+                                        <th> Último Acceso </th>
+                                        <th> Bloqueado </th> 
+                                    </tr>
+                                </thead>
+                                <tbody class="no-borders" *ngFor="let cliente of listadoClientes  | paginate: {id: 'tableListaClientes', itemsPerPage: clienteService.paginationConstants.pageSize,currentPage: clienteService.paginationConstants.pageNumber, totalItems: clienteService.paginationConstants.total}" 
+                                (click)="!cliente.Selected ? seleccionar(cliente, true) : return;">
+                                   
+                                    <tr >
+                                        <td>
+                                            <i class="fa fa-edit" (click)="openModal('#modalEditar')"></i>
+                                            <i class="fa fa-lock" (click)="bloquear(cliente)"  *ngIf="!cliente.EstaBloqueado"></i>
+                                            <i class="fa fa-key" (click)="openModal('#modalEditarPassword')"></i>
+                                        </td>
+                                        <td>{{cliente.DocumentoIdentificacion}}</td>
+                                        <td>{{cliente.Nombres}}</td>
+                                        <td>{{cliente.ApellidoPaterno}}</td>
+                                        <td>{{cliente.ApellidoMaterno}}</td>
+                                        <td>{{cliente.Usuario}}</td>
+                                        <td>{{cliente.TelefonoFijo}}</td>
+                                        <td>{{cliente.TelefonoMovil}}</td>
+                                        <td>{{cliente.Email}}</td>
+                                        <td>{{cliente.FechaNacimiento != '0001-01-01T00:00:00Z' ? (cliente.FechaNacimiento | date: 'dd/MM/yyyy') : '-'}}</td>
+                                        <td>{{cliente.UltimoAcceso!= '0001-01-01T00:00:00Z' ? (cliente.UltimoAcceso | date: 'dd/MM/yyyy') : '-'}}</td>
+                                        <td *ngIf="cliente.EstaBloqueado">SI</td>
+                                        <td *ngIf="!cliente.EstaBloqueado">NO</td>
+                                        
+                                    </tr>
+                                </tbody>
+                                <tfoot *ngIf="clienteService.paginationConstants.total == 0">
+                                    <tr>
+                                        <td colspan="11" style="text-align: center;">No existen resultados</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <pagination-controls id="tableListaClientes" maxSize="5" previousLabel="" nextLabel="" autoHide="true" (pageChange)="clienteService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal fade" id="modalEditar" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">Administrar Clientes</h5>
+            </div>
+            <div class="panel-body text-center">
+                <form  #editarClientesForm="ngForm">
+                    <div class="form-group col-lg-12 no-padding">    
+                        <fieldset class="col-lg-12">
+                            <legend class="info">Editar Datos del Cliente</legend>
+                            <div class="col-lg-12">
+                                <label class="col-lg-2 control-label" for="documentoIdentificacionEditar">Documento Identificación:</label>
+                                <div class="m-b col-lg-4">
+                                    <input type="text" id="documentoIdentificacionEditar" name="documentoIdentificacionEditar" class="form-control" [(ngModel)]="clienteSelectedTable.DocumentoIdentificacion" disabled/>
+                                </div>
+                                <label class="col-lg-2 control-label" for="usuarioEditar">Usuario</label>
+                                <div class="m-b col-lg-4">
+                                    <input type="text" id="usuarioEditar" name="usuarioEditar" class="form-control"  [(ngModel)]="clienteSelectedTable.Usuario" disabled />
+                                </div>   
+                            </div>
+                            <div class="col-lg-12">
+                                <label class="col-lg-2 control-label" for="nombresEditar">Nombres:</label>
+                                <span class="col-md-3 col-xs-7">
+                                        <input type="text" placeholder="Nombres" id="nombresEditar" name="nombresEditar" class="form-control"  [(ngModel)]="tempClienteEditado.Nombres" 
+                                        #nombresEditar="ngModel" required pattern="[a-zA-Z][a-zA-Z ]+"  [disabled] = "ultimoAcceso || tempClienteEditado.EstaBloqueado"/>
+                                        <div [hidden]="nombresEditar.valid || nombresEditar.pristine" class="error">
+                                            <p *ngIf="nombresEditar.errors?.pattern">Sólo Letras</p>
+                                        </div>
+                                </span>
+                                <label class="col-lg-2 control-label" for="apellidoPaternoEditar">Apellido Paterno:</label>
+                                <span class="col-md-3 col-xs-7">
+                                        <input type="text" placeholder="Apellido Paterno" id="apellidoPaternoEditar" name="apellidoPaternoEditar" class="form-control"  [(ngModel)]="tempClienteEditado.ApellidoPaterno"
+                                        #apellidoPaternoEditar="ngModel" required pattern="[a-zA-Z][a-zA-Z ]+" [disabled] = "ultimoAcceso || tempClienteEditado.EstaBloqueado"/>
+                                    <div [hidden]="apellidoPaternoEditar.valid || apellidoPaternoEditar.pristine" class="error">
+                                        <p *ngIf="apellidoPaternoEditar.errors?.pattern">Sólo Letras</p>
+                                    </div>  
+                                </span>
+                            </div>
+                            <div class="col-lg-12">
+                                <label class="col-lg-2 control-label" for="apellidoMaternoEditar">Apellido Materno:</label>
+                                <span class="col-md-3 col-xs-7">
+                                        <input type="text" placeholder="Apellido Materno" id="apellidoMaternoEditar" name="apellidoMaternoEditar" class="form-control"   [(ngModel)]="tempClienteEditado.ApellidoMaterno"
+                                        #apellidoMaternoEditar="ngModel" required pattern="[a-zA-Z][a-zA-Z ]+"  [disabled] = "ultimoAcceso || tempClienteEditado.EstaBloqueado"/>
+                                        <div [hidden]="apellidoMaternoEditar.valid || apellidoMaternoEditar.pristine" class="error">
+                                            <p *ngIf="apellidoMaternoEditar.errors?.pattern">Sólo Letras</p>
+                                        </div>
+                                </span>
+                                <label class="col-lg-2 control-label" for="telefonoMovilEditar">Teléfono Móvil:</label>
+                                <span class="col-md-3 col-xs-7">
+                                    <input type="text" placeholder="Teléfono Móvil" id="telefonoMovilEditar" name="telefonoMovilEditar" class="form-control" 
+                                        [(ngModel)]="tempClienteEditado.TelefonoMovil" #telefonoMovilEditar="ngModel" min="10" pattern="\d*"  [disabled] = "ultimoAcceso || tempClienteEditado.EstaBloqueado"/>
+                                        <div [hidden]="telefonoMovilEditar.valid || telefonoMovilEditar.pristine" class="error">
+                                        <p *ngIf="telefonoMovilEditar.errors?.min">Al menos 10 dígitos</p>
+                                        <p *ngIf="telefonoMovilEditar.errors?.pattern">Sólo números</p>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="col-lg-12">
+                                <label class="col-lg-2 control-label" for="telefonoFijoEditar">Teléfono Fijo:</label>
+                                <span class="col-md-3 col-xs-7">
+                                        <input type="text" placeholder="Teléfono Fijo" id="telefonoFijoEditar" name="telefonoFijoEditar" class="form-control"   
+                                        [(ngModel)]="tempClienteEditado.TelefonoFijo" #telefonoFijoEditar="ngModel" min="9" pattern="\d*"  [disabled] = "ultimoAcceso || tempClienteEditado.EstaBloqueado"/>
+                                        <div [hidden]="apellidoMaternoEditar.valid || apellidoMaternoEditar.pristine" class="error">
+                                            <p *ngIf="apellidoMaternoEditar.errors?.min">Al menos 9 dígitos</p>
+                                            <p *ngIf="apellidoMaternoEditar.errors?.pattern">Sólo números</p>
+                                        </div>
+                                </span>
+                                <label class="col-lg-2 control-label" for="emailEditar">Email:</label>
+                                <span class="col-md-3 col-xs-7">
+                                    <input type="text" placeholder="Email" id="emailEditar" name="emailEditar" class="form-control"  
+                                    [(ngModel)]="tempClienteEditado.Email" #emailEditar="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$"  [disabled] = "ultimoAcceso || tempClienteEditado.EstaBloqueado"/>
+                                    <div [hidden]="emailEditar.valid || emailEditar.pristine" class="error">
+                                            <p *ngIf="emailEditar.errors?.pattern">Ingresar un email válido</p>
+                                        </div>
+                                </span>  
+                            </div>
+                            <div class="col-lg-12" *ngIf="!ultimoAcceso ">
+                                <label class="col-lg-2 control-label" for="fechaNacimientoEditar">Fecha de Nacimiento:</label>
+                                <span class="col-md-3 col-xs-7" >
+                                        <datetime class="heigth25 col-lg-12 no-padding" name="fechaNacimientoEditar" [timepicker]="false" id="fechaNacimientoEditar" [(ngModel)]="tempClienteEditado.FechaNacimiento"
+                                            [datepicker]="datepickerOpts" [disabled] = "ultimoAcceso || tempClienteEditado.EstaBloqueado" *ngIf="!tempClienteEditado.EstaBloqueado"></datetime>
+                                        <input type="text" id="fechaNacimientoDato" name="fechaNacimientoDato" class="form-control"   *ngIf="tempClienteEditado.EstaBloqueado"
+                                        placeholder="{{tempClienteEditado.FechaNacimiento | date: 'dd/MM/yyyy'}}" disabled/>
+                                </span> 
+                            </div>
+                            <div class="col-lg-12" *ngIf="!ultimoAcceso">
+                                <span class="col-md-3 col-xs-7">
+                                    <label>
+                                        <input type="checkbox" name="estadoBloqueado" [(ngModel)]="tempClienteEditado.EstaBloqueado" [checked]="tempClienteEditado.EstaBloqueado">
+                                        Estado Bloqueado
+                                    </label>
+                                </span>
+                                <span class="col-md-3 col-xs-7">
+                                    <label>
+                                        <input type="checkbox" name="requiereCambioPassword" [(ngModel)]="tempClienteEditado.CambiarContrasenia" [checked]="tempClienteEditado.CambiarContrasenia">
+                                        Requerir cambio de contraseña
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="col-lg-12"   *ngIf="ultimoAcceso">
+                                <label class="col-lg-2 control-label" for="primerPassword">Nueva Contraseña</label>
+                                <span class="col-md-3 col-xs-7">
+                                    <input type="password" placeholder="Nueva Contraseña" id="primerPassword" name="primerPassword" class="form-control" [(ngModel)]="nuevoPassword"
+                                  />
+                                    </span> 
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-12 text-center">
+                        <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="guardar()">
+                            <i class="fa fa-search"></i> Guardar
+                        </button>
+                        <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="salir()">
+                            <i class="fa fa-search"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal fade" id="modalEditarPassword" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Administrar Clientes</h5>
+                </div>
+                <div class="panel-body text-center">
+                    <form  #editarClientesPasswordForm="ngForm" [formGroup]="form">
+                        <div class="form-group col-lg-12 no-padding">    
+                            <fieldset class="col-lg-12">
+                                <legend class="info"> Cambiar Contraseña</legend>
+                                <div class="col-lg-12">
+                                    <label class="col-lg-2 control-label" for="nuevoPassword">Nueva Contraseña:</label>
+                                    <div class="m-b col-lg-4">
+                                        <input type="password" id="nuevoPassword" name="nuevoPassword" class="form-control"  formControlName="nuevoPassword"  [(ngModel)]="nuevoPassword" [formGroup]="form" minlength="6"/>
+                                    </div>
+                                    <label class="col-lg-2 control-label" for="nuevoPasswordConfirmar">Confirmar Nueva Contraseña:</label>
+                                    <div class="m-b col-lg-4">
+                                        <input type="password" id="nuevoPasswordConfirmar" name="nuevoPasswordConfirmar" class="form-control" formControlName="nuevoPasswordConfirmar" [formGroup]="form" />
+                                    </div>   
+                                </div>
+                                <div class="alert alert-danger" *ngIf="form.controls.nuevoPasswordConfirmar.errors?.MatchPassword">La  Contraseña no coincide</div>
+                            </fieldset>
+                            <b>No olvide ingresar al menos 6 caracteres</b>
+                        </div>
+                        <div class="col-lg-12 text-center">
+                            <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!editarClientesPasswordForm.form.valid"  (click)="guardarNuevoPassword()">
+                                <i class="fa fa-search"></i> Guardar
+                            </button>
+                            <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="salirPassword()">
+                                <i class="fa fa-search"></i> Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

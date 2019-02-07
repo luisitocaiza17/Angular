@@ -1,0 +1,307 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Ingreso Preexistencias</h5>
+        </div>
+        <div class="panel-body">
+            <form name="preexistenciasForm" role="form" #modBeneficiarioForm="ngForm">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="beneficiarios" role="tabpanel">
+                        <div class="col-lg-12 m-b">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">Listado de Beneficiarios</h5>
+                                </div>
+                                <div class="panel-body panelDatos">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover dataTable">
+                                            <thead>
+                                                <tr>
+                                                    <th class="centerMiddle">Nombres</th>
+                                                    <th class="centerMiddle">Persona Número</th>
+                                                    <th class="centerMiddle">Estado</th>
+                                                    <th class="centerMiddle">Fecha Inclusión</th>
+                                                    <th class="centerMiddle">Fecha Exclusión</th>
+                                                    <th class="centerMiddle">Precio Beneficiario</th>
+                                                    <th class="centerMiddle">Precio Servicios</th>
+                                                    <th class="centerMiddle">% Descuento</th>
+                                                    <th class="centerMiddle">Titular</th>
+                                                    <th class="centerMiddle">Valor Descuento</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="no-borders selectableBodyTable" *ngFor="let beneficiario of beneficiarios">
+                                                <tr title="{{!beneficiario.Selected ? 'Click para seleccionar' : ''}}" (click)="!beneficiario.Selected ? seleccionar(beneficiario, true) : return;"
+                                                    [class.active]="beneficiario.Selected">
+                                                    <td>{{beneficiario.NombreCompleto}}</td>
+                                                    <td>{{beneficiario.NumeroPersona}}</td>
+                                                    <td>{{beneficiario.Estado}}</td>
+                                                    <td>{{beneficiario.FechaInclusion}}</td>
+                                                    <td>{{beneficiario.FechaExclusion}}</td>
+                                                    <td>{{beneficiario.PrecioBeneficiario}}</td>
+                                                    <td>{{beneficiario.PrecioServicios}}</td>
+                                                    <td>{{beneficiario.PorcentajeDescuento}}</td>
+                                                    <td>{{beneficiario.EsTitular}}</td>
+                                                    <td>{{beneficiario.ValorDescuento}}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot *ngIf="beneficiarios.length == 0">
+                                                <tr>
+                                                    <td colspan="10" style="text-align: center;">No existen resultados</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <fieldset class="col-lg-12">
+                            <div class="m-b col-lg-12">
+                                <legend class="info">Preexistencias</legend>
+                            </div>
+                        </fieldset>
+
+                        <div class="col-lg-12 m-b">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">Diagósticos</h5>
+                                </div>
+                                <div class="panel-body panelDatos">
+                                    <div class="panel-body panelDatos">
+                                        <div class="dataTables_info">{{exclusionesService.paginationConstants.EncabezadoTablaAllResults}}</div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="centerMiddle">Estado Diag.</th>
+                                                        <th class="centerMiddle">Tipo</th>
+                                                        <th class="centerMiddle">Cabecera</th>
+                                                        <th class="centerMiddle">Diagnóstico</th>
+                                                        <th class="centerMiddle">Es Congénito</th>
+                                                        <th class="centerMiddle">Fecha Inicio</th>
+                                                        <th class="centerMiddle">Ultima Declaración</th>
+                                                        <th class="centerMiddle">% Discapacidad</th>
+                                                        <th class="centerMiddle">Observaciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="no-borders" *ngFor="let exclusion of exclusiones | paginate: {id:'exclusionesTableComponent', itemsPerPage: exclusionesService.paginationConstants.pageSize,currentPage: exclusionesService.paginationConstants.pageNumber, totalItems: exclusionesService.paginationConstants.total}">
+                                                    <tr title="{{!exclusion.Selected ? 'Click para seleccionar' : ''}}" (click)="!exclusion.Selected ? seleccionarExclusion(exclusion, true) : return;"
+                                                        [class.active]="exclusion.Selected">
+                                                        <td>{{exclusion.NombreEstado}}</td>
+                                                        <td>{{exclusion.TipoExclusion}}</td>
+                                                        <td>{{exclusion.CabeceraDiagnostico}}</td>
+                                                        <td>{{exclusion.Nombre}}</td>
+                                                        <td>{{exclusion.EsCongenito?'SI':'NO'}}</td>
+                                                        <td>{{exclusion.FechaInicio}}</td>
+                                                        <td>{{exclusion.FechaUltimaDeclaracion}}</td>
+                                                        <td>{{exclusion.PorcentajeDiscapacidad | number : '1.2-2'}}%</td>
+                                                        <td>{{exclusion.Observaciones}}</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot *ngIf="exclusionesService.paginationConstants.total == 0">
+                                                    <tr>
+                                                        <td colspan="10" style="text-align: center;">No existen resultados</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                        <pagination-controls id="exclusionesTableComponent" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="exclusionesService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-b col-lg-12">
+                            <ul class="nav nav-tabs nestedTabs" role="tablist">
+                                <li class="nav-item active nestedTab">
+                                    <a id="datosGeneralesTab" class="nav-link active" data-toggle="tab" role="tab" (click)="Nuevo()">Nuevo</a>
+                                </li>
+                                <li class="nav-item nestedTab">
+                                    <a id="pagoInteligenteTab" class="nav-link" data-toggle="tab" role="tab">Editar</a>
+                                </li>
+                                <li class="nav-item nestedTab">
+                                    <a id="pagoInteligenteTab" class="nav-link" data-toggle="tab" role="tab" (click)="Grabar()">Guardar Preexistencia</a>
+                                </li>
+                                <li class="nav-item nestedTab">
+                                    <a id="pagoInteligenteTab" class="nav-link" data-toggle="tab" role="tab" (click)="GrabarCoberturaEspecial()">Guardar Cobertura Especial</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <fieldset class="col-lg-12">
+                            <div class="m-b col-lg-12">
+                                <legend class="info">Ingresar / Modificar</legend>
+                            </div>
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Tipo Enfermedad:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <select required class="form-select-control  heigth25" id="tipoEnfermedad" name="tipoEnfermedad" [(ngModel)]="diagnostico.CodigoTipoEnf"
+                                    #tipoEnfermedad="ngModel">
+                                    <option [value]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let en of enfermedades" [value]="en.Id">{{en.Valor}}</option>
+                                </select>
+                                <div [hidden]="tipoEnfermedad.valid" class="error">
+                                    <p *ngIf="tipoEnfermedad.errors?.required">Campo Requerido</p>
+                                </div>
+                            </div>
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left" for="diagnostico">Diagnóstico:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <input type="text" required placeholder="Iniciales Diagnóstico" id="incialDiagnostico" name="incialDiagnostico" class="heigth25 form-control"
+                                    minlength="3" maxlength="50" [(ngModel)]="diagnostico.Diagnostico" #incialDiagnostico="ngModel"
+                                />
+                                <a (click)="listarDiagnosticos()" class="lupita" data-toggle="modal" data-target="#diagnosticoViewModal" style="right: 20px;top: 4px;">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                                <div class="">
+                                    <label class="col-md-12 no-padding " style="color: #ff0000;font-weight: normal;font-size: smaller;">{{msgValidacionDiagnostico}}</label>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12">
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Estado Diagnostico:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <label class="control-label no-padding-left">{{diagnostico.CabeceraDiagnostico}}</label>
+                            </div>
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Riesgo Cliente:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <label class="control-label no-padding-left">{{diagnostico.CabeceraDiagnostico}}</label>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12">
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Cabecera Diagnostico:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <label class="control-label no-padding-left">{{diagnostico.CabeceraDiagnostico}}</label>
+                            </div>
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left" for="fechaUltimaDeclaracion">Ultima Declaración:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaUltimaDeclaracion" [(ngModel)]="diagnostico.FechaUltimaDeclaracionDate"
+                                    [datepicker]="datepickerOpts" [ngModelOptions]="{standalone: true}"></datetime>
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12">
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left" for="fechaInicio">Fecha Inicio:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaInicio" [(ngModel)]="diagnostico.FechaInicioDate"
+                                    [datepicker]="datepickerOpts" [ngModelOptions]="{standalone: true}"></datetime>
+                            </div>
+
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left" for="fechaFin">Fecha Fin:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaFin" [(ngModel)]="diagnostico.FechaFinDate"
+                                    [datepicker]="datepickerOpts" [ngModelOptions]="{standalone: true}"></datetime>
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset class="col-lg-12">
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left" for="fechaInicio">Fecha Diagnostico:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaAnulacion" [(ngModel)]="diagnostico.FechaDiagnosticoDate"
+                                    [datepicker]="datepickerOpts" [ngModelOptions]="{standalone: true}"></datetime>
+                            </div>
+
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left" for="fechaFin">Digitador Anulación:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <label class="control-label no-padding-left">{{diagnostico.CabeceraDiagnostico}}</label>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="col-lg-12">
+
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">% Discapacidad:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <input type="text" [(ngModel)]="diagnostico.PorcentajeDiscapacidad" id="porcentajeDiscapacidad" name="porcentajeDiscapacidad"
+                                    class="heigth25 form-control col-lg-12" />
+                            </div>
+
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Es Congénito?:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <label class="control-label no-padding-left">{{diagnostico.EsCongenito}}</label>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12">
+
+
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Observación:</label>
+                            </div>
+                            <div class="m-b col-lg-10">
+                                <input type="text" [(ngModel)]="diagnostico.Observaciones" id="Idobs" name="Idobs" class="heigth25 form-control col-lg-12"/>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de Diagnosticos -->
+<div id="diagnosticoModalDiv">
+    <div class="modal inmodal fade" id="diagnosticoViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Diagnósticos</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaDiagnosticos" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle no-left-border">Código</th>
+                                            <th class="centerMiddle">Diagnóstico
+                                                <input type="text" (input)="filtrarDiagnostico($event.target.value)" placeholder="Buscar..." id="buscarDiagnostico" name="buscarDiagnostico"
+                                                    class="form-control heigth25">
+                                            </th>
+                                            <th class="centerMiddle">Es Congénito</th>
+                                            <th class="centerMiddle">Grupo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyDiagnostico" class="no-borders selectableBodyTable" style="max-height: 400px!important;">
+                                        <tr id="diagnostico{{i}}" title="{{!diagnostico.Selected ? 'Click para seleccionar' : ''}}" (click)="!diagnostico.Selected ? seleccionarDiagnostico(diagnostico) : return;"
+                                            [class.active]="diagnostico.Selected" *ngFor="let diagnostico of diagnosticos; let i = index">
+                                            <td class="centerMiddle no-left-border">{{diagnostico.CodigoDiagnostico}}</td>
+                                            <td class="centerMiddle">{{diagnostico.Diagnostico}}</td>
+                                            <td class="centerMiddle">{{diagnostico.EsCongenito?'SI':'NO'}}</td>
+                                            <td class="centerMiddle">{{diagnostico.GrupoDiagnostico}}</td>
+                                        </tr>
+                                        <tr *ngIf="diagnosticos.length == 0">
+                                            <td colspan="4">No existen resultados</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

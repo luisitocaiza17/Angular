@@ -1,0 +1,40 @@
+export class SobreFilter {
+    constructor(
+        public CodigoRegion?: string,
+        public CodigoProducto?: string,
+        public NumeroContrato?: number,
+        public NumeroSolicitud?: string,
+        public CodigoContrato?: number,
+        public FechaDesde?: Date,
+        public FechaHasta?: Date,
+        public NumeroSobre?: string,
+        public NumeroCedula?: string,
+        public UsuarioAsignado?: string,
+        public IngresadoPor?: string,
+        public IdEstado?: number,
+        public FechaAsignacion?: Date,
+        public IdSobre?: number,
+        public FechaAsignacionDesde?: Date,
+        public FechaAsignacionHasta?: Date,
+        public FechaLiquidacionDesde?: Date,
+        public FechaLiquidacionHasta?: Date,
+        public CodigoRegionOficina?: string,
+        public Devuelto?: boolean,
+        public SMSIngreso?: boolean,
+        public SMSDevolucion?: boolean,
+        public RequiereAutorizar?: boolean,
+        public AutorizadoConsultor?: boolean,
+        public Estados?: number[],
+        public OrdenarPorFechaDigitacion?: boolean,
+        public FechaFinConsultor?: Date,
+        public TipoDocumento?:number,
+        public FechaLiquidador?:Date,
+        public UsuarioAuditor?: string,
+        public UsuarioLiquidador?: string,
+        public UsuarioLogueado?: string,
+        public idClinica?: number,
+        public Clinica?: string
+
+        
+    ) { }
+}

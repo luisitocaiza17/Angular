@@ -1,0 +1,84 @@
+<div class="wrapper wrapper-content" *ngIf="componenteActivo == 'consulta'">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title"> Administración de Bonos </h5>
+        </div>
+        <div class="wrapper wrapper-content">
+            <div class="row">
+                <form #formularioBusqueda="ngForm">
+                    <div class="col-lg-12">
+                        <label class="col-lg-1 control-label" for="mes">Nombre:</label>
+                        <div class="m-b col-lg-3">
+                            <input type="text" placeholder="Nombre" id="nombre"
+                                [(ngModel)]="filtroBonos.Nombre" name="nombre" class="form-control" #nombre="ngModel"/>
+                        </div>
+                        <label class="col-lg-1 control-label" for="anio">Estado:</label>
+                        <div class="m-b col-lg-3">
+                            <select class="form-control" [(ngModel)]="filtroBonos.Estado" name="estado" #estado="ngModel">
+                                <option [ngValue]="undefined">Seleccione</option>
+                                <option [ngValue]="true">Activo</option>
+                                <option [ngValue]="false">Inactivo</option>
+                            </select>
+                        </div>
+                        <label class="col-lg-1 control-label" for="anio">Tipo:</label>
+                        <div class="m-b col-lg-3">
+                            <select class="form-control" [(ngModel)]="filtroBonos.Tipo" name="tipo" #tipo="ngModel">
+                                <option [ngValue]="undefined">Seleccione</option>
+                                <option *ngFor="let i of constantes.TIPOS_BONO" [ngValue]="i.Id">{{i.Nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 text-center">
+                        <button (click)="cargarBonos();" class="btn btn-w-m btn-success btn-sm" type="submit">
+                            <i class="fa fa-search"></i> Buscar
+                        </button>
+                        <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-eraser"></i> Limpiar </a>
+                        <a (click)="CambiarTipoOperacion('CREAR', -1); setearComponenteActivo('nuevo');" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-plus"></i> Nuevo </a>
+                    </div>
+                </form>
+                <div class="col-lg-12">
+                    <div class="dataTables_info">{{bonosService.paginationConstants.EncabezadoTabla}}</div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle"> Acciones </th>
+                                    <th class="centerMiddle"> Nombre </th>
+                                    <th class="centerMiddle"> Estado </th>
+                                    <th class="centerMiddle"> Tipo </th>
+                                </tr>
+                            </thead>
+                            <tbody class="no-borders selectableBodyTable" *ngFor="let i of bonos | paginate: {id : 'comisionesTable', itemsPerPage: bonosService.paginationConstants.pageSize,currentPage: bonosService.paginationConstants.pageNumber, totalItems: bonosService.paginationConstants.total};">
+                                <tr (click)="seleccionar(i)" [class.active]="i.Selected">
+                                    <td class="centerMiddle clickableColumn">
+                                        <a title="Editar">
+                                            <i (click)="CambiarTipoOperacion('EDITAR', i.Id); setearComponenteActivo('nuevo');" class="fa fa-pencil-square-o"></i>
+                                        </a>
+                                    </td>
+                                    <td class="centerMiddle"> {{i.Nombre}} </td>
+                                    <td class="centerMiddle"> {{i.Estado == 1 ? 'Activo' : 'Inactivo'}} </td>
+                                    <td class="centerMiddle"> {{ getNombreTipoBono(i.Tipo) }} </td>
+                                </tr>
+                            </tbody>
+                            <tfoot *ngIf="bonosService.paginationConstants.total == 0">
+                                <tr>
+                                    <td colspan="14" style="text-align: center;">No existen resultados</td>
+                                </tr>
+                            </tfoot> 
+                        </table>
+                        <pagination-controls id="comisionesTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="bonosService.paginationConstants.pageNumber=$event;pageChangedMovimientos();"></pagination-controls>
+                    </div>
+                </div>
+            </div>         
+        </div>      
+    </div> 
+</div>
+
+<div class="wrapper wrapper-content" *ngIf="componenteActivo == 'nuevo'">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">{{ operacion == 'CREAR' ? 'Creacion de nuevo Bono' : 'Edicion de Bono' }}</h5>
+        </div>
+        <app-gestionBonoComision [operacion]="operacion" [idBonoEditar]="idBonoEditar" (eventoGuardar)="setearComponenteActivo($event);"></app-gestionBonoComision>
+    </div>
+</div>

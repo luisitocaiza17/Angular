@@ -1,0 +1,21 @@
+<div class="col-lg-12">
+  <form class="col-lg-12 col-md-12" name="formularioArchivoSalida" role="form" #formularioArchivoSalida="ngForm">
+    <div class="row">
+      <div class="col-lg-4 col-md-4 text-left">Cargue un archivo de ejemplo:</div>
+      <input class="col-lg-4 col-md-4" type="file" [disabled] = "haveMaxFiles()" id="file" (change)="handleFileInput($event.target.files)"/>
+      <div class="col-lg-4 col-md-4">   
+        <div class="col-lg-12 col-md-12">
+          <button  class="btn btn-w-m btn-success btn-sm" 
+                  (click)="confirmarUploadFileToActivity()" [disabled] = "haveMaxFiles() || fileToUpload == null || !formularioArchivoSalida.form.valid" 
+                  name="Subir" 
+                  value="Subir">
+              <i class="fa fa-cogs"></i> Cargar Archivo
+          </button>
+        </div>
+        <div class="col-lg-12 col-md-12" *ngFor="let f of uploadFiles">
+          <a (click)="deleteFile(f)"><i class="fa fa-close" aria-hidden="true"></i></a> {{f.Name}}
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

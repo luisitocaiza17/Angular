@@ -1,0 +1,35 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Carga Estado Cuenta Bancaria</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a [routerLink]="['carga']">Home</a></li>
+            <li class="breadcrumb-item"> Estado Cuenta Bancaria </li>
+        </ol>
+    </div>
+
+    <div class="col-lg-10">
+        <br>
+        <br>
+    </div>
+
+    <div class="col-lg-12">
+        <ul id="ulMenuConsultas" class="nav nav-tabs" role="tablist">
+            <li class="nav-item" routerLinkActive="active">
+                <a [routerLink]="['carga']"> Cargar Estado Cuenta </a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+                <a [routerLink]="['configuracion']"> Configuración Carga</a>
+            </li>
+        </ul>    
+    </div>
+
+    <div class="col-lg-12">
+        <p></p>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="tab-content">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

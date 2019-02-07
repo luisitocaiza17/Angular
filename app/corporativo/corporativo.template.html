@@ -1,0 +1,166 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Corporativo</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a ng-reflect-router-link="" href="#/">Home</a>
+            </li>
+            <li class="breadcrumb-item">Corporativos</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-body no-padding">
+            <div class="panel-heading" (click)="colapsarTab()">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title" id="contratos" style="border-width:1px 0px 0px 0px;">
+                                <div class="row">
+                                    <div class="form-group col-lg-12 no-padding">
+                                        <label class="col-lg-1 control-label" for="RUC">RUC:</label>
+                                        <div class="col-lg-3" ng-reflect-klass="col-lg-3" ng-reflect-ng-class="[object Object]">
+                                            <input [(ngModel)]="filter.Ruc" class="form-control ng-untouched ng-pristine ng-valid" id="RUC" maxlength="13" minlength="13"
+                                                name="RUC" pattern="\d*" placeholder="RUC" type="text" ng-reflect-minlength="13"
+                                                ng-reflect-maxlength="13" ng-reflect-pattern="\d*" ng-reflect-name="RUC">
+                                            <div class="error" hidden="">
+
+                                            </div>
+                                        </div>
+
+
+                                        <label class="col-lg-1 control-label" for="razonSocial">Razón Social:</label>
+                                        <div class="m-b col-lg-3">
+                                            <input [(ngModel)]="filter.RazonSocial" class="form-control ng-untouched ng-pristine ng-valid" id="razonSocial" maxlength="100"
+                                                minlength="3" name="razonSocial" placeholder="Razón Social" type="text" ng-reflect-minlength="3"
+                                                ng-reflect-maxlength="100" ng-reflect-name="razonSocial">
+                                            <div class="error" hidden="">
+
+                                            </div>
+                                        </div>
+
+
+
+
+                                        <label class="col-lg-1 control-label" for="numeroEmpresa">Número Empresa:</label>
+                                        <div class="m-b col-lg-3">
+                                            <input [(ngModel)]="filter.Numero" class="form-control ng-untouched ng-pristine ng-valid" id="numeroEmpresa" maxlength="9"
+                                                minlength="1" name="numeroEmpresa" pattern="\d*" placeholder="Número Empresa"
+                                                type="text" ng-reflect-minlength="1" ng-reflect-maxlength="9" ng-reflect-pattern="\d*"
+                                                ng-reflect-name="numeroEmpresa">
+                                            <div class="error" hidden="">
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <button class="btn btn-w-m btn-success btn-sm" (click)="consultar();">
+                                            <i class="fa fa-search"></i> Buscar</button>
+                                        <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">
+                                            <i class="fa fa-eraser"></i> Limpiar</a>
+
+                                        <a class="btn btn-w-m btn-success btn-sm" click="corporativo/create(corporativo)">
+                                            <i class="fa fa-plus"></i> Crear</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="ibox-content" id="ResultadoBusquedaCorporativo" style="border-width:1px 0px 0px 0px;">
+                                <div class="dataTables_info">{{corporativoService.paginationConstants.EncabezadoTabla}}</div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="CenterMiddle">sel</th>
+                                                <th class="centerMiddle">Numero</th>
+                                                <th class="centerMiddle">Ruc</th>
+                                                <th class="centerMiddle">Razon Social</th>
+                                                <th class="centerMiddle">Nombre Grupo</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody *ngFor="let Corporativo of corporativos | paginate: { itemsPerPage: corporativoService.paginationConstants.pageSize,currentPage: corporativoService.paginationConstants.pageNumber, totalItems: corporativoService.paginationConstants.total} ; let i = index">
+
+
+                                            <tr>
+                                                <td rowspan="100%" class="centerMiddle clickableColumn" (click)="inicializarPanelCorporativo(Corporativo)">
+                                                    <i class="fa fa-file-text"></i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{Corporativo.Numero}}</td>
+                                                <td>{{Corporativo.Ruc}}</td>
+                                                <td class="alignR">{{Corporativo.RazonSocial}}</td>
+                                                <td>{{Corporativo.Nombre}}</td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="100%">
+                                                    <h4>Empresa</h4>
+                                                    <div class="col-lg-12">
+                                                        <label class="col-lg-2 no-padding">Numero Empresa:</label>
+                                                        <span class="col-lg-4">{{Corporativo.Numero}}</span>
+                                                        <label class="col-lg-2 no-padding">RUC:</label>
+                                                        <span class="col-lg-4">{{Corporativo.Ruc}}</span>
+
+                                                        <label class="col-lg-2 no-padding clearInfo">Razon Socia:</label>
+                                                        <span class="col-lg-4">{{Corporativo.RazonSocial}}</span>
+                                                        <label class="col-lg-2 no-padding">Nombre Grupo:</label>
+                                                        <span class="col-lg-4">{{Corporativo.Nombre}}</span>
+
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                        <tfoot *ngIf="corporativoService.paginationConstants.total == 0">
+                                            <tr>
+                                                <td colspan="100%" style="text-align: center;">No existen resultados</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <pagination-controls maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="corporativoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="" *ngIf="isDesplegar">
+                <div id="divPanelCorporativo" class="panel-collapse collapse">
+                    <div class="panel-body" style="padding-top:0px">
+                        <div id="panelCorporativo">
+                            <div class="row">
+                                <div class="col-lg-12 no-padding">
+                                    <corporativoForm></corporativoForm>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

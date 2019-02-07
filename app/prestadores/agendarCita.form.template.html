@@ -1,0 +1,96 @@
+<form #agendarPrestadoresVeris="ngForm">
+
+    <div class="col-lg-12 no-padding">
+        <label class="col-lg-2 control-label" for="slcPlan">Nombre:</label>
+        <span class="col-lg-4">{{prestadorKey.PrimerApellido+" "+prestadorKey.SegundoApellido+" "+prestadorKey.PrimerNombre+" "+prestadorKey.SegundoNombre}}</span>
+        <label class="col-lg-2 control-label" for="slcPlan">Especialidad:</label>
+        <span class="col-lg-4">{{prestadorKey.Especialidad}}</span>
+    </div>
+    <div class="col-lg-12 no-padding">
+        <label class="col-lg-2 control-label" for="slcPlan">Valor a pagar:</label>
+        <span class="col-lg-4">&#36;{{prestadorKey.ValorAPagar}}</span>
+        <label class="col-lg-2 control-label" for="slcPlan">Central Medica:</label>
+        <span class="col-lg-4">{{prestadorKey.CentralMedical}}</span>
+    </div>
+    <div class="col-lg-12 no-padding">
+        <label class="col-lg-2 control-label" for="slcPlan">Horario:</label>
+        <span class="col-lg-4">{{prestadorKey.Horario}}</span>
+        <label class="col-lg-2 control-label" for="slcPlan">Ciudad:</label>
+        <span class="col-lg-4">{{prestadorKey.Ciudad}}</span>
+
+    </div>
+    <div class="col-lg-12 no-padding">
+        <label class="col-lg-2 control-label" for="slcPlan">Sector:</label>
+        <span class="col-lg-4">{{prestadorKey.Sector}}</span>
+        <label class="col-lg-2 control-label" for="slcPlan">Calificacion:</label>
+        <span class="col-lg-4">{{prestadorKey.Ipn}}</span>
+    </div>
+
+    <div class="col-lg-6">
+
+        <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="prepararAgenda();" data-toggle="modal" data-target="#horarioShowModal"
+            title="Detalles"><i class="fa fa-address-book-o" ></i> Agendar            
+                    </button>
+
+        <button class="btn btn-w-m btn-success btn-sm" (click)="salir();">
+                <i class="fa fa-sign-out"></i>Salir</button>
+    </div>
+
+</form>
+
+
+<div class="modal inmodal fade" id="horarioShowModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="col-lg-12 m-t-sm no-padding">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Seleccione Horario</h5>
+                </div>
+                <div class="panel-body no-padding m-t-sm">
+                    <div class="col-md-12 no-padding m-b-md">
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-1 control-label" for="slcPlan">Nombre:</label>
+                            <span class="col-lg-4">{{prestadorKey.PrimerApellido+" "+prestadorKey.SegundoApellido+" "+prestadorKey.PrimerNombre+" "+prestadorKey.SegundoNombre}}</span>
+                            <label class="col-lg-2 control-label" for="slcPlan">Especialidad:</label>
+                            <span class="col-lg-4">{{prestadorKey.Especialidad}}</span>
+
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-1 control-label" for="slcPlan">Sector:</label>
+                            <span class="col-lg-4">{{prestadorKey.Sector}}</span>
+                        </div>
+
+                        <div class="col-md-12 m-t-sm m-b-md">
+                            <div style="border-bottom: 1px solid #d1d5d9;"></div>
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-1 control-label" for="fecha">Fecha:</label>
+                            <div class="m-b col-lg-4">
+                                <datetime [timepicker]="false" id="fecha" [(ngModel)]="agendaFilter.Fecha" [datepicker]="datepickerOpts" (ngModelChange)="prepararAgenda()"></datetime>
+                            </div>
+
+                            <label class="col-lg-1 control-label" for="codigoHorario">Horarios:</label>
+                            <div class="m-b col-lg-4">
+                                <select class="form-control" [(ngModel)]="citaFilter.IdIntervalo" id="codigoHorario" name="codigoHorario" #codigoHorario="ngModel">
+                                            <option [value]="undefined" selected>Seleccione..</option>
+                                            <option *ngFor="let agenda of agendas" [value]="agenda.IdIntervalo">{{agenda.HoraInicio+" - "+agenda.HoraFin}}</option>
+                                    </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-12 alignR">
+                            <button class="btn btn-w-m btn-success btn-sm" type="button" (click)="confirmarAgenda();" [disabled]="citaFilter.IdIntervalo == undefined"
+                                data-toggle="modal" title="Confirmar"><i class="fa fa-address-book-o" data-dismiss="modal"></i> Confirmar             
+                                    </button>
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

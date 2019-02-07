@@ -1,0 +1,125 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Agregar Nuevo Valor por Punto</h5>
+        </div>
+        <div class="panel-body">
+            <form name="agregarPuntoValorForm" role="form" #agregarPuntoValorForm="ngForm">
+                <fieldset class="col-lg-12">
+
+                    <legend class="info">VALOR POR PUNTO</legend>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label">Nivel:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="number" placeholder="Ingrese un Nivel" id="nivel" name="nivel" [(ngModel)]="valorPunto.Nivel" class="heigth25 form-control"
+                            #nombre="ngModel" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label">Tipo:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control m-b" id="slcTipoValorPunto" name="slcTipoValorPunto" [(ngModel)]="valorPunto.Tipo" #slcTipoValorPunto="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1" selected>Individual</option>
+                            <option [ngValue]="2" selected>Coorprativo</option>
+                        </select>
+                        <div [hidden]="slcTipoValorPunto.valid" class="error">
+                            <p *ngIf="slcTipoValorPunto.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-lg-12">
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label">Grupo:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="descripcionGrupo" id="codigoGrupoArancel" name="codigoGrupoArancel" class="heigth25 form-control col-lg-12"
+                            [disabled]="true" />
+                        <a (click)="abrirModalGrupoArancel();">
+                            <i class="fa fa-user-md"></i> {{descripcionGrupo==undefined || descripcionGrupo==null || descripcionGrupo==""? 'Seleccionar'
+                            : 'Cambiar'}}
+                        </a>
+                    </div> 
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label">Valor:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="number" placeholder="Ingrese un Valor" id="valor" name="valor" [(ngModel)]="valorPunto.Valor" class="heigth25 form-control"
+                            #nombre="ngModel" />
+                    </div>
+
+                </fieldset>
+                <fieldset class="col-lg-12">
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label">Fecha Inicio Vigencia:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaInicio" name="fechaInicio" [(ngModel)]="valorPunto.FechaDesde"
+                            [datepicker]="datepickerOpts"></datetime>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label">Fecha Fin Vigencia:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaFin" name="fechaFin" [(ngModel)]="valorPunto.FechaHasta"
+                            [datepicker]="datepickerOpts"></datetime>
+                    </div>
+
+                </fieldset>
+
+                <div class="col-lg-12 no-padding">
+                    <button [disabled]="!agregarPuntoValorForm.form.valid" class="btn btn-w-m btn-success btn-sm" (click)="crearValorPunto();">
+                        <i class="fa fa-save"></i> Crear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal de grupoArancels de Anulación -->
+<div id="consultorModalDiv">
+    <div class="modal inmodal fade" id="grupoArancelViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Listado de Grupos de Arancel</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaGrupoArancel" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Código</th>
+                                            <th class="centerMiddle">Descipción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyGrupoArancel" class="no-borders selectableBodyTable">
+                                        <tr id="grupoArancel{{i}}" [class.active]="grupoArancel.Selected" title="{{!grupoArancel.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!grupoArancel.Selected ? seleccionarGrupoArancel(grupoArancel) : return;"
+                                            *ngFor="let grupoArancel of grupoAranceles; let i = index">
+                                            <td class="centerMiddle">{{grupoArancel.Id}}</td>
+                                            <td class="centerMiddle">{{grupoArancel.Valor}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

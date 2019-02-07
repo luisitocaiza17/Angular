@@ -1,0 +1,615 @@
+<div class="col-lg-12 no-padding">
+    <ul class="nav nav-tabs nestedTabs" role="tablist">
+        <li class="nav-item active nestedTab">
+            <a id="datosGeneralesTab" class="nav-link active" data-toggle="tab" href="#datosGenerales" role="tab">Datos
+                Generales</a>
+        </li>
+        <li class="nav-item nestedTab">
+            <a id="pagoInteligenteTab" class="nav-link" data-toggle="tab" href="#pagoInteligente" role="tab">Pago
+                Inteligente</a>
+        </li>
+    </ul>
+    <div class="tab-content nestedTabs">
+        <div class="tab-pane active" id="datosGenerales" role="tabpanel">
+            <div class="panel panel-success">
+                <div class="panel-body panelDatos">
+                    <div class="col-md-12 no-padding">
+                        <div class="col-md-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Region:</label>
+                            <span class="col-lg-2">{{contratoKey.CodigoRegion}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Producto:</label>
+                            <span class="col-lg-2">{{contratoKey.CodigoProducto}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">No Contrato:</label>
+                            <span class="col-lg-2">{{contratoKey.NumeroContrato}}</span>
+                        </div>
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Cédula:</label>
+                            <span class="col-lg-2">{{contratoKey.CedulaTitular}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombres y Apellidos:</label>
+                            <span class="col-lg-2">{{contratoKey.NombreTitular}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Plan:</label>
+                            <span class="col-lg-2">{{contratoKey.Plan}}</span>
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Versión:</label>
+                            <span class="col-lg-2">{{contratoKey.VersionPlan}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Fecha Inicio:</label>
+                            <span class="col-lg-2">{{contratoKey.FechaInicio | date: 'dd/MM/yyyy'}}</span>
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Fecha Fin:</label>
+                            <span class="col-lg-2">{{contratoKey.FechaFin | date: 'dd/MM/yyyy'}}</span>
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Estado:</label>
+                            <span class="col-lg-2">{{contratoKey.ContratoEstado}}</span>
+
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombre Plan:</label>
+                            <span class="col-lg-2">{{contratoKey.NombrePlan}}</span>
+
+                            <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Numero Sobre:</label>
+                            <span class="col-lg-2">{{sobre.NumeroSobre}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="pagoInteligente" role="tabpanel">
+            <div class="panel panel-success">
+                <div class="panel-body panelDatos">
+                    <div class="col-md-12 no-padding">
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Numero Cuenta:</label>
+                            <span class="col-lg-3">{{contratoKey.NumeroCuentaCredito}}</span>
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Tipo Cuenta:</label>
+                            <span class="col-lg-3" *ngIf="contratoKey.TipoCuentaCredito ==1">Cuenta Corriente</span>
+                            <span class="col-lg-3" *ngIf="contratoKey.TipoCuentaCredito ==2">Cuenta de Ahorro</span>
+                            <span class="col-lg-3" *ngIf="contratoKey.TipoCuentaCredito ==3">Tarjeta</span>
+                            <span class="col-lg-3" *ngIf="contratoKey.TipoCuentaCredito ==4">Pago Directo</span>
+                        </div>
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Banco:</label>
+                            <span class="col-lg-3">{{contratoKey.NombreBancoPI}}</span>
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Email:</label>
+                            <span class="col-lg-3">{{contratoKey.EmailDomicilio}}</span>
+                        </div>
+
+                        <div class="col-lg-12 no-padding">
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Celular:</label>
+                            <span class="col-lg-3">{{contratoKey.Celular}}</span>
+                            <label class="col-lg-3 control-label no-padding-left" for="slcPlan">Persona Contacto:</label>
+                            <span class="col-lg-3">{{sobre.PersonaContacto}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="min-height: 70px;">
+
+    <div class="col-xs-12 no-padding m-t-xs m-b-sm">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title">ACTUALIZACIÓN DEL SOBRE</h5>
+            </div>
+
+            <div class="panel-body">
+                <fieldset class="col-lg-12">
+                    <legend class="info">ACTUALIZACIÓN DE LOS DATOS</legend>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Número de Sobre:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="sobre.NumeroSobre" id="numeroSobre" name="numeroSobre" class="heigth25 form-control col-lg-12"
+                            [disabled]="true" />
+                    </div>
+
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Valor Presentado:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="number" [(ngModel)]="sobre.ValorPresentado" id="valorPresentado" name="valorPresentado"
+                            class="heigth25 form-control col-lg-12" [disabled]="true" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Persona Contacto:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="sobre.PersonaContacto" id="personaContacto" name="personaContacto"
+                            class="heigth25 form-control col-lg-12" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Celular:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="sobre.Celular" id="celular" name="celular" class="heigth25 form-control col-lg-12" />
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Región:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control m-b" id="slcRegion" name="slcRegion" [(ngModel)]="sobre.IdRegionEstablecimiento"
+                            #slcRegion="ngModel" (change)="cargarEstablecimientos()">
+                            <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                            <option *ngFor="let region of regiones" [value]="region.Id">{{region.Valor}}</option>
+                        </select>
+                        <div [hidden]="slcRegion.valid" class="error">
+                            <p *ngIf="slcRegion.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Punto Recepción:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control m-b" id="slcEstablecimiento" name="slcEstablecimiento"
+                            [(ngModel)]="sobre.IdEstablecimiento" #slcEstablecimiento="ngModel">
+                            <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                            <option *ngFor="let establecimiento of establecimientosbyRegion" [value]="establecimiento.Id">{{establecimiento.Valor}}</option>
+                        </select>
+                        <div [hidden]="slcEstablecimiento.valid" class="error">
+                            <p *ngIf="slcEstablecimiento.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <legend class="info col-lg-12">BENEFICIARIOS</legend>
+                <div id="divBusquedaMedicos" class="ibox-content" style="border-width:0px 0px 0px 0px;">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle">Sel:</th>
+                                    <th class="centerMiddle">Beneficiario:</th>
+                                    <th class="centerMiddle">Tipo Identificación</th>
+                                    <th class="centerMiddle">Identificación</th>
+                                    <th class="centerMiddle">Género</th>
+                                    <th class="centerMiddle">Estado Beneficiario</th>
+                                    <th class="centerMiddle">Estado en Sobre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let detalleSobre of detalleSobreTemporal">
+                                    <td class="centerMiddle clickableColumn">
+                                        <a title="Clic para procesar al Beneficiario" *ngIf="detalleSobre.IdEstado == undefined">
+                                            <i (click)="abrirModalDetalleSobre(detalleSobre)" class="fa fa-address-book-o"></i>
+                                        </a>
+                                        <a title="Clic para actualizar al Beneficiario" *ngIf="detalleSobre.IdEstado != undefined">
+                                            <i (click)="abrirModalDetalleSobre(detalleSobre)" class="fa fa-refresh"></i>
+                                        </a>
+                                        <a title="Clic para procesar limpiar Registro del beneficiario">
+                                            <i (click)="limpiarRegistroDetalleSobre(detalleSobre)" class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
+                                    <td>{{detalleSobre.NombrePersona}}</td>
+                                    <td>{{detalleSobre.TipoDocumento}}</td>
+                                    <td>{{detalleSobre.DocumentoPersona}}</td>
+                                    <td>{{detalleSobre.GeneroPersona}}</td>
+                                    <td>{{detalleSobre.EstadoPersona}}</td>
+                                    <td *ngIf="detalleSobre.DescripcionEstado == undefined">NO PROCESADO</td>
+                                    <td *ngIf="detalleSobre.DescripcionEstado != undefined">{{detalleSobre.DescripcionEstado}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot *ngIf="detalleSobreTemporal.length == 0">
+                                <tr>
+                                    <td colspan="14" style="text-align: center;">No existen Beneficiarios</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+
+                <fieldset class="col-lg-12 no-padding">
+                    <legend class="info">RECUERDE</legend>
+
+                    <div class="col-lg-12 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="seleccionNota1" id="seleccionNota1" [checked]="sobre.Nota1"
+                            [(ngModel)]="sobre.Nota1" #seleccionNota1="ngModel">
+                        <label class="control-label" for="seleccionNota1">
+                            {{constantesSobres.DESCRIPCION_NOTA_1}}
+                        </label>
+                    </div>
+
+                    <div class="col-lg-12 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="seleccionNota2" id="seleccionNota2" [checked]="sobre.Nota2"
+                            [(ngModel)]="sobre.Nota2" #seleccionNota2="ngModel">
+                        <label class="control-label" for="seleccionNota2">
+                            {{constantesSobres.DESCRIPCION_NOTA_2}}
+                        </label>
+                    </div>
+
+                    <div class="col-lg-12 checkbox icheck-primary" style="padding-left: 15px!important;">
+                        <input type="checkbox" name="seleccionNota3" id="seleccionNota3" [checked]="sobre.Nota3"
+                            [(ngModel)]="sobre.Nota3" #seleccionNota3="ngModel">
+                        <label class="control-label" for="seleccionNota3">
+                            {{constantesSobres.DESCRIPCION_NOTA_3}}
+                        </label>
+                    </div>
+                </fieldset>
+
+                <div class="col-lg-12 no-padding">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="guardar();" [disabled]="sobre.DetalleSobre.length == 0">
+                        <i class="fa fa-save"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalle -->
+<div id="detalleSobreModalDiv">
+    <div class="modal inmodal fade" id="detalleSobreViewModal" tabindex="-1" role="dialog" aria-hidden="false"
+        data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Detalle del Sobre</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <form name="prestadoresSobresForm" role="form" #prestadoresSobresForm="ngForm">
+
+                                <fieldset class="col-lg-12 m-b">
+                                    <legend class="info">DETALLE DEL SOBRE</legend>
+
+                                    <div class="col-lg-1" style="padding-left:10px !important">
+                                        <label class="control-label">Código:</label>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input type="text" id="codigoSobrePersona" name="codigoSobrePersona" class="heigth25 form-control col-lg-12"
+                                            [(ngModel)]="detalleSobreSelected.NumeroSolicitudDetalle" [disabled]="true" />
+                                    </div>
+
+                                    <div class="col-lg-1" style="padding-left:10px !important">
+                                        <label class="control-label">Valor:</label>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input type="number" id="valorBonificado" name="valorBonificado" class="heigth25 form-control col-lg-12"
+                                            min="0" step="1" [(ngModel)]="detalleSobreSelected.ValorPresentadoDetalle" />
+                                        <div class="" *ngIf="detalleSobreSelected.ValorPresentadoDetalle <= 0">
+                                            <label class="col-md-12 no-padding " style="color: #ff0000;font-weight: normal;font-size: smaller;">
+                                                El valor presentado debe se mayor a cero
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-1" style="padding-left:10px !important">
+                                        <label class="control-label padding-left">Estado:</label>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <select required class="form-select-control" id="seleccionEstadoSobre" name="seleccionEstadoSobre"
+                                            [(ngModel)]="detalleSobreSelected.IdEstado" #seleccionEstadoSobre="ngModel"
+                                            (change)="desabilitaCambiarEstado();">
+                                            <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                                            <option *ngFor="let estado of estados" [value]="estado.Id">{{estado.Valor}}</option>
+                                        </select>
+                                        <div [hidden]="seleccionEstadoSobre.valid" class="error">
+                                            <p *ngIf="seleccionEstadoSobre.errors?.required">Campo Requerido</p>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="col-lg-12 m-b">
+                                    <div class="col-lg-1" style="padding-left:10px !important">
+                                        <label class="control-labe">Cobertura:</label>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <select required class="form-select-control col-lg-12" id="seleccionTipoCobertura"
+                                            name="seleccionTipoCobertura" [(ngModel)]="detalleSobreSelected.IdTipoCobertura"
+                                            #seleccionTipoCobertura="ngModel" (change)="crearCodigoSobrePersona();"
+                                            [disabled]="detalleSobreSelected.IdConstitucion != null || detalleSobreSelected.Migrado">
+                                            <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                                            <option *ngFor="let tipoCobertura of tiposCobertura" [value]="tipoCobertura.IdTipoCobertura">{{tipoCobertura.NombreTipoCobertura}}</option>
+                                        </select>
+                                        <div [hidden]="seleccionTipoCobertura.valid" class="error">
+                                            <p *ngIf="seleccionTipoCobertura.errors?.required">Campo Requerido</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-1" style="padding-left:10px !important">
+                                        <label class="control-label">Tiene Novedad:</label>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <select required class="form-select-control" id="seleccionNovedad" name="seleccionNovedad"
+                                            [(ngModel)]="detalleSobreSelected.Novedad" #seleccionNovedad="ngModel"
+                                            (change)="desabilitaCambiaTieneNovedad();" [disabled]="detalleSobreSelected.IdEstado == constantesSobres.CODIGO_ESTADO_SOBRE_QPRA || detalleSobreSelected.IdEstado == constantesSobres.CODIGO_ESTADO_SOBRE_CODIFICADO">
+                                            <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                                            <option [ngValue]="false" selected>No</option>
+                                            <option [ngValue]="true">Si</option>
+                                        </select>
+                                        <div [hidden]="seleccionNovedad.valid" class="error">
+                                            <p *ngIf="seleccionNovedad.errors?.required">Campo Requerido</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-1" style="padding-left:10px !important">
+                                        <label class="control-label ">Escoja la Novedad:</label>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <select required class="form-select-control m-b" id="seleccionIdNovedad" name="seleccionIdNovedad"
+                                            [(ngModel)]="detalleSobreSelected.IdNovedad" #seleccionIdNovedad="ngModel"
+                                            [disabled]="!detalleSobreSelected.Novedad || detalleSobreSelected.IdEstado == constantesSobres.CODIGO_ESTADO_SOBRE_QPRA"
+                                            (change)="desabilitaCambiarNovedad();">
+                                            <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                                            <option *ngFor="let nov of novedad" [value]="nov.Id">{{nov.Valor}}</option>
+                                        </select>
+                                        <div [hidden]="seleccionIdNovedad.valid" class="error">
+                                            <p *ngIf="seleccionIdNovedad.errors?.required">Campo Requerido</p>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="col-lg-12 m-b">
+                                    <div class="col-lg-1" style="padding-left:10px !important">
+                                        <label class="control-label ">Observaciones:</label>
+                                    </div>
+                                    <div class="col-lg-11">
+                                        <input type="text" id="observacionesGenerales" name="observacionesGenerales"
+                                            class="heigth25 form-control col-lg-12" [(ngModel)]="detalleSobreSelected.ObservacionesConsultor" />
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="col-lg-12" *ngIf="detalleSobreSelected.IdEstado == constantesSobres.CODIGO_ESTADO_SOBRE_QPRA || ( detalleSobreSelected.IdTipoDevolucion != constantesSobres.ID_TIPO_DEVOLUCION_PARCIAL &&   detalleSobreSelected.IdTipoDevolucion != undefined )">
+                                    <div class="col-lg-1" style="padding-left:10px !important">
+                                        <label class="control-label ">Número Qpra:</label>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <input type="text" id="numeroQpra" name="numeroQpra" class="heigth25 form-control col-lg-12"
+                                            [(ngModel)]="detalleSobreSelected.NumeroQpra" />
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="col-lg-12 m-b">
+                                    <legend class="info">DEVOLUCIÓN</legend>
+
+                                    <div class="col-lg-2" style="padding-left:10px !important">
+                                        <label class="control-label">Tipo de devolución:</label>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <select required class="form-select-control col-lg-12" id="seleccionTipoDevolucion"
+                                            name="seleccionTipoDevolucion" [(ngModel)]="detalleSobreSelected.IdTipoDevolucion"
+                                            #seleccionTipoDevolucion="ngModel" (change)="desabilitaCambiaTipoDevolucion();"
+                                            [disabled]="detalleSobreSelected.IdNovedad != constantesSobres.ID_NOVEDAD_DEVOLUCION">
+                                            <option [value]="undefined || null" selected>Seleccione...</option>
+                                            <option *ngFor="let tipoDevolucion of tiposDevolucion" [value]="tipoDevolucion.IdTipoDevolucion">{{tipoDevolucion.NombreTipoDevolucion}}</option>
+                                        </select>
+                                        <div [hidden]="seleccionTipoDevolucion.valid" class="error">
+                                            <p *ngIf="seleccionTipoDevolucion.errors?.required">Campo Requerido</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-2" style="padding-left:10px !important">
+                                        <label class="control-label">Tipo de Carta:</label>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <select required class="form-select-control col-lg-12" id="seleccionTipoCarta"
+                                            name="seleccionTipoCarta" [(ngModel)]="detalleSobreSelected.IdTipoCarta"
+                                            #seleccionTipoCarta="ngModel" [disabled]="detalleSobreSelected.IdNovedad != constantesSobres.ID_NOVEDAD_DEVOLUCION || detalleSobreSelected.IdTipoDevolucion == constantesSobres.ID_TIPO_DEVOLUCION_QPRA"
+                                            (change)="desabilitaCambiaTipoCarta();">
+                                            <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                                            <option *ngFor="let tipo of tipoCarta" [value]="tipo.Id">{{tipo.Valor}}</option>
+                                        </select>
+                                        <div [hidden]="seleccionTipoCarta.valid" class="error">
+                                            <p *ngIf="seleccionTipoCarta.errors?.required">Campo Requerido</p>
+                                        </div>
+                                    </div>
+
+                                </fieldset>
+                                <fieldset class="col-lg-12 m-b">
+                                    <div class="col-lg-2" style="padding-left:10px !important">
+                                        <label class="control-label ">Motivo devolución:</label>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <select required class="form-select-control col-lg-12" id="seleccionMotivoDevolucion"
+                                            name="seleccionMotivoDevolucion" [(ngModel)]="detalleSobreSelected.IdMotivoDevolucion"
+                                            #seleccionMotivoDevolucion="ngModel" [disabled]="detalleSobreSelected.IdNovedad != constantesSobres.ID_NOVEDAD_DEVOLUCION || detalleSobreSelected.IdTipoCarta == constantesSobres.ID_TIPO_CARTA_NEGATIVA_COBERTURA || detalleSobreSelected.IdTipoDevolucion == constantesSobres.ID_TIPO_DEVOLUCION_QPRA"
+                                            (change)="desabilitaMotivoDevolucion();">
+                                            <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                                            <option *ngFor="let motivo of motivosDevolucion" [value]="motivo.IdMotivoDevolucion">{{motivo.NombreMotivo}}</option>
+                                        </select>
+
+                                        <div [hidden]="seleccionMotivoDevolucion.valid" class="error">
+                                            <p *ngIf="seleccionMotivoDevolucion.errors?.required">Campo Requerido</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-2" style="padding-left:10px !important">
+                                        <label class="control-label ">Motivo Negativa:</label>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <select required class="form-select-control col-lg-12" id="seleccionMotivoNegativa"
+                                            name="seleccionMotivoNegativa" [(ngModel)]="detalleSobreSelected.IdMotivoNegativa"
+                                            #seleccionMotivoNegativa="ngModel" [disabled]="detalleSobreSelected.IdNovedad != constantesSobres.ID_NOVEDAD_DEVOLUCION || detalleSobreSelected.IdTipoCarta == constantesSobres.ID_TIPO_CARTA_DEVOLUCION || detalleSobreSelected.IdTipoDevolucion == constantesSobres.ID_TIPO_DEVOLUCION_QPRA"
+                                            (change)="desabilitaMotivoNegativa();">
+                                            <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                                            <option *ngFor="let motivoN of motivosDevolucionNegativa" [value]="motivoN.IdMotivoDevolucion">{{motivoN.NombreMotivo}}</option>
+                                        </select>
+
+                                        <div [hidden]="seleccionMotivoNegativa.valid" class="error">
+                                            <p *ngIf="seleccionMotivoNegativa.errors?.required">Campo Requerido</p>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="col-lg-12 m-b">
+                                    <div class="col-lg-6" style="padding-left:10px !important">
+                                        <legend class="info">DETALLE 1</legend>
+
+                                        <div class="col-lg-4 m-b" style="padding-left:10px !important">
+                                            <label class="control-label ">
+                                                <a title="Clic para ver el Detalle de la Cláusula de Devolución">
+                                                    <i (click)="abrirModalLiteralesClausula(detalleSobreSelected.IdClausulaDevolucion, constantesSobres.ID_TIPO_CARTA_DEVOLUCION)"
+                                                        class="fa fa-eye" *ngIf="detalleSobreSelected.IdClausulaDevolucion != undefined &&  clausulasDevolucion.length != 0">
+                                                    </i>
+                                                </a>
+                                                Cláusula Dev:
+                                            </label>
+                                        </div>
+
+                                        <div class="col-lg-8 m-b">
+                                            <select required class="form-select-control col-lg-12" id="clausulaDevolucion"
+                                                name="clausulaDevolucion" [(ngModel)]="detalleSobreSelected.IdClausulaDevolucion"
+                                                #clausulaDevolucion="ngModel" [disabled]="detalleSobreSelected.IdNovedad != constantesSobres.ID_NOVEDAD_DEVOLUCION || detalleSobreSelected.IdTipoCarta == constantesSobres.ID_TIPO_CARTA_NEGATIVA_COBERTURA || clausulasDevolucion.length == 0">
+                                                <option [ngValue]="
+                                                undefined || null"
+                                                    selected>Seleccione...</option>
+                                                <option *ngFor="let clausula of clausulasDevolucion" [value]="clausula.IdClausula">{{clausula.TituloClausula}}</option>
+                                            </select>
+
+                                            <div [hidden]="clausulaDevolucion.valid" class="error">
+                                                <p *ngIf="clausulaDevolucion.errors?.required">Campo Requerido</p>
+                                            </div>
+                                        </div>
+
+                                        <textarea rows="5" placeholder="Detalle de devolución y cláusula del contrato."
+                                            id="motivoDevolucion2" name="motivoDevolucion2" class="form-control"
+                                            [(ngModel)]="detalleSobreSelected.ClausulaDevolucion" style="resize: none;"
+                                            [disabled]="detalleSobreSelected.IdNovedad != constantesSobres.ID_NOVEDAD_DEVOLUCION || detalleSobreSelected.IdTipoCarta == constantesSobres.ID_TIPO_CARTA_NEGATIVA_COBERTURA">
+                                    </textarea>
+                                    </div>
+
+                                    <div class="col-lg-6" style="padding-left:10px !important">
+                                        <legend class="info">DETALLE 2</legend>
+
+                                        <div class="col-lg-4 m-b" style="padding-left:10px !important">
+                                            <label class="control-label">
+                                                <a title="Clic para ver el Detalle de la Cláusula de Negativa" *ngIf="detalleSobreSelected.IdClausulaNegativa != undefined &&  clausulasNegativa.length != 0">
+                                                    <i (click)="abrirModalLiteralesClausula(detalleSobreSelected.IdClausulaNegativa, constantesSobres.ID_TIPO_CARTA_NEGATIVA_COBERTURA)"
+                                                        class="fa fa-eye"></i>
+                                                </a>
+                                                Cláusula Negativa:
+                                            </label>
+                                        </div>
+
+                                        <div class="col-lg-8 m-b">
+                                            <select required class="form-select-control col-lg-12" id="clausulaNegativa"
+                                                name="clausulaNegativa" [(ngModel)]="detalleSobreSelected.IdClausulaNegativa"
+                                                #clausulaNegativa="ngModel" [disabled]="detalleSobreSelected.IdNovedad != constantesSobres.ID_NOVEDAD_DEVOLUCION || detalleSobreSelected.IdTipoCarta == constantesSobres.ID_TIPO_CARTA_DEVOLUCION || clausulasNegativa.length == 0">
+                                                <option [ngValue]="undefined || null" selected>Seleccione...</option>
+                                                <option *ngFor="let clausula of clausulasNegativa" [value]="clausula.IdClausula">{{clausula.TituloClausula}}</option>
+                                            </select>
+
+                                            <div [hidden]="clausulaNegativa.valid" class="error">
+                                                <p *ngIf="clausulaNegativa.errors?.required">Campo Requerido</p>
+                                            </div>
+                                        </div>
+                                        <textarea rows="5" placeholder="Detalle de la negativa y cláusula del contrato."
+                                            id="observacionesSobre" name="observacionesSobre" class="form-control"
+                                            [(ngModel)]="detalleSobreSelected.ClausulaNegativa" style="resize: none;"
+                                            [disabled]="detalleSobreSelected.IdNovedad != constantesSobres.ID_NOVEDAD_DEVOLUCION || detalleSobreSelected.IdTipoCarta == constantesSobres.ID_TIPO_CARTA_DEVOLUCION">
+                                    </textarea>
+                                    </div>
+                                </fieldset>
+
+                                <div class="col-lg-12 no-padding">
+                                    <button class="btn btn-w-m btn-success btn-sm" (click)="guardarDetalle();"
+                                        [disabled]="!prestadoresSobresForm.form.valid">
+                                        <i class="fa fa-save"></i> Guardar Detalle
+                                    </button>
+
+                                    <button *ngIf="detalleSobreSelected.IdEstado == constantesSobres.CODIGO_ESTADO_SOBRE_QPRA ||  (detalleSobreSelected.IdTipoDevolucion != constantesSobres.ID_TIPO_DEVOLUCION_PARCIAL && detalleSobreSelected.IdTipoDevolucion != undefined)"
+                                        class="btn btn-w-m btn-success btn-sm" (click)="irQpra();">
+                                        QPRA
+                                    </button>
+
+                                    <button class="btn btn-w-m btn-success btn-sm" (click)="cancelarDetalle();">
+                                        <i class="fa fa-save"></i> Cancelar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalClausula">
+    <div class="modal inmodal fade" id="modalLiteralClausulaViewModal" tabindex="-1" role="dialog" aria-hidden="false"
+        data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Literales de la Cláusula</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <fieldset class="col-lg-12">
+                                <legend class="info">{{clausulaSelected.TituloClausula}}</legend>
+                            </fieldset>
+
+                            <div class="dataTables_info">
+                                <p style="text-align: justify;" *ngIf="clausulaSelected.DetalleClausula!='' && clausulaSelected.DetalleClausula != undefined">{{clausulaSelected.DetalleClausula}}
+                                </p>
+                                <p style="text-align: justify;" *ngIf="clausulaSelected.DetalleClausula=='' || clausulaSelected.DetalleClausula == undefined">No
+                                    Posee Detalle </p>
+                            </div>
+
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;" *ngIf="clausulaSelected.Literales.length > 0">
+                                <table id="tablaLiterales" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Sel:</th>
+                                            <th class="centerMiddle">Literal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyLiterales" class="no-borders selectableBodyTable" *ngFor="let literal of clausulaSelected.Literales">
+                                        <tr>
+                                            <td class="centerMiddle clickableColumn">
+                                                <input type="checkbox" [checked]="literal.Selected" (change)="actualizarLiterales(literal);" />
+                                            </td>
+                                            <td class="centerMiddle clickableColumn" style="text-align: justify;">{{literal.LiteralClausula}}</td>
+                                        </tr>
+
+                                    </tbody>
+                                    <tfoot *ngIf="clausulaSelected.Literales.length == 0">
+                                        <tr>
+                                            <td colspan="2" style="text-align: center;">
+                                                No extisten literales para la cláusula
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <div class="col-lg-12 no-padding">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="guardarLiterales();">
+                                    <i class="fa fa-save"></i> Ok
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

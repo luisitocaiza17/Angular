@@ -1,0 +1,1292 @@
+<!-- NAVEGACIÓN SUPERIOR -->
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Empresa</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Corporativo</li>
+            <li class="breadcrumb-item active">Empresa</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+
+
+<!-- PANEL BUSCADOR -->
+<div class="wrapper wrapper-content" *ngIf="!showEditor">
+    <div class="ibox float-e-margins">
+
+        <!-- CRITERIOS DE BÚSQUEDA -->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+
+            <fieldset>
+                <legend>Criterios de Búsqueda</legend>
+
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-4">
+                    <input type="text" placeholder="Buscar por Ruc"
+                           [(ngModel)]="filter.Ruc" class="form-control"
+                    />
+                </div>
+
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-4">
+                    <input type="text" placeholder="Buscar por Razón Social"
+                           [(ngModel)]="filter.RazonSocial" class="form-control"
+                    />
+
+                </div>
+
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-4">
+                    <input type="text" placeholder="Buscar por Número Empresa"
+                           [(ngModel)]="filter.Numero" class="form-control"
+                    />
+
+                </div>
+
+            </fieldset>
+
+
+            <!-- BOTÓN DE BUSCAR -->
+            <div class="form-group col-lg-12 no-padding">
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="nuevo()">
+                    <i class="fa fa-plus"></i> Nuevo
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="limpiarBusqueda()">
+                    <i class="fa fa-eraser"></i> Limpiar
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="traerTodos()">
+                    <i class="fa fa-search"></i> Traer todos
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        [disabled]="!puedeBuscar()" (click)="buscar()">
+                    <i class="fa fa-search"></i> Filtrar
+                </button>
+            </div>
+
+        </div>
+
+        <!-- GRILLA DE RESULTADO DE BÚSQUEDA -->
+        <div class="ibox-title" id="ResultadoBusquedaCorporativo" style="border-width:1px 0px 0px 0px;">
+            <div class="dataTables_info">{{corporativoService.paginationConstants.EncabezadoTabla}}</div>
+            <div class="table-responsive">
+                <table id="tablaListado" class="table table-striped table-bordered table-hover dataTable">
+                    <tbody id="bodyListado" class="no-borders">
+                    <tr>
+                        <th class="centerMiddle">
+                            Sel
+                        </th>
+                        <th class="centerMiddle">
+                            Número
+                        </th>
+                        <th class="centerMiddle">
+                            Ruc
+                        </th>
+                        <th class="centerMiddle">
+                            Razon Social
+                        </th>
+                        <th class="centerMiddle">
+                            Nombre Grupo
+                        </th>
+                    </tr>
+                    <tr *ngFor="let empresaItem of empresasList | paginate: { itemsPerPage: corporativoService.paginationConstants.pageSize,currentPage: corporativoService.paginationConstants.pageNumber, totalItems: corporativoService.paginationConstants.total} ; let i = index">
+                        <td class="centerMiddle general-column">
+                            <a (click)="abrirEdicion(empresaItem.Numero)" title="Clic para editar">
+                                <i class="fa fa-file-text"></i>
+                            </a>
+                        </td>
+                        <td class="centerMiddle">
+                            {{empresaItem.Numero}}
+                        </td>
+                        <td class="centerMiddle">
+                            {{empresaItem.Ruc}}
+                        </td>
+                        <td class="centerMiddle">
+                            {{empresaItem.RazonSocial}}
+                        </td>
+                        <td class="centerMiddle">
+                            {{empresaItem.NombreGrupo}}
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot *ngIf="corporativoService.paginationConstants.total == 0">
+                    <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                    </tfoot>
+                </table>
+                <pagination-controls maxSize="12" previousLabel="" nextLabel="" autoHide="true" (pageChange)="corporativoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PANEL EDITOR -->
+<div class="wrapper wrapper-content" *ngIf="showEditor">
+
+    <div class="ibox float-e-margins">
+        <h3>Formulario de Edición</h3>
+        <div *ngIf="!esNuevo">
+            <h4> Empresa N.- <b>{{corporativo.Empresa.Numero}}</b></h4>
+        </div>
+        <!-- FORMULARIO DE EDICIÓN -->
+        <!-- Creacion de seccion Empresa -->
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Datos Generales Smartplan</h5>
+            </div>
+            <div class="panel-body">
+                <label class="col-lg-1 control-label" for="Ruc">Ruc:</label>
+                <div class="col-lg-3" [ngClass]="{'has-error':Ruc.invalid}">
+                    <input type="text" style="text-transform: uppercase;" placeholder="Ruc" id="Ruc" [(ngModel)]="corporativo.Empresa.Ruc" name="Ruc"
+                           class="form-control" #Ruc="ngModel" pattern="\d*" minlength="13" maxlength="13" />
+                    <div [hidden]="Ruc.valid || Ruc.pristine" class="error">
+                        <p *ngIf="Ruc.errors?.maxlength">Maximo 13 dígitos</p>
+                        <p *ngIf="Ruc.errors?.minlength">Mínimo 13 dígitos</p>
+                    </div>
+                </div>
+                <label class="col-lg-1 control-label" for="RazonSocial">Razón Social:</label>
+                <div class="m-b col-lg-3">
+                    <input type="text" style="text-transform: uppercase;" placeholder="Razón Social" id="RazonSocial" [(ngModel)]="corporativo.Empresa.RazonSocial "
+                           name="RazonSocial" class="form-control" #RazonSocial="ngModel" minlength="0" maxlength="400"
+                    />
+                    <div [hidden]="RazonSocial.valid || RazonSocial.pristine" class="error">
+                        <p *ngIf="RazonSocial.errors?.maxlength">Maximo 100 carácteres</p>
+                    </div>
+                </div>
+                <label class="col-lg-1 control-label" >Grupo:</label>
+                <div class="m-b col-lg-3">
+                    <select class="form-control" [(ngModel)]="corporativo.Empresa.CodigoGrupo" name="NumeroGrupo" class="form-control" #NumeroGrupo="ngModel">
+                        <option [value]="undefined" selected>Seleccione grupo</option>
+                        <option *ngFor="let r of grupos" [value]="r.Numero">{{r.Nombre}}</option>
+                    </select>
+                </div>
+                <label class="col-lg-1 control-label">Región:</label>
+                <div class="m-b col-lg-3">
+                    <select class="form-control" [(ngModel)]="corporativo.Sucursal.Region" name="Región" class="form-control" #Region="ngModel">
+                        <option [value]="undefined" selected>Seleccione región</option>
+                        <option *ngFor="let r of regiones" [value]="r.Codigo.toUpperCase()">{{r.Nombre.toUpperCase()}}</option>
+                    </select>
+                </div>
+
+                <label *ngIf="esNuevo" class="col-lg-1 control-label" for="FechaDesde">Fecha Desde:</label>
+                <div *ngIf="esNuevo" class="m-b col-lg-3">
+                    <datetime required name="FechaDesde" class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaDesde" [(ngModel)]="corporativo.Sucursal.FechaInicio"
+                              [datepicker]="datepickerOpts" (ngModelChange)="onChangeFechaAnual($event)">
+                    </datetime>
+                </div>
+                <label *ngIf="esNuevo" class="col-lg-1 control-label" for="FechaFin">Fecha Fin:</label>
+                <div *ngIf="esNuevo" class="m-b col-lg-3" style="margin-bottom: 30px;">
+                    <datetime required name="FechaFin" class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="FechaFin" [(ngModel)]="corporativo.Sucursal.FechaFin"
+                              [datepicker]="datepickerOpts" >
+                    </datetime>
+                </div>
+                <label class="col-lg-1 control-label">Tipo Sociedad:</label>
+                <div class="m-b col-lg-3">
+                    <select class="form-control" [(ngModel)]="corporativo.Empresa.TipoSociedad" name="TipoSociedad" class="form-control" #TipoSociedad="ngModel">
+                        <option [value]="undefined" selected>Seleccione el tipo de sociedad</option>
+                        <option *ngFor="let r of sociedades" [value]="r.Codigo">{{r.Nombre}}</option>
+                    </select>
+                </div>
+                <label class="col-lg-1 control-label">Actividad:</label>
+                <div class="m-b col-lg-3">
+                    <select class="form-control" [(ngModel)]="corporativo.Empresa.CodigoActividad" name="CodigoActividad" class="form-control"
+                            #CodigoActividad="ngModel">
+                        <option [value]="undefined" selected>Seleccione la actividad</option>
+                        <option *ngFor="let r of actividades" [value]="r.IdItem">{{r.Nombre}}</option>
+                    </select>
+                </div>
+                <label class="col-lg-1 control-label" for="Unidad">Ejecutivo Responsable:</label>
+                <div class="m-b col-lg-3">
+                    <select class="form-control" [(ngModel)]="corporativo.Sucursal.UnidadResponsable" id="Unidad" name="Unidad" #Unidad="ngModel">
+                        <option [value]="undefined" selected>Seleccione ejecutivo</option>
+                        <option *ngFor="let r of unidades" [value]="r.Responsable">{{r.Nombre}}</option>
+                    </select>
+                </div>
+                <label class="col-lg-1 control-label" for="Sucursal">Sucursal:</label>
+                <div class="m-b col-lg-3">
+                    <select class="form-control" [(ngModel)]="corporativo.Sucursal.CodigoSucursal" id="Unidad" name="Unidad" #Unidad="ngModel">
+                        <option [value]="undefined" selected>Seleccione sucursal</option>
+                        <option *ngFor="let r of sucursalessalud" [value]="r.Codigo">{{r.Nombre}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- Creacion de seccion Representante -->
+        <br>
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Representante Legal</h5>
+            </div>
+            <div class="panel-body">
+                <div class=" container-fluid row ">
+                    <div class="col-lg-1">
+                        <label class="control-label">Tipo de Documento:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <select class="form-control" [(ngModel)]="tipoDocumentoRepresentate" (ngModelChange)="verificarRepresentante($event)" >
+                            <option *ngFor="let r of tiposDocumento" [value]="r">{{r}}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-1">
+                        <label class="control-label" for="CedulaRepresentante">Cédula / pasaporte:</label>
+                    </div>
+                    <div class="col-lg-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Cédula/pasaporte" id="CedulaRepresentante" [(ngModel)]="corporativo.Empresa.CedulaRepresentante"
+                               name="CedulaRepresentante" class="form-control" #CedulaRepresentante="ngModel" minlength="3"
+                               maxlength="22" (keyup)="onKeyRepresentante($event)"
+                        />
+                        <div [hidden]="CedulaRepresentante.valid || CedulaRepresentante.pristine" class="error">
+                            <!--<p *ngIf="CedulaRepresentante.errors?.pattern">Solo se admiten dígitos</p>-->
+                            <p *ngIf="CedulaRepresentante.errors?.maxlength">Maximo 22 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                    </div>
+                </div>
+                <br>
+                <div class=" container-fluid row">
+                    <div class="col-md-1"><label class="control-label" for="NombresRepresentante"> Nombre:</label></div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Nombre" id="NombresRepresentante" [(ngModel)]="corporativo.Empresa.NombresRepresentante"
+                               name="NombresRepresentante" class="form-control" #NombresRepresentante="ngModel"
+                               [disabled]="actRepresentate" minlength="0" maxlength="90" />
+                        <div [hidden]="NombresRepresentante.valid || NombresRepresentante.pristine" class="error">
+                            <p *ngIf="NombresRepresentante.errors?.maxlength">Maximo 90 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1"><label class=" control-label" for="ApellidosRepresentante"> Apellidos:</label></div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Apellidos" id="ApellidosRepresentante" [(ngModel)]="corporativo.Empresa.ApellidosRepresentante"
+                               name="ApellidosRepresentante" class="form-control" #ApellidosRepresentante="ngModel"
+                               [disabled]="actRepresentate" minlength="0" maxlength="80" />
+                        <div [hidden]="ApellidosRepresentante.valid || ApellidosRepresentante.pristine" class="error">
+                            <p *ngIf="ApellidosRepresentante.errors?.maxlength">Maximo 80 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="RepresentanteCelular">Teléfono:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Teléfono" id="RepresentanteTelefono" [(ngModel)]="corporativo.Empresa.RepresentanteTelefono"
+                               name="RepresentanteTelefono" class="form-control" #RepresentanteTelefono="ngModel"
+                               pattern="\d*" minlength="0" maxlength="9" />
+                        <div [hidden]="RepresentanteTelefono.valid || RepresentanteTelefono.pristine" class="error">
+                            <p *ngIf="RepresentanteTelefono.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="RepresentanteTelefono.errors?.maxlength">Maximo 9 dígitos</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class=" container-fluid row ">
+                    <div class="col-md-1">
+                        <label class="control-label" for="RepresentanteMail">Email:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="email" placeholder="EMAIL" id="RepresentanteMail" [(ngModel)]="corporativo.Empresa.RepresentanteMail" name="RepresentanteMail"
+                               class="form-control" #RepresentanteMail="ngModel" minlength="0" maxlength="200" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                        />
+                        <div [hidden]="RepresentanteMail.valid || RepresentanteMail.pristine" class="error">
+                            <p *ngIf="RepresentanteMail.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="RepresentanteMail.errors?.maxlength">Maximo 200 dígitos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="CargoRepresentante">Cargo:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Cargo del Representante" id="CargoRepresentante" [(ngModel)]="corporativo.Empresa.CargoRepresentante"
+                               name="CargoRepresentante" class="form-control" #CargoRepresentante="ngModel" minlength="0"
+                               maxlength="60" />
+                        <div [hidden]="CargoRepresentante.valid || CargoRepresentante.pristine" class="error">
+                            <p *ngIf="CargoRepresentante.errors?.maxlength">Maximo 60 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="RepresentanteCelular">Celular:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Celular" id="RepresentanteCelular" [(ngModel)]="corporativo.Empresa.RepresentanteCelular"
+                               name="RepresentanteCelular" class="form-control" #RepresentanteCelular="ngModel"
+                               pattern="\d*" minlength="0" maxlength="10" />
+                        <div [hidden]="RepresentanteCelular.valid || RepresentanteCelular.pristine" class="error">
+                            <p *ngIf="RepresentanteCelular.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="RepresentanteCelular.errors?.maxlength">Maximo 10 dígitos</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Creacion de seccion Contactos -->
+        <br>
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Dirección de la Empresa</h5>
+            </div>
+            <div class="panel-body">
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label" >Ciudad:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select required class="form-select-control" id="slcCiudad" name="slcCiudad" [(ngModel)]="corporativo.Empresa.CodigoCiudad"
+                                #slcCiudad="ngModel" (ngModelChange)="onChangeCiudad($event)">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let c of traslateCiudades" [ngValue]="c.Id">{{c.Name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="col-lg-1 control-label">Sector:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select required class="form-select-control" id="slcSector" name="slcSector" [(ngModel)]="corporativo.Empresa.Zona" #slcSector="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let s of sectoresFiltrados" [ngValue]="s.Codigo">{{s.Valor}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" >Barrio:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Barrio"  [(ngModel)]="corporativo.Empresa.Barrio"
+                               name="Barrio" class="form-control" #Barrio="ngModel" minlength="0" maxlength="60"
+                        />
+                        <div [hidden]="RazonSocial.valid || RazonSocial.pristine" class="error">
+                            <p *ngIf="RazonSocial.errors?.maxlength">Maximo 60 carácteres</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label">Dirección:</label>
+                    </div>
+                    <div *ngIf="esNuevo">
+                        <div class="col-md-3">
+                            <input type="text" style="text-transform: uppercase;" placeholder="calle principal" id="calle1" [(ngModel)]="empresaDireccion.calle1"
+                                   name="calle1" class="form-control" #calle1="ngModel" minlength="3" maxlength="40"
+                                   (change)=changeDireccion() />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" style="text-transform: uppercase;" placeholder="calle secundaria" id="calle2" [(ngModel)]="empresaDireccion.calle2"
+                                   name="calle2" class="form-control" #calle2="ngModel" minlength="3" maxlength="50"
+                                   (change)=changeDireccion() />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" style="text-transform: uppercase;" placeholder="referencia" id="referencia" [(ngModel)]="empresaDireccion.referencia"
+                                   name="referencia" class="form-control" #referencia="ngModel" minlength="3" maxlength="50"
+                                   (change)=changeDireccion() />
+                        </div>
+                    </div>
+                    <div *ngIf="!esNuevo">
+                        <div class="col-md-9">
+                            <input type="text" style="text-transform: uppercase;" placeholder="Direccion Completa"  [(ngModel)]="direccionTemporal"
+                                   class="form-control" minlength="3"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Télefono" id="ETelefono" [(ngModel)]="corporativo.Empresa.Telefono"
+                               name="ETelefono" class="form-control" #ETelefono="ngModel" pattern="\d*" minlength="0"
+                               maxlength="10" />
+                        <div [hidden]="ETelefono.valid || ETelefono.pristine" class="error">
+                            <p *ngIf="ETelefono.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="ETelefono.errors?.maxlength">Maximo 120 dígitos</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+        <!-- Creacion de seccion Usuarios -->
+        <br>
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Datos Administrador</h5>
+            </div>
+            <div class="panel-body">
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label">Tipo de Documento:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" [(ngModel)]="tipoDocumentoUsuario"  (ngModelChange)="verificarPasaporte($event)"  >
+                            <option *ngFor="let r of tiposDocumento" [value]="r" >{{r}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label">Cédula / pasaporte:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Cédula / pasaporte" (keyup)="onKeyUsuario($event)"
+                               [(ngModel)]="usuari.Cedula" name="Cedula" class="form-control" #Cedula="ngModel"
+                               minlength="3" maxlength="22" id="CedulaUsuario" />
+                        <div [hidden]="Cedula.valid || Cedula.pristine" class="error">
+                            <!--<p *ngIf="Cedula.errors?.pattern">Solo se admiten dígitos</p>-->
+                            <p *ngIf="Cedula.errors?.maxlength">Máximo 22 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="NombreApellido">Nombres y Apellidos:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Nombres y Apellidos" id="NombreApellido" [(ngModel)]="usuari.NombreApellido"
+                               [disabled]="actCedula" name="Nombre" class="form-control" #NombreApellido="ngModel" minlength="0" maxlength="100"
+                        />
+                        <div [hidden]="NombreApellido.valid || NombreApellido.pristine" class="error">
+                            <p *ngIf="NombreApellido.errors?.maxlength">Máximo 100 dígitos</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label" for="RepresentanteMail">Email:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" placeholder="EMAIL" id="Email" [(ngModel)]="usuari.Email" name="Email" class="form-control" #Email="ngModel"
+                               minlength="0" maxlength="100" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                        />
+                        <div [hidden]="Email.valid || Email.pristine" class="error">
+                            <p *ngIf="Email.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="Email.errors?.maxlength">Máximo 100 dígitos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class=" control-label" for="Telefono">Celular:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Télefono" id="Telefono" [(ngModel)]="usuari.Telefono"
+                               name="Telefono" class="form-control" #Telefono="ngModel" pattern="\d*" minlength="0"
+                               maxlength="10" />
+                        <div [hidden]="Telefono.valid || Telefono.pristine" class="error">
+                            <p *ngIf="Telefono.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="Telefono.errors?.maxlength">Maximo 120 dígitos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class=" control-label" for="TelefonoFijo">Télefono Fijo:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Télefono Fijo" id="TelefonoFijo" [(ngModel)]="usuari.TelefonoFijo"
+                               name="TelefonoFijo" class="form-control" #TelefonoFijo="ngModel" pattern="\d*" minlength="0"
+                               maxlength="9" />
+                        <div [hidden]="TelefonoFijo.valid || TelefonoFijo.pristine" class="error">
+                            <p *ngIf="TelefonoFijo.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="TelefonoFijo.errors?.maxlength">Maximo 120 dígitos</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label" for="Extension">Extensión Telf:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" style="text-transform: uppercase;" placeholder="Extensión" id="Extension" [(ngModel)]="usuari.Extension"
+                               name="Extension" class="form-control" #Extension="ngModel" pattern="\d*" minlength="0"
+                               maxlength="120" />
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label">Perfil:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" [(ngModel)]="usuari.rol.Id">
+                            <option [value]="undefined" selected>Seleccione perfil</option>
+                            <option *ngFor="let r of roles" [value]="r.Id">{{r.Nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="col-lg-offset-6 col-lg-1 btn btn-w-m btn-success btn-sm" type="button" [disabled]="!validarUsuario()" (click)="InsertarUsuarioTabla();">
+                            <i class="fa fa-save"></i> Agregar
+                        </button>
+                    </div>
+                </div>
+                <br>
+                <!-- Tabla de usuarios agregados -->
+                <div class="ibox-content ">
+                    <div class="dataTables_info"></div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                            <tr>
+                                <th>Cédula/pasaporte</th>
+                                <th>Nombres y Apellidos</th>
+                                <th>Email</th>
+                                <th>Teléfono Celular</th>
+                                <th>Teléfono Fijo</th>
+                                <th>Extensión</th>
+                                <!--<th> Perfil </th>-->
+                                <th> Editar </th>
+                                <th> Notificar </th>
+                                <th> Eliminar </th>
+                            </tr>
+                            </thead>
+                            <tbody class="no-borders">
+
+                            <tr *ngFor="let u of users">
+                                <td>{{u.Cedula}}</td>
+                                <td>{{u.NombreApellido}}</td>
+                                <td>{{u.Email}}</td>
+                                <td>{{u.Telefono}}</td>
+                                <td>{{u.TelefonoFijo}}</td>
+                                <td>{{u.Extension}}</td>
+                                <!--<td>{{u.rol.Nombre}}</td>-->
+                                <td class="centerMiddle general-column">
+                                    <a (click)="updateUsuario(u)" title="Editar" *ngIf="!
+                                    estaEnEdicion">
+                                        <i class="fa fa-file-text"></i>
+                                    </a>
+                                </td>
+                                <td class="centerMiddle general-column"  [class.disabled] ="notificar">
+                                    <a (click)="mailUsuario(u)" title="Notificar" *ngIf="!
+                                    estaEnEdicion" >
+                                        <i class="fa fa-envelope"></i>
+                                    </a>
+                                </td>
+                                <td class="centerMiddle general-column" >
+                                    <a (click)="deleteUsuario(u)" title="Eliminar" *ngIf="!
+                                    estaEnEdicion">
+                                        <i class="fa fa-eraser"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <pagination-controls id="tableContratos" maxSize="5" previousLabel="" nextLabel="" autoHide="true" (pageChange)="contratoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                    <!-- Boton de notificacion masiva-->
+                    <button type="button" class = "btn btn-w-m btn-info btn-sm" [disabled]="notificar" (click)="NotificarTodosUsuarios();">
+                        <i class="fa fa-envelope"></i> Notificar Todos
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Creacion de seccion Broker -->
+        <br>
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Datos Broker</h5>
+            </div>
+            <div class="panel-body">
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label"> Nombre:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" required placeholder="Iniciales Prestador" id="nombrePrestador" name="nombrePrestador" class="heigth25 form-control" readonly="true"
+                               minlength="4" maxlength="255" [(ngModel)]="filtroPrestador" #nombrePrestador="ngModel" (click)="listarConveniosPrestador()" (focus)="listarConveniosPrestador()" (blur)="listarConveniosPrestador()"
+                               style="padding-right: 20px;" data-toggle="modal" data-target="#prestadorViewModal"/>
+                        <!--<select class="form-control" [(ngModel)]="corporativo.Empresa.CodigoAgenteVenta" id="Agente" name="Agente" autocomplete="on" #Agente="ngModel">
+                            <option [value]="undefined" selected>Seleccione agente de venta</option>
+                            <option *ngFor="let r of agentes" [value]="r.Codigo">{{r.Nombre}}</option>
+                        </select>-->
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="PorcentajeComisionBroker">Comisión %:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" placeholder="% Comisión" id="PorcentajeComisionBroker" [(ngModel)]="corporativo.Empresa.PorcentajeComisionBroker"
+                               name="PorcentajeComisionBroker" class="form-control" #PorcentajeComisionBroker="ngModel"
+                               max="100" min="1" minlength="0" maxlength="17" />
+                        <div [hidden]="PorcentajeComisionBroker.valid || PorcentajeComisionBroker.pristine" class="error">
+                            <p *ngIf="PorcentajeComisionBroker.errors?.pattern">ingrese un porcentaje válido</p>
+                            <p *ngIf="PorcentajeComisionBroker.errors?.maxlength">Maximo 17 dígitos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label">Contacto:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Nombre Contacto"  [(ngModel)]="corporativo.Empresa.BrokerContacto"
+                               class="form-control" #Extension="ngModel" pattern="\d*" minlength="0"
+                               maxlength="120" />
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label">Teléfono:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Teléfono" id="Extension2" [(ngModel)]="corporativo.Empresa.BrokerTelefono"
+                               name="Extension2" class="form-control" #Extension2="ngModel" pattern="\d*" minlength="0"
+                               maxlength="10" />
+                        <div [hidden]="Extension2.valid || Extension2.pristine" class="error">
+                            <p *ngIf="Extension2.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="Extension2.errors?.maxlength">Maximo 10 dígitos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Creacion de seccion Pagos -->
+        <br>
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Datos Pago Inteligente</h5>
+            </div>
+            <div class="panel-body">
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label"> Pago Inteligente:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="checkbox" [(ngModel)]="corporativo.Sucursal.EsPagoInteligente">
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label no-padding-left" >Correo Empresa:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" placeholder="Correo Empresa" id="EmailscP" [(ngModel)]="corporativo.Empresa.EmailRRHH"
+                               name="EmailscP" class="form-control" #EmailscP="ngModel" minlength="0" maxlength="100"
+                               pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$" />
+                        <div [hidden]="EmailscP.valid || EmailscP.pristine" class="error">
+                            <p *ngIf="EmailscP.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="EmailscP.errors?.maxlength">Maximo 100 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="EmailBroker">Correo Broker:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" placeholder="Correo del Broker" id="EmailBroker" [(ngModel)]="corporativo.Empresa.EmailBroker" name="EmailBroker"
+                               class="form-control" #EmailBroker="ngModel" minlength="0" maxlength="100" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                        />
+                        <div [hidden]="EmailBroker.valid || EmailBroker.pristine" class="error">
+                            <p *ngIf="EmailBroker.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="EmailBroker.errors?.maxlength">Máximo 100 carácteres</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+            </div>
+        </div>
+        <!-- Creacion de seccion Pagos Datos Facturacion -->
+        <br>
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Datos Facturación y Pago</h5>
+            </div>
+            <div class="panel-body">
+                <div class="row container-fluid">
+                    <div class="col-md-5">
+                        <label class="control-label" for="Email"> Correos de Facturación:</label>
+                    </div>
+                    <div class="col-md-7">
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-3">
+                        <input type="text" placeholder="Correo de Contacto" id="Emailsc" [(ngModel)]="corporativo.Sucursal.ContactoDocumentosElectronicos"
+                               name="Emailsc" class="form-control" #Emailsc="ngModel" minlength="0" maxlength="100"
+                               pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$" />
+                        <div [hidden]="Emailsc.valid || Emailsc.pristine" class="error">
+                            <p *ngIf="Emailsc.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="Emailsc.errors?.maxlength">Maximo 100 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" placeholder="Correo Envío de Documento" id="Emailec" [(ngModel)]="corporativo.Sucursal.EmailContactoDocumentosElectronicos"
+                               name="Emailec" class="form-control" #Emailec="ngModel" minlength="0" maxlength="100"
+                               pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$" />
+
+                        <div [hidden]="Emailec.valid || Emailec.pristine" class="error">
+                            <p *ngIf="Emailec.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="Emailec.errors?.maxlength">Maximo 100 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" placeholder="Correo Envío de Documentos" id="Emailes" [(ngModel)]="corporativo.Sucursal.EmailSucursalDocumentosElectronicos"
+                               name="Emailes" class="form-control" #Emailes="ngModel" minlength="0" maxlength="100"
+                               pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$" />
+
+                        <div [hidden]="Emailes.valid || Emailes.pristine" class="error">
+                            <p *ngIf="Emailes.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="Emailes.errors?.maxlength">Maximo 100 carácteres</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" placeholder="Correo Documento a Broker" id="Emailbc" [(ngModel)]="corporativo.Sucursal.EmailBrokerDocumentosElectronicos"
+                               name="Emailbc" class="form-control" #Emailbc="ngModel" minlength="0" maxlength="100"
+                               pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$" />
+                        <div [hidden]="Emailbc.valid || Emailbc.pristine" class="error">
+                            <p *ngIf="Emailbc.errors?.pattern">Introduzca un formato de email válido</p>
+                            <p *ngIf="Emailbc.errors?.maxlength">Maximo 100 carácteres</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label" >Periodo de Facturación:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select required class="form-select-control" [(ngModel)]="corporativo.Sucursal.PeriodoPago" id="slcPeriodoPago" name="slcPeriodoPago"
+                                [disabled]="habilitar" #slcPeriodoPago="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">Mensual</option>
+                            <option [ngValue]="2">Bimestral</option>
+                            <option [ngValue]="3"> Trimestral</option>
+                            <option [ngValue]="4">Semestral</option>
+                            <option [ngValue]="5"> Anual</option>
+                            <option [ngValue]="6">Cuatrimestral</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label no-padding-left" >Forma de Pago:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select required class="form-select-control" [(ngModel)]="corporativo.Sucursal.FormaPago"
+                                #slcformaPago="ngModel" [disabled]="habilitar">
+                            <option [value]="undefined" selected>Seleccione la forma de pago</option>
+                            <option [ngValue]="1">Debito</option>
+                            <option [ngValue]="2">Pago Directo</option>
+                            <option [ngValue]="49">Transferencia</option>
+                            <option [ngValue]="50">Deposito</option>
+                            <option [ngValue]="12341">Cheque</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+        <!-- Creacion de seccion Configuracion portal-->
+        <br>
+        <div *ngIf="visiblePortalContratante">
+            <div class="panel panel-success" style="margin-bottom: 0px;" >
+                <div class="panel-heading">
+                    <h5 class="panel-title">Configuracion del Portal</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="row container-fluid">
+                            <div class="col-md-1">
+                                    <label class="control-label" >Notificación de Maternidad:</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" placeholder="NÚMERO DE DÍAS" [(ngModel)]="notificacionCobranzas"
+                                       class="form-control" />
+                            </div>
+
+                            <div class="col-md-1">
+                                <label class="control-label" for="FechaBloqueo">Notificación Prefactura:</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" placeholder="NÚMERO DE DÍAS" [(ngModel)]="notificacionPrefactura"
+                                       class="form-control" />
+                            </div>
+                    </div>
+                    <br>
+                    <div class="row container-fluid">
+                        <div class="col-md-1">
+                            <label class="control-label">Periodo de Copago Días:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" placeholder="NÚMERO DÍAS LABORABLES" [(ngModel)]="corporativo.Empresa.PeriodoCopago"
+                                   class="form-control" #NotificacionPrefactura="ngModel" VALUE="3"
+                                   pattern="\d*" minlength="0" maxlength="10" />
+                        </div>
+                        <div class="col-md-1">
+                            <label class="control-label">Periodo de Pago Días:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" placeholder="NÚMERO DÍAS LABORABLES" [(ngModel)]="corporativo.Empresa.PeriodoPago"
+                                   class="form-control" #NotificacionPrefactura="ngModel"
+                                   pattern="\d*" minlength="0" maxlength="10" />
+                        </div>
+                    </div>
+                    <!-- <div class="row container-fluid">
+                        <div class="col-md-1">
+                            <label class="control-label" for="FechaBloqueo"> Fecha Bloqueo:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <datetime required name="FechaBloqueo" class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="FechaBloqueo" [(ngModel)]="fechatemporal"
+                                      [datepicker]="datepickerOpts"></datetime>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="control-label" >Notificación Cobranza:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" placeholder="NÚMERO DE DÍAS" [(ngModel)]="notificacionCobranzas"
+                                   class="form-control" />
+                        </div>
+                    </div> -->
+                    <!-- <br>
+                    <div class="row container-fluid">
+                        <div class="col-md-4">
+                        </div>
+                    </div>
+                    <br> -->
+                    <br>
+                    <div class="row container-fluid">
+                        <div class="col-md-1">
+                            <label class="control-label" for="ModeloCarga">Carga Masiva:</label>
+                        </div>
+                        <div>
+                            <select required class="form-select-control" [(ngModel)]="corporativo.Empresa.EmpresaVision" #slCargaMasiva="ngModel">
+                            <option value="undefined" selected>Seleccione...</option>
+                            <option value="1">Carga Normal (Campos base)</option>
+                            <option value="2">Carga Incompleta</option>
+                            <option value="3">Carga Completa</option>
+                        </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Creacion de seccion Cobertura Provisional-->
+        <!--
+        <br>
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Cobertura Provisional</h5>
+            </div>
+            <br>
+            <div class="row container-fluid">
+                <div class="col-md-2">
+                    <label class="control-label" for="CoberturaProvisional"> Cobertura Provisional Copago Consulta ($):</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" style="text-transform: uppercase;" placeholder="Cobertura Provisional" id="CoberturaProvisional" [(ngModel)]="corporativo.Empresa.ProvisionalCobertura"
+                           name="CoberturaProvisional" class="form-control" #CoberturaProvisional="ngModel"
+                    />
+                </div>
+                <div class="col-md-2">
+                    <label class="control-label" for="CoberturaProvisional"> Cobertura Provisional Copago Porcentaje (%):</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" style="text-transform: uppercase;" placeholder="Cobertura Copago" id="CoberturaProvisionalCopago" [(ngModel)]="corporativo.Empresa.ProvisionalCopago"
+                           name="CoberturaProvisional" class="form-control" #CoberturaProvisional="ngModel" (keyup)="verificarCobertura($event)"
+                           min="3" max="10" />
+                </div>
+                <div class="col-md-1">
+                    <label class="control-label">Continuidad de Cobertura:</label>
+                </div>
+                <div class="col-md-1">
+                    <input id="continuidadCobertura" name="continuidadCobertura" type="checkbox" [(ngModel)]="corporativo.Empresa.ContinuidadCobertura">
+                </div>
+            </div>
+            <br>
+        </div>
+        -->
+        <!-- Creacion de seccion Planes -->
+        <br>
+        <div class="panel panel-success" style="margin-bottom: 0px;" >
+            <div class="panel-heading">
+                <h5 class="panel-title">Planes</h5>
+            </div>
+            <div class="panel-body">
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class=" control-label" for="Nivel">Nivel:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" placeholder="Nivel del Plan" id="Nivel"  name="numeroEmpresa"
+                               [(ngModel)]="sucursalNombre.nivel" #Nivel="ngModel" class="form-control" min="3"
+                               (keyup)="verificarNivel($event)"  max="10" />
+                        <div [hidden]="Nivel.valid || Nivel.pristine" class="error">
+                            <p *ngIf="Nivel.errors?.max">Máximo 10</p>
+                            <p *ngIf="Nivel.errors?.min">Mínimo 0</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="Max">Max:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" style="text-transform: uppercase;" placeholder="Cobertura Máxima" id="Max"
+                               name="Max" [(ngModel)]="sucursalNombre.max" #Max="ngModel" class="form-control"
+                               pattern="\d*" minlength="0" maxlength="10" />
+                        <div [hidden]="Max.valid || Max.pristine" class="error">
+                            <p *ngIf="Max.errors?.pattern">Solo se admiten dígitos</p>
+                            <p *ngIf="Max.errors?.maxlength">Maximo 10 dígitos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="descripcion">Descripción:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Descripción" id="descripcion" onkeyup="descripcion.value = descripcion.value.toUpperCase()"
+                               name="descripcion" [(ngModel)]="sucursalNombre.descripcion" #descripcion="ngModel"
+                               class="form-control" minlength="0" maxlength="100" />
+                        <div [hidden]="descripcion.valid || descripcion.pristine" class="error">
+                            <p *ngIf="descripcion.errors?.maxlength">Maximo 100 dígitos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="descripcion">Alias:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" style="text-transform: uppercase;" placeholder="Alias" id="alias"
+                               name="descripcion" [(ngModel)]="sucursalNombre.alias" #descripcion="ngModel"
+                               class="form-control" minlength="0" maxlength="100" />
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label class="control-label" for="slcproducto">Producto:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select required class="form-select-control" [(ngModel)]="sucursalNombre.producto" id="slcproducto" name="slcproducto" #slcproducto="ngModel"
+                                [disabled]="habilitar">
+                            <option value="undefined" selected>Seleccione...</option>
+                            <option value="COR">SmartPlan</option>
+                            <option value="DEN">Dental</option>
+                            <option value="EXE">Exequial</option>
+                            <option value="CPO">Oncológico</option>
+                            <option value="TRA">Travel</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="control-label" for="slccobertura">Cobertura:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select required class="form-select-control" [(ngModel)]="sucursalNombre.coberturas" id="slccobertura" name="slccobertura"
+                                #slccobertura="ngModel" [disabled]="habilitar">
+                            <option value="undefined" selected>Seleccione...</option>
+                            <option value="AT">Titular</option>
+                            <option value="A1">Titular,Titular+1</option>
+                            <option value="AF">Titular,Titular+1,Titular+Familia</option>
+                        </select>
+                    </div>
+                    <!--<div class="col-md-1">
+                        <label class="control-label" >Es Opcional:</label>
+                    </div>
+                    <div  class="col-md-3">
+                        <input type="checkbox" [(ngModel)]="sucursalNombre.esOpcional">
+                    </div>-->
+                </div>
+                <br>
+                <div class="row container-fluid">
+
+                    <div class="col-md-1">
+                        <label *ngIf="!esNuevo" class=" control-label">Fecha Desde:</label>
+                    </div>
+                    <div *ngIf="!esNuevo" class="col-md-3">
+                        <datetime required class="heigth25  no-padding" [timepicker]="false"  [(ngModel)]="fechaInicioSursalEdit" (ngModelChange)="onChangeFechaActualizacionAnual($event)"
+                                  [datepicker]="datepickerOpts">
+                        </datetime>
+                    </div>
+                    <div class="col-md-1">
+                        <label *ngIf="!esNuevo" class=" control-label">Fecha Hasta:</label>
+                    </div>
+                    <div *ngIf="!esNuevo" class="col-md-3">
+                        <datetime required class="heigth25 no-padding" [timepicker]="false"   [(ngModel)]="fechaFinSursalEdit"
+                                  [datepicker]="datepickerOpts">
+                        </datetime>
+                    </div>
+                    <div class="col-md-1">
+                        <label *ngIf="!esNuevo" class="control-label" >Tipo Tarjeta:</label>
+                    </div>
+                    <div *ngIf="!esNuevo" class="col-md-3">
+                        <select class="form-control" [(ngModel)]="tipoTarjetaEdit">
+                            <option value="undefined" selected>Seleccione...</option>
+                            <option value="AZUL">Azul</option>
+                            <option value="BLANCA">Blanca</option>
+                            <option value="DORADA">Dorada</option>
+                            <option value="TOMATE">Tomate</option>
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="row container-fluid">
+                    <div class="col-md-1">
+                        <label *ngIf="!esNuevo" class="control-label" >Garantia:</label>
+                    </div>
+                    <div *ngIf="!esNuevo" class="col-md-3">
+                        <input type="checkbox" [(ngModel)]="garantiaEdit">
+                    </div>
+                    <div class="col-md-1">
+                        <label *ngIf="!esNuevo" class="control-label" >Odas:</label>
+                    </div>
+                    <div *ngIf="!esNuevo" class="col-md-3">
+                        <input type="number" class="form-control" [(ngModel)]="odasEdit" #Nodas="ngModel"
+                        (keyup)="verificarOdas($event)"  max="9999">
+                        <div [hidden]="Nodas.valid || Nodas.pristine" class="error">
+                            <p *ngIf="Nodas.errors?.max">Máximo 9999</p>
+                            <p *ngIf="Nodas.errors?.min">Mínimo 0</p>
+                        </div>
+                    </div>
+                    <div *ngIf="!esNuevo && visibleBotonSubCobertura">
+                        <div class="col-md-1">
+                            <label class="control-label" >Administrar Coberturas:</label>
+                        </div>
+                        <div  class="col-md-3">
+                            <button type="button" class="btn btn-primary" (click)="cargarCoberturasAdm()" data-toggle="modal" data-target="#cargarCoberturasAdm" >
+                                SubCoberturas
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <button class="btn btn-w-m btn-info btn-sm" [disabled]="!validarSucursal()" type="button" (click)="InsertarSucursalTabla();">
+                    <i class="fa fa-save"></i> Agregar
+                </button>
+                <!-- Tabla de paneles -->
+                <div class="ibox-content" id="divResultadoBusquedaContratosAuth" style="border-width:1px 0px 0px 0px;">
+                    <div class="dataTables_info">Mostrando de 0 a 0 de 0 registros</div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                            <tr style="text-transform: uppercase;">
+                                <th>Alias</th>
+                                <th>Nivel </th>
+                                <th>Máximo</th>
+                                <th>Descripción</th>
+                                <th>Producto</th>
+                                <th>Cobertura</th>
+                                <th>Editar</th>
+                                <th *ngIf="esNuevo">Eliminar</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let su of sucursalesNombre">
+                                <td>{{su.alias}}</td>
+                                <td>{{su.nivel}}</td>
+                                <td>{{su.max}}</td>
+                                <td>{{su.descripcion}}</td>
+                                <td>{{su.producto}}</td>
+                                <td>{{su.coberturas}}</td>
+                                <td class="centerMiddle general-column">
+                                    <a (click)="updateSucursalTabla(su)" *ngIf="!
+                                    estaEnEdicion" title="Editar">
+                                        <i class="fa fa-file-text"></i>
+                                    </a>
+                                </td>
+
+                                <td class="centerMiddle general-column" *ngIf="esNuevo">
+                                    <a (click)="deleteSucursalTabla(su)" *ngIf="!estaEnEdicion" title="Eliminar">
+                                        <i class="fa fa-eraser"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!-- Valido todo --->
+        <div  *ngIf="ExisteError" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong>  {{mensajeError}}.
+        </div>
+        <div *ngIf="existeErroresValidacion" class="alert alert-danger" role="alert">
+            <div  *ngFor="let su of mensajeErroresValidacion.split('-')">
+                <p>{{su}}</p>
+            </div>
+
+        </div>
+        <br>
+        <!-- Botones -->
+        <div class="row">
+            <div class="col-lg-12 m-t-md " align="right">
+                <button  class="btn btn-w-m btn-success btn-sm" type="button" (click)="volver();">
+                    <i class="fa fa-arrow-left" ></i> Volver
+                </button>
+                <button *ngIf="esNuevo" [disabled]="estaEnEdicion" class="btn btn-w-m btn-success btn-sm" type="button" (click)="guardar();">
+                    <i class="fa fa-save"></i> Crear Empresa
+                </button>
+                <button *ngIf="!esNuevo" [disabled]="estaEnEdicion" class="btn btn-w-m btn-success btn-sm" type="button" (click)="actualizar();">
+                    <i class="fa fa-save"></i> Actualizar Empresa
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de Prestadores -->
+<div id="prestadorModalDiv">
+    <div class="modal inmodal fade" id="prestadorViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">{{popupTitle}}</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaPrestadores" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th class="centerMiddle no-left-border">Número</th>
+                                        <th class="centerMiddle">Nombre
+                                            <input type="text" (input)="filtrarConvenios($event.target.value)" placeholder="Buscar..." id="buscarPrestador" name="buscarPrestador"
+                                                   class="form-control heigth25">
+                                        </th>
+                                        <th class="centerMiddle">Seleccionar</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="bodyPrestador" class="no-borders selectableBodyTable">
+                                    <tr *ngFor="let convenio of agenteTemporal; let i = index">
+                                        <td class="centerMiddle">{{convenio.Codigo}}</td>
+                                        <td class="centerMiddle">{{convenio.Nombre}}</td>
+                                        <td><a (click)="seleccionarConvenio(convenio)" title="Editar">
+                                            <i class="fa fa-plus"></i>
+                                        </a></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de SubCoberturas -->
+
+<div class="modal inmodal fade" id="cargarCoberturasAdm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="col-lg-12 m-t-sm no-padding">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">{{popupTitle}}</h5>
+                    </div>
+                    <div class="panel-body panelDatos">
+                        <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                            <h4>Coberturas:</h4>
+                            <div *ngIf="ExeSeccionVisible">
+                                <p>Coberturas EXE.</p>
+                                <table id="tableEXE" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th>Seleccionadas</th>
+                                        <th> Nombre</th>
+                                        <th> Cobertura </th>
+                                        <th> Plan </th>
+                                        <th>Es Obligatorio?</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let su of sucursalesEXE">
+                                        <td><input type="checkbox" [(ngModel)]="su.EsCheckeado" (change)="seleccionarEXETable(su)" ></td>
+                                        <td>{{su.Nombre}}</td>
+                                        <td>{{su.CodigoProducto}}</td>
+                                        <td>{{su.TipoCobertura}}</td>
+                                        <td>
+                                            <input type="checkbox" [disabled]="su.EsHabilitado==undefined?true:su.EsHabilitado" [(ngModel)]="su.EsObligatorio">Obligatorio
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="DenSeccionVisible">
+                                <p>Coberturas DEN.</p>
+                                <table id="tableDEN" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th>Seleccionadas</th>
+                                        <th> Nombre</th>
+                                        <th> Cobertura </th>
+                                        <th> Plan </th>
+                                        <th>Es Obligatorio?</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let su of sucursalesDEN">
+                                        <td><input type="checkbox" [(ngModel)]="su.EsCheckeado" (change)="seleccionarDENTable(su)" ></td>
+                                        <td>{{su.Nombre}}</td>
+                                        <td>{{su.CodigoProducto}}</td>
+                                        <td>{{su.TipoCobertura}}</td>
+                                        <td>
+                                            <input type="checkbox" [disabled]="su.EsHabilitado==undefined?true:su.EsHabilitado" [(ngModel)]="su.EsObligatorio">Obligatorio
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="OncSeccionVisible">
+                                <p>Coberturas ONC.</p>
+                                <table id="tableONC" class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                <tr>
+                                    <th>Seleccionadas</th>
+                                    <th> Nombre </th>
+                                    <th> Cobertura </th>
+                                    <th> Plan </th>
+                                    <th> Es Obligatorio?</th>
+                                </tr>
+                                </thead>
+                                    <tbody>
+                                    <tr *ngFor="let su of sucursalesONC">
+                                        <td><input type="checkbox" [(ngModel)]="su.EsCheckeado" (change)="seleccionarONCTable(su)" ></td>
+                                        <td>{{su.Nombre}}</td>
+                                        <td>{{su.CodigoProducto}}</td>
+                                        <td>{{su.TipoCobertura}}</td>
+                                        <td>
+                                            <input type="checkbox" [disabled]="su.EsHabilitado==undefined?true:su.EsHabilitado" [(ngModel)]="su.EsObligatorio">Obligatorio
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="TraSeccionVisible">
+                                <p>Coberturas Travel.</p>
+                                <table id="tableTRA" class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                <tr>
+                                    <th>Seleccionadas</th>
+                                    <th> Nombre </th>
+                                    <th> Cobertura </th>
+                                    <th> Plan </th>
+                                    <th> Es Obligatorio?</th>
+                                </tr>
+                                </thead>
+                                    <tbody>
+                                    <tr *ngFor="let su of sucursalesTRA">
+                                        <td><input type="checkbox" [(ngModel)]="su.EsCheckeado" (change)="seleccionarTRATable(su)" ></td>
+                                        <td>{{su.Nombre}}</td>
+                                        <td>{{su.CodigoProducto}}</td>
+                                        <td>{{su.TipoCobertura}}</td>
+                                        <td>
+                                            <input type="checkbox" [disabled]="su.EsHabilitado==undefined?true:su.EsHabilitado" [(ngModel)]="su.EsObligatorio">Obligatorio
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <button type="button" class="btn btn-info" (click)="confirmarCoberturaLigada()">Guardar</button>
+                            <button type="button" class="btn btn-danger" (click)="cerrarModal()">Cancelar</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

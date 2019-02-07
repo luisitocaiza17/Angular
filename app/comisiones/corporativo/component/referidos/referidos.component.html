@@ -1,0 +1,80 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Pago Comisiones</h5>
+        </div>
+        <div class="panel-body">
+            <form name="comisionCorporativoForm" role="form" #comisionCorporativoForm="ngForm" (ngSubmit)="guardarCorporativo()">
+                <div class="panel-body no-padding m-b-md">
+                    <legend class="info">Mantenimiento para cálculo de comisión</legend>
+                    <div class="col-lg-12">
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Venta Familiar:</label>
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <input type="radio" name="checkFamiliarNo" id="checkFamiliarNo" #checkFamiliarNo="ngModel"
+                                (click)="noFamiliar()" [(ngModel)]="referidorCorporativo.VentaFamiliar" value="NO"> No
+                            <input type="radio" name="checkFamiliarSi" id="checkFamiliarSi" #checkFamiliarSi="ngModel"
+                                (click)="siFamiliar()" [(ngModel)]="referidorCorporativo.VentaFamiliar" value="SI"> Si
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <label class="control-label">Pertenece a la Competencia:</label>
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <input type="radio" name="checkCompetenciaNo" id="checkCompetenciaNo" #checkCompetenciaNo="ngModel"
+                                (click)="noCompetencia()" [(ngModel)]="referidorCorporativo.PerteneceCompetencia" value="NO">
+                            No
+                            <input type="radio" name="checkCompetenciaSi" id="checkCompetenciaSi" #checkCompetenciaSi="ngModel"
+                                (click)="siCompetencia()" [(ngModel)]="referidorCorporativo.PerteneceCompetencia" value="SI">
+                            Si
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="m-b col-lg-3">
+                                <label class="control-label">Código Referidor:</label>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <input type="number" placeholder={{message.CodigoReferidor}} name="codigoReferidor" id="codigoReferidor"
+                                    [required]="estadoObligatorio" #codigoReferidor="ngModel" [(ngModel)]="referidorCorporativo.CodigoReferidor">
+                                    <div [hidden]="codigoReferidor.valid" class="error">
+                                        <p *ngIf="codigoReferidor.errors?.required">Campo requerido</p>
+                                    </div>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <label class="control-label">Porcentaje Referidor %:</label>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <input type="number" placeholder={{message.PorcentajeReferidor}} name="porcentajeReferidor"
+                                    id="porcentajeReferidor" #porcentajeReferidor="ngModel" [(ngModel)]="referidorCorporativo.PorcentajeReferidor"
+                                     max="100" [required]="estadoObligatorio">
+                                <div [hidden]="porcentajeReferidor.valid" class="error">
+                                    <p *ngIf="porcentajeReferidor.errors?.max">Revise el porcentaje</p>
+                                    <p *ngIf="porcentajeReferidor.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="m-b col-lg-3">
+                                <label class="control-label">Porcentaje Director Referidor %:</label>
+                            </div>
+                            <div class="m-b col-lg-3">
+                                <input type="number" name="porcentajeDirectorReferidor" id="porcentajeDirectorReferidor"
+                                    #porcentajeDirectorReferidor="ngModel" [(ngModel)]="referidorCorporativo.PorcentajeDirectorReferidor"
+                                    max="100" [required]="estadoObligatorio" placeholder={{message.PorcentajeDirectorReferidor}}>
+                                <div [hidden]="porcentajeDirectorReferidor.valid" class="error">
+                                    <p *ngIf="porcentajeDirectorReferidor.errors?.max">Revise el porcentaje</p>
+                                    <p *ngIf="porcentajeDirectorReferidor.errors?.required">Campo requerido</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 m-t-md">
+                    <button [disabled]="!comisionCorporativoForm.form.valid" class="btn btn-w-m btn-success btn-sm"
+                        type="submit">
+                        <i class="fa fa-save"></i> Guardar {{message.PorcentajeDirectorReferidor}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

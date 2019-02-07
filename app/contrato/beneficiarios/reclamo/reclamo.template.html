@@ -1,0 +1,313 @@
+<div class="row no-padding">
+    <div class="col-lg-12">
+        <div class="panel panel-success m-t-sm">
+            <div class="panel-heading">
+                <h5 class="panel-title">Listado de Reclamos</h5>
+            </div>
+            <div class="panel-body panelDatos" id="divListaReclamo">
+                <div class="dataTables_info">{{reclamoService.paginationConstants.EncabezadoTablaAllResults}}</div>
+                <div class="table-responsive">
+                    <table id="tablaReclamos" class="table table-bordered dataTable tableFixed" style="width: 1065;max-width: 1065;">
+                        <thead>
+                            <tr>
+                                <th class="centerMiddle no-left-border">
+                                    <p class="columnW60 fixedTableCell">Exportar</p>
+                                </th>
+                                <th class="centerMiddle no-left-border">
+                                    <p class="columnW60 fixedTableCell">Número Reclamo</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell">Alcance</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="column-value-sm fixedTableCell">Tipo</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW90 fixedTableCell">Diagnóstico</p>
+                                </th>
+                                <th class="centerMiddle no-left-border">
+                                    <p class="columnW100 fixedTableCell">Fecha Incurrencia</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell">Estado</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell">Forma Pago</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell">Monto Cubierto</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell">Monto No Cubierto</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell">Monto Deducible</p>
+                                </th>
+                                <th class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell">Monto Copago</p>
+                                </th>
+                                <th class="centerMiddle no-right-border">
+                                    <p class="columnW60 fixedTableCell">Monto Bonificado</p>
+
+                                </th>
+                                <th class="no-left-border"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyReclamos" class="no-borders fixedBodyHeight400 selectableBodyTable">
+                            <tr id="reclamo{{i}}" title="{{!reclamo.Selected ? 'Click para seleccionar' : ''}}" (click)="!reclamo.Selected ? seleccionar(reclamo, true) : return;"
+                                [class.active]="reclamo.Selected" *ngFor="let reclamo of reclamos; let i = index">
+
+                                <td class="centerMiddle no-left-border" title="Click para exportar liquidación" (click)="generarPdf(reclamo,$event)">
+                                    <p class="columnW60 fixedTableCell">
+                                        <a>
+                                           <img height="25px" src="./assets/img/pdf_icon.png" />
+                                        </a>
+                                    </p>
+                                </td>
+                                <td class="centerMiddle no-left-border">
+                                    <p class="columnW60 fixedTableCell">{{reclamo.NumeroReclamo}}</p>
+                                </td>
+                                <td class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell">{{reclamo.NumeroAlcance}}</p>
+                                </td>
+                                <td class="centerMiddle">
+                                    <p class="column-value-sm fixedTableCell">{{reclamo.TipoReclamo}}</p>
+                                </td>
+                                <td class="centerMiddle">
+                                    <p class="columnW90 fixedTableCell">{{(reclamo.CodigoDiagnostico!=undefined && reclamo.CodigoDiagnostico!='') ? (reclamo.CodigoDiagnostico
+                                        +'-'+reclamo.Diagnostico) : reclamo.Diagnostico }}</p>
+
+                                </td>
+                                <td class="centerMiddle second-column">
+                                    <p class="columnW100 fixedTableCell">{{reclamo.FechaIncurrencia}}</p>
+
+                                </td>
+                                <td class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell">{{reclamo.EstadoReclamo}}</p>
+                                </td>
+
+                                <td class="centerMiddle" *ngIf="reclamo.FormaPagoReclamo == 'Credito Cuenta'" class="centerMiddle" title="Informacion de Pago"
+                                    (click)="loadInfoPagoInteligente(reclamo,$event);" data-toggle="modal" data-target="#infoPagosViewModal">
+                                    <a>
+                                        <p class="columnW60 fixedTableCell"> {{reclamo.FormaPagoReclamo}} </p>
+                                    </a>
+                                </td>
+                                <td class="centerMiddle" *ngIf="reclamo.FormaPagoReclamo != 'Credito Cuenta'" class="centerMiddle">
+                                    <p class="columnW60 fixedTableCell"> {{reclamo.FormaPagoReclamo}} </p>
+                                </td>
+
+                                <td class="alignR centerMiddle">
+                                    <p class="columnW60 fixedTableCell">&#36;{{reclamo.MontoCubierto | number : '1.2-2'}}</p>
+                                </td>
+                                <td class="alignR centerMiddle">
+                                    <p class="columnW60 fixedTableCell">&#36;{{reclamo.MontoNoCubierto | number : '1.2-2'}}</p>
+                                </td>
+                                <td class="alignR centerMiddle">
+                                    <p class="columnW60 fixedTableCell">&#36;{{reclamo.MontoDeducible | number : '1.2-2'}}</p>
+                                </td>
+                                <td class="alignR centerMiddle">
+                                    <p class="columnW60 fixedTableCell">&#36;{{reclamo.MontoCopago | number : '1.2-2'}}</p>
+                                </td>
+                                <td class="alignR centerMiddle">
+                                    <p class="columnW60 fixedTableCell">&#36;{{reclamo.MontoBonificado | number : '1.2-2'}}</p>
+
+                                </td>
+
+                            </tr>
+                            <tr *ngIf="reclamos.length == 0">
+                                <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12 m-t-sm no-padding" id="divListaDetalleReclamo">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Detalle Reclamo</h5>
+                </div>
+                <div class="panel-body panelDatos">
+                    <div class="table-responsive">
+                        <table class="table table-bordered dataTable tableFixed" style="width: 1018px;max-width: 1018px;">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" class="centerMiddle first-column no-left-border">
+                                        <p class="first-column fixedTableCell">PRESTACIÓN</p>
+                                    </th>
+                                    <th rowspan="2" class="centerMiddle second-column">
+                                        <p class="second-column fixedTableCell">Beneficio</p>
+                                    </th>
+                                    <th rowspan="2" class="centerMiddle general-column">
+                                        <p class="general-column fixedTableCell">Valor Presentado</p>
+                                    </th>
+                                    <th rowspan="2" class="centerMiddle general-column">
+                                        <p class="general-column fixedTableCell">Cantidad Presentada</p>
+                                    </th>
+                                    <th colspan="6" class="centerMiddle no-right-border">
+                                        <p class="fixedTableCell">VALORES LIQUIDADOS</p>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="centerMiddle column-value-xs">
+                                        <p class="column-value-xs fixedTableCell">No Cubierto</p>
+                                    </th>
+                                    <th class="centerMiddle column-value-xs">
+                                        <p class="column-value-xs fixedTableCell">Cubierto</p>
+                                    </th>
+                                    <th rowspan="2" class="centerMiddle general-column">
+                                        <p class="general-column fixedTableCell">Deducible</p>
+                                    </th>
+                                    <th class="centerMiddle column-value-xs">
+                                        <p class="column-value-xs fixedTableCell">Copago</p>
+                                    </th>
+                                    <th class="centerMiddle column-value-sm no-right-border">
+                                        <p class="column-value-sm fixedTableCell">Bonificado</p>
+                                    </th>
+                                    <th class="centerMiddle column-value-xs">
+                                        <p class="column-value-xs fixedTableCell">Pagado</p>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="no-borders fixedBodyHeight200">
+                                <tr *ngFor="let detalleReclamoEntity of detalleReclamos">
+                                    <td colspan="9" style="padding: 0;margin: 0;border: none;" class="borderLeft">
+                                        <table class="table table-bordered" style="border: none;margin-bottom: 0;">
+                                            <tr>
+                                                <td colspan="10" class="nestedColumRowSpan no-left-border" style="width: 945px">Prestador:
+                                                    <span class="text-uppercase">{{detalleReclamoEntity.NombrePrestador}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr *ngFor="let detalle of detalleReclamoEntity.Detalles">
+                                                <td class="first-column no-left-border">
+                                                    <p class="first-column fixedTableCell">{{'('+detalle.NumeroLinea+')-'+detalle.NumeroProcedimiento+'-'+detalle.Procedimiento}}</p>
+                                                </td>
+                                                <td class="second-column">
+                                                    <p class="second-column fixedTableCell">{{detalle.Beneficio}}</p>
+                                                </td>
+                                                <td class="general-column">
+                                                    <p class="general-column fixedTableCell alignR">&#36;{{detalle.ValorPresentado | number : '1.2-2'}}</p>
+                                                </td>
+                                                <td class="general-column">
+                                                    <p class="general-column fixedTableCell centerMiddle">{{detalle.CantidadPresentada}}</p>
+                                                </td>
+                                                <td class="column-value-xs">
+                                                    <p class="column-value-xs fixedTableCell alignR">&#36;{{detalle.ValorNoCubierto | number : '1.2-2'}}</p>
+                                                </td>
+                                                <td class="column-value-xs">
+                                                    <p class="column-value-xs fixedTableCell alignR">&#36;{{detalle.ValorCubierto | number : '1.2-2'}}</p>
+                                                </td>
+                                                <td class="general-column">
+                                                    <p class="general-column fixedTableCell alignR">&#36;{{detalle.ValorDeducible | number : '1.2-2'}}</p>
+                                                </td>
+                                                <td class="column-value-xs">
+                                                    <p class="column-value-xs fixedTableCell alignR">&#36;{{detalle.ValorCopago | number : '1.2-2'}}</p>
+                                                </td>
+                                                <td class="column-value-sm">
+                                                    <p class="column-value-sm fixedTableCell alignR">&#36;{{detalle.ValorBonificado | number : '1.2-2'}}</p>
+                                                </td>
+                                                <td class="column-value-xs">
+                                                    <p class="column-value-xs fixedTableCell alignR">&#36;{{detalle.ValorPagado | number : '1.2-2'}}</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="detalleReclamos.length == 0">
+                                    <td colspan="10" style="text-align: center;width:1016px;">No existen resultados</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12 m-t-sm no-padding" id="divDatosGeneralesReclamo">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Datos Generales</h5>
+                </div>
+                <div class="panel-body panelDatos">
+                    <div class="col-lg-12">
+                        <label class="col-lg-2">Número Reclamo:</label>
+                        <span class="col-lg-2">{{reclamoSeleccionado.NumeroReclamo+'-'+reclamoSeleccionado.NumeroAlcance}}</span>
+                        <label class="col-lg-1">Beneficiario:</label>
+                        <span class="col-lg-3">{{reclamoSeleccionado.NombreBeneficiario}}</span>
+                        <label class="col-lg-2">Fecha de Pago:</label>
+                        <span class="col-lg-2">{{reclamoSeleccionado.FechaPago}}</span>
+                    </div>
+                    <div class="col-lg-12 clearInfo">
+                        <label class="col-lg-2">Diagnóstico:</label>
+                        <span class="col-lg-10">{{reclamoSeleccionado.Diagnostico}}</span>
+                    </div>
+
+                    <div class="col-lg-12 clearInfo">
+                        <label class="col-lg-2">Observaciones:</label>
+                        <span class="col-lg-10">{{reclamoSeleccionado.Observaciones}}</span>
+                    </div>
+                    <div class="col-lg-12 clearInfo">
+                        <label class="col-lg-2">Observación Interna:</label>
+                        <span class="col-lg-10">{{reclamoSeleccionado.ObservacionInterna}}</span>
+                    </div>
+                    <div class="col-lg-12 clearInfo">
+                        <label class="col-lg-2">Observación 1:</label>
+                        <span class="col-lg-10">{{reclamoSeleccionado.Observacion1}}</span>
+                    </div>
+                    <div class="col-lg-12 clearInfo">
+                        <label class="col-lg-2">Observación 2:</label>
+                        <span class="col-lg-10">{{reclamoSeleccionado.Observacion2}}</span>
+                    </div>
+                    <div class="col-lg-12 clearInfo">
+                        <label class="col-lg-2">Observación 3:</label>
+                        <span class="col-lg-10">{{reclamoSeleccionado.Observacion3}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de infoPagos -->
+
+<div class="modal inmodal fade" id="infoPagosViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="col-lg-12 m-t-sm no-padding">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Informacion de Pago Inteligente</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-18 no-padding">
+                        <div class="dataTables_info"></div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th class="centerMiddle">Numero Envio</th>
+                                        <th class="centerMiddle">Nombre Beneficiario</th>
+                                        <th class="centerMiddle">Estado</th>
+                                        <th class="centerMiddle">Motivo de Rechazo</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="no-borders">
+                                    <tr *ngFor="let info of infoPagos">
+                                        <td class="col-lg-2">{{info.NumeroEnvio +" - "+info.SecuencialEnvio}}</td>
+                                        <td>{{info.NombreBeneficiario}}</td>
+                                        <td>{{info.Estado}}</td>
+                                        <td>{{info.MotivoRechazo}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-12 alignR">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

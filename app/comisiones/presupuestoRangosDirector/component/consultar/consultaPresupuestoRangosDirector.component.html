@@ -1,0 +1,158 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+  <div class="col-lg-10">
+    <h2>Comisiones</h2>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['']">Home</a>
+      </li>
+      <li class="breadcrumb-item">Comisiones</li>
+      <li class="breadcrumb-item active">Presupuesto Rangos Directores</li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h5 class="panel-title">
+          <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+            <i class="fa fa-bookmark"></i>
+          </a>
+        </h5>
+      </div>
+      <div id="divConsultar" class="panel-collapse collapse in">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+              <form #crearPresupuestoRangosDirectorForm="ngForm" (ngSubmit)="consultarPresupuestos();">
+                <div class="form-group col-lg-12 no-padding">
+                  <div class="form-group col-lg-12 no-padding">
+                    <label class="col-lg-1 control-label" for="region">Región:</label>
+                    <div class=" col-lg-3">
+                      <select class="form-control" id="region" [(ngModel)]="filter.Region" name="region" (change)="cargarSucursal($event);" class="form-control"
+                        #region="ngModel">
+                        <option [value]="undefined" selected>Todos</option>
+                        <option *ngFor="let e of listaRegiones" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-1 control-label" for="sucursal">Sucursal:</label>
+                    <div class=" col-lg-3">
+                      <select class="form-control" id="sucursal" [(ngModel)]="filter.CodigoSucursal" name="sucursal"  (change)="cargarSalas();" class="form-control" #sucursal="ngModel">
+                        <option [value]="undefined" selected>Todos</option>
+                        <option *ngFor="let e of sucursalesDeRegion" [value]="e.CodigoSucursal">{{e.NombreSucursal}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-1 control-label" for="sala">Sala:</label>
+                    <div class=" col-lg-3">
+                      <select class="form-control" id="sala" [(ngModel)]="filter.CodigoSala" name="sala" class="form-control" #sala="ngModel">
+                        <option [value]="undefined" selected>Todos</option>
+                        <option *ngFor="let s of salas" [value]="s.Codigo">{{s.Nombre}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group col-lg-12 no-padding">
+                    <label class="col-lg-1 control-label" for="valorDesde">Valor Desde:</label>
+                    <div class="m-b col-lg-3">
+                      <input type="text" placeholder="Valor Desde" id="valorDesde" [(ngModel)]="filter.ValorDesde" name="valorDesde" class="form-control"
+                        #valorDesde="ngModel" />
+                    </div>
+                    <label class="col-lg-1 control-label" for="valorHasta">Valor Hasta:</label>
+                    <div class="m-b col-lg-3">
+                      <input type="text" placeholder="Valor Hasta" id="valorHasta" [(ngModel)]="filter.ValorHasta" name="valorHasta" class="form-control"
+                        #valorHasta="ngModel" />
+                    </div>
+                    <label class="col-lg-1 control-label" for="estado">Estado:</label>
+                    <div class=" col-lg-3">
+                      <select class="form-control" id="estado" [(ngModel)]="filter.Estado" name="estado" class="form-control" #estado="ngModel">
+                        <option [value]="undefined" selected>Todos</option>
+                        <option [value]="true"> Activo </option>
+                        <option [value]="false"> Inactivo </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!crearPresupuestoRangosDirectorForm.form.valid">
+                    <i class="fa fa-search"></i> Buscar
+                  </button>
+                  <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">
+                    <i class="fa fa-eraser"></i> Limpiar </a>
+                  <a (click)="openModal('#modalCrear')" class="btn btn-w-m btn-success btn-sm">
+                    <i class="fa fa-plus"></i> Nuevo</a>
+                </div>
+              </form>
+              <div id="divResultadoBusquedaListas" class="ibox-content " style="border-width:1px 0px 0px 0px;">
+                <div class="dataTables_info">{{presupuestoRangosDirectorService.paginationConstants.EncabezadoTabla}}</div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered table-hover dataTable">
+                    <thead>
+                      <tr>
+                        <th class="centerMiddle"> Acciones </th>
+                        <th class="centerMiddle"> Codigo </th>
+                        <th class="centerMiddle"> Estado </th>
+                        <th class="centerMiddle"> Sala </th>
+                        <th class="centerMiddle"> Valor Desde - Hasta </th>
+                        <th class="centerMiddle"> Porcentaje </th>
+                      </tr>
+                    </thead>
+                    <tbody (click)="!i.Selected ? seleccionar(i, true) : return;" class="no-borders selectableBodyTable" *ngFor="let i of presupuestosRangosDirector | paginate: {id : 'tablePresupuestos', itemsPerPage: presupuestoRangosDirectorService.paginationConstants.pageSize,currentPage: presupuestoRangosDirectorService.paginationConstants.pageNumber, totalItems: presupuestoRangosDirectorService.paginationConstants.total};">
+                      <tr>
+                        <td rowspan="4" class="centerMiddle clickableColumn">
+                          <a *ngIf="i.Estado === false" title="Click para activar">
+                            <i class="fa fa-thumbs-up" (click)="activarDesactivarPresupuesto(i)"></i>
+                          </a>
+                          <a *ngIf="i.Estado === true" title="Click para desactivar">
+                            <i class="fa fa-thumbs-down" (click)="activarDesactivarPresupuesto(i)"></i>
+                          </a>                         
+                          <a title="Click para editar">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"  (click)="openModal('#modalEditar')"></i>
+                          </a>
+                        </td>
+                      </tr>
+                      <tr [class.active]="i.Selected" class="centerMiddle ">
+                        <td>{{i.Codigo}}</td>
+                        <td>{{ i.Estado == true ? 'Activo' : 'Inactivo'}}</td>
+                        <td>{{i.NombreSala}}</td>
+                        <td>{{i.ValorDesde}} - {{i.ValorHasta}}</td>
+                        <td>{{i.Porcentaje}} %</td>
+                      </tr>
+                    </tbody>
+                    <tfoot *ngIf="presupuestoRangosDirectorService.paginationConstants.total == 0">
+                        <tr>
+                            <td colspan="14" style="text-align: center;">No existen resultados</td>
+                        </tr>
+                      </tfoot> 
+                  </table>
+                </div>
+                <pagination-controls id="tablePresupuestos" maxSize="5" previousLabel="" nextLabel="" autoHide="true" (pageChange)="presupuestoRangosDirectorService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal fade" id="modalCrear" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h5 class="panel-title">Crear nuevo registro de Presupuesto Rangos Director</h5>
+      </div>
+      <app-ingresarPresupuestoRangosDirector></app-ingresarPresupuestoRangosDirector>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal fade" id="modalEditar" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h5 class="panel-title">Editar registro de Presupuesto Rangos Director</h5>
+      </div>
+      <app-editarPresupuestoRangosDirector (eventoGuardarPresupuesto)="consultarPresupuestos();"></app-editarPresupuestoRangosDirector>
+    </div>
+  </div>
+</div>

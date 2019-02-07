@@ -1,0 +1,85 @@
+<div class="wrapper wrapper-content">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div id="divConsultar" class="panel-collapse collapse in">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+              <form #formularioCrear="ngForm">
+                <div class="form-group col-lg-12 no-padding">
+
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="region">Región:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" [(ngModel)]="codigoRegion" id="region" name="region" #region="ngModel" (change)="cargarSucursal($event);"
+                        required>
+                        <option [value]="undefined" selected>Seleccione región</option>
+                        <option *ngFor="let r of listaRegiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label" for="sucursal">Sucursal:</label>
+                    <div class="col-lg-4">
+                      <select class="form-control heigth25  no-padding" id="Sucursal" name="Sucursal" (change)="cargarSalas();" [(ngModel)]="idSucursal" #Sucursal="ngModel"
+                        required>
+                        <option *ngFor="let sucursal of sucursalesDeRegion" [value]="sucursal.CodigoSucursal"> {{ sucursal.NombreSucursal }} </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="sala">Sala:</label>
+                    <div class=" col-lg-4">
+                      <select class="form-control" id="sala" [(ngModel)]="presupuesto.CodigoSala" name="sala" class="form-control" #sala="ngModel">
+                        <option *ngFor="let s of salas" [value]="s.Codigo">{{s.Nombre}}</option>
+                      </select>
+                    </div>
+                    <label class="col-lg-2 control-label" for="valorDesde">Valor Desde:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="number" placeholder="Valor Desde" id="valorDesde" [(ngModel)]="presupuesto.ValorDesde" name="valorDesde" class="form-control"
+                        #valorDesde="ngModel" pattern="\d*" [max]="presupuesto.ValorHasta-1" required/>
+                      <div [hidden]="valorDesde.valid || valorDesde.pristine" class="error">
+                        <p *ngIf="valorDesde.errors?.pattern">Sólo dígitos</p>
+                        <p *ngIf="valorDesde.errors?.max"> El valor debe ser menor al Valor Hasta</p>
+                      </div>
+                    </div>                  
+                  </div>
+
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="valorHasta">Valor Hasta:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="number" placeholder="Valor Hasta" id="valorHasta" [(ngModel)]="presupuesto.ValorHasta"
+                        name="valorHasta" class="form-control" #valorHasta="ngModel" pattern="\d*" max="999999" required />
+                      <div [hidden]="valorHasta.valid || valorHasta.pristine" class="error">
+                        <p *ngIf="valorHasta.errors?.pattern">Sólo dígitos</p>
+                        <p *ngIf="valorHasta.errors?.max">Revise el valor</p>
+                      </div>
+                    </div>
+                    <label class="col-lg-2 control-label" for="valorDesde">Porcentaje:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="text" placeholder="Porcentaje" id="porcentaje" name="porcentaje" maxlength="3" [(ngModel)]="presupuesto.Porcentaje"
+                        #porcentaje="ngModel" required class="form-control" max="999" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                      <div [hidden]="porcentaje.valid || porcentaje.pristine" class="error">
+                        <p *ngIf="porcentaje.errors?.pattern">Sólo dígitos</p>
+                        <p *ngIf="porcentaje.errors?.max">Máximo valor 999 %</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 text-center">
+                  <button class="btn btn-w-m btn-success btn-sm" [disabled]="!formularioCrear.form.valid" type="submit" (click)="crearPresupuestoRangosDirector();">
+                    <i class="fa fa-plus"></i> Crear
+                  </button>
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="salir()">
+                    <i class="fa fa-times"></i> Cancelar
+                  </button>
+                  <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">
+                      <i class="fa fa-eraser"></i> Limpiar </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

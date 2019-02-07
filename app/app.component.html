@@ -1,0 +1,24 @@
+<!-- Wrapper-->
+<div [id]="(activeRoute('login') || activeRoute('not-found')) ? 'login' : 'wrapper'">
+
+    <!-- Left navigation bar -->
+    <navigation *ngIf="!(activeRoute('login') || activeRoute('not-found'))"></navigation>
+
+    <!-- Main page wrapper -->
+    <div [id]="(activeRoute('login') || activeRoute('not-found')) ? 'page-login' : 'page-wrapper'" class="gray-bg">
+
+        <!-- Top navigation -->
+        <topnavbar *ngIf="!(activeRoute('login') || activeRoute('not-found'))"></topnavbar>
+
+        <!-- Main view/routes wrapper-->
+        <router-outlet></router-outlet>
+
+        <!-- Footer -->
+        <footer *ngIf="!activeRoute('login')">
+        </footer>
+
+    </div>
+    <!-- End page wrapper-->
+
+</div>
+<!-- End wrapper-->

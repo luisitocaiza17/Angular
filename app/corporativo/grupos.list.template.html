@@ -1,0 +1,104 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Grupos Empresariales</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Corporativo</li>
+            <li class="breadcrumb-item active">Grupos</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading" (click)="colapsarTab()">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+
+                    <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+                        <div class="row">
+                            <form (ngSubmit)="crear();" #consultaContratoForm="ngForm">
+                                <div class="form-group col-lg-12 no-padding">
+
+                                    <label class="col-lg-1 control-label" for="fechaHasta">Crear Grupo Empresarial:</label>
+                                    <div class="m-b col-lg-3">
+                                        <input type="text" placeholder="Nombre de nuevo Grupo" id="idNombre" name="idNombre" [(ngModel)]="grupo.Nombre" class="form-control"
+                                            #idNombre="ngModel" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="(grupo.Nombre == undefined)">
+                                        <i class="fa fa-save"></i> Crear</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="panel-body panelDatos" id="divListaRemesa">
+                        <div class="dataTables_info">Mostrando {{grupos.length}} registros</div>
+                        <div class="table-responsive">
+                            <table id="tablaRemesa" class="table table-striped table-bordered table-hover dataTable">
+                                <tbody id="bodyRemesa" class="no-borders">
+                                    <tr>
+                                        <th class="centerMiddle">
+                                            Sel
+                                        </th>
+                                        <th class="centerMiddle">
+                                            Número
+                                        </th>
+                                        <th class="centerMiddle">
+                                            Grupo
+                                        </th>
+                                    </tr>
+                                    <tr *ngFor="let grupo of grupos">
+                                        <td class="centerMiddle general-column">
+                                            <a (click)="inicializarPanelGrupos(grupo)" title="Clic para editar Grupo">
+                                                <i class="fa fa-file-text"></i>
+                                            </a>
+                                        </td>
+                                        <td class="centerMiddle">
+                                            {{grupo.Numero}}
+                                        </td>
+                                        <td class="centerMiddle">
+                                            {{grupo.Nombre}}
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="grupos.length == 0">
+                                        <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel panel-default" *ngIf="isDesplegar">
+                <div id="divPanelAC" class="panel-collapse collapse">
+                    <div class="panel-body" style="padding-top:0px">
+                        <div id="panelOdas">
+                            <div class="row">
+                                <div class="col-lg-12 no-padding">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

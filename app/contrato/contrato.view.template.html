@@ -1,0 +1,58 @@
+<div class="col-lg-12">
+    <ul id="ulMenuConsultas" class="nav nav-tabs" role="tablist">
+        <li class="nav-item active">
+            <a class="nav-link active" id="dashboardTab" data-toggle="tab" href="#dashboard" role="tab" (click)="activateTab('dashboardTab')" *ngIf="!consultaExterna">Resumen</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="detalleContratoTab" data-toggle="tab" href="#detalleContrato" role="tab" (click)="activateTab('detalleContratoTab')" *ngIf="!consultaExterna">Detalle Contrato</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="beneficiariosTab" data-toggle="tab" href="#beneficiarios" role="tab" (click)="activateTab('beneficiariosTab')"*ngIf="consultaExterna || consultaFull || consultaVendedor">Beneficiarios</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="cotizacionesTab" data-toggle="tab" href="#cotizaciones" role="tab" (click)="activateTab('cotizacionesTab')" *ngIf="consultaFull || consultaVendedor">Cotizaciones</a>
+        </li>
+        <li class="nav-item" *ngIf="false">
+            <a class="nav-link" id="siniestralTab" data-toggle="tab" href="#siniestral" role="tab" (click)="activateTab('siniestralTab')" *ngIf="consultaFull">Siniestral</a>
+        </li>
+        <li class="nav-item" >
+            <a class="nav-link" id="planesTab" data-toggle="tab" href="#planes" role="tab" (click)="activateTab('planesTab')" *ngIf="consultaFull">Planes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="cobranzasTab" data-toggle="tab" href="#cobranzas" role="tab" (click)="activateTab('cobranzasTab')" *ngIf="consultaFull">Cobranzas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="movimientosTab" data-toggle="tab" href="#movimientos" role="tab" (click)="activateTab('movimientosTab')" *ngIf="consultaFull">Movimientos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="sobresTab" data-toggle="tab" href="#sobres" role="tab" (click)="activateTab('sobresTab')" *ngIf="consultaFull || consultaVendedor">Sobres</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="dashboard" role="tabpanel">
+            <dashboard></dashboard>
+        </div>
+        <div class="tab-pane" id="detalleContrato" role="tabpanel">
+            <detalleContrato></detalleContrato>
+        </div>
+        <div class="tab-pane" id="beneficiarios" role="tabpanel">
+            <beneficiarios></beneficiarios>
+        </div>
+        <div class="tab-pane" id="cotizaciones" role="tabpanel" *ngIf="consultaFull || consultaVendedor">
+            <cotizaciones></cotizaciones>
+        </div>
+        <div class="tab-pane" id="planes" role="tabpanel" *ngIf="consultaFull">
+            <planes></planes>
+        </div>
+        <div class="tab-pane" id="cobranzas" role="tabpanel" *ngIf="consultaFull">
+            <cobranzas></cobranzas>
+        </div>
+        <div class="tab-pane" id="movimientos" role="tabpanel" *ngIf="consultaFull">
+            <movimientos></movimientos>
+        </div>
+        <div class="tab-pane" id="sobres" role="tabpanel" *ngIf="consultaFull || consultaVendedor">
+            <sobrereembolso></sobrereembolso>
+        </div>
+    </div>
+</div>

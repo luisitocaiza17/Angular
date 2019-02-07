@@ -1,0 +1,127 @@
+<div>
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Datos Generales</h5>
+        </div>
+        <div class="panel-body">
+            <div class="col-lg-12 no-padding">
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Region:</label>
+                <span class="col-lg-2">{{contratoKey.CodigoRegion}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Producto:</label>
+                <span class="col-lg-2">{{contratoKey.CodigoProducto}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">No Contrato:</label>
+                <span class="col-lg-2">{{contratoKey.NumeroContrato}}</span>
+            </div>
+            <div class="col-lg-12 no-padding">
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Cédula:</label>
+                <span class="col-lg-2">{{contratoKey.CedulaTitular}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombres y Apellidos:</label>
+                <span class="col-lg-2">{{contratoKey.NombreTitular}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Plan:</label>
+                <span class="col-lg-2">{{contratoKey.Plan}}</span>
+            </div>
+
+            <div class="col-lg-12 no-padding">
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Versión:</label>
+                <span class="col-lg-2">{{contratoKey.VersionPlan}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Fecha Inicio:</label>
+                <span class="col-lg-2">{{contratoKey.FechaInicio | date: 'dd/MM/yyyy'}}</span>
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Fecha Fin:</label>
+                <span class="col-lg-2">{{contratoKey.FechaFin | date: 'dd/MM/yyyy'}}</span>
+            </div>
+
+            <div class="col-lg-12 no-padding">
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Estado:</label>
+                <span class="col-lg-2">{{contratoKey.ContratoEstado}}</span>
+
+                <label class="col-lg-2 control-label no-padding-left" for="slcPlan">Nombre Plan:</label>
+                <span class="col-lg-2">{{contratoKey.NombrePlan}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divMenu" class="ibox-content divHorizontalMenu" style="padding-top: 0px; border-width:0px;">
+    <div class="collapse navbar-collapse no-padding hoverMenu" id="divCollapseMenu">
+        <ul id="ulMenu" class="nav navbar-nav navbar-left" style="background: #005BBB;border-bottom-left-radius: 1em;border-bottom-right-radius: 1em;width:100%;height: 30px;">
+            <li id="liCambio" class="dropdown" *ngIf="accessTransaccionesCambios">
+                <a href="#" id="menCambio" class="menuH dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Cambios <span class="caret"></span>
+                    </a>
+                <ul class="dropdown-menu">
+                    <li *ngIf="accessSubCorrespondencia"><a (click)="activar('Correspondencia')">Direcci&oacute;n de Correspondencia</a></li>
+                    <li *ngIf="accessSubTransaccionesEmpresa"><a (click)="activar('Empresa')">Empresa</a></li>
+                    <li *ngIf="accessSubTransaccionesPendienteVigente"><a (click)="activar('PendienteVigente')">Pendiente a Vigente</a></li>
+                    <li *ngIf="accessSubTransaccionesPlan"><a (click)="activar('Plan')">Plan</a></li>
+                    <li *ngIf="accessSubTransaccionesPrecio"><a (click)="activar('modPrecioBeneficiario')">Precio</a></li>
+                    <li *ngIf="accessSubTransaccionesReasignacionCartera"><a (click)="activar('reasignacion-cartera')">Reasignaci&oacute;n Cartera</a></li>
+                    <li *ngIf="accessSubTransaccionesTitular"><a (click)="activar('Titular')">Titular</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown" *ngIf="accessTransaccionesPagos">
+                <a href="#" class="menuH dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Pago<span class="caret"></span>
+                    </a>
+                <ul class="dropdown-menu">
+                    <li *ngIf="accessSubTransaccionesFormaPago"><a (click)="activar('FormaPago')">Forma de Pago</a></li>
+                    <li *ngIf="accessSubTransaccionesPagoInteligente"><a (click)="activar('PagoInteligente')">Pago Inteligente</a></li>
+                    <li *ngIf="true"><a (click)="activar('app-individual')">Pago Comisiones</a></li> 
+                </ul>
+            </li>
+            <li class="dropdown" *ngIf="accessTransaccionesContratos">
+                <a href="#" class="menuH dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Contrato<span class="caret"></span>
+                    </a>
+                <ul class="dropdown-menu">
+                    <li *ngIf="accessSubTransaccionesAnulacion"><a (click)="activar('Anulacion')">Anulaci&oacute;n</a></li>
+                    <li *ngIf="accessSubTransaccionesAplicacionDescuentos"><a (click)="activar('AplicacionDescuentos')">Aplicaci&oacute;n de Descuentos</a></li>
+                    <li *ngIf="accessSubTransaccionesBloqueoDesbloqueoMorosidad"><a (click)="activar('DesbloqueoMorosidad')">Bloqueo/Desbloqueo Morosidad</a></li>
+                    <li *ngIf="accessSubTransaccionesEmisionTarjetas"><a (click)="activar('EmisionTarjetas')">Emisi&oacute;n/Reverso de Tarjetas</a></li>
+                    <li *ngIf="accessSubTransaccionesFacturacionManual"><a (click)="activar('FacturacionManual')">Facturaci&oacute;n Manual</a></li>
+                    <li *ngIf="accessSubTransaccionesMantenimientoObservaciones"><a (click)="activar('MantenimientoObservaciones')">Mantenimiento Observaciones</a></li>
+                    <li *ngIf="accessSubTransaccionesQuitarCarencias"><a (click)="activar('QuitarCarencias')">Quitar Carencias</a></li>
+                    <li *ngIf="accessSubTransaccionesReactivacion"><a (click)="activar('Reactivacion')">Reactivaci&oacute;n</a></li>
+                    <li *ngIf="accessSubTransaccionesRenovacion"><a (click)="activar('Renovacion')">Renovaci&oacute;n</a></li>
+                </ul>
+            </li>
+            <li class="dropdown" *ngIf="accessTransaccionesOtros">
+                <a href="#" class="menuH dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Otros<span class="caret"></span>
+                    </a>
+                <ul class="dropdown-menu">
+                    <li *ngIf="true"><a (click)="activar('IngresoPreexistencias')">Ingreso Preexistencias</a></li>
+                    <li *ngIf="accessSubTransaccionesMaternidad"><a (click)="activar('Maternidad')">Maternidad</a></li>
+                    <li *ngIf="accessSubTransaccionesModificarBeneficiarios"><a (click)="activar('ModificarBeneficiario')">Modificar Beneficiarios</a></li>
+                    <li *ngIf="accessSubTransaccionesSeguroDegravamen"><a (click)="activar('SeguroDegravamen')">Seguro Degravamen</a></li>
+                    <li *ngIf="accessSubTransaccionesTransicionAnticipada"><a (click)="activar('TransicionAnticipada')">Transición Anticipada</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div style="min-height: 70px;">
+    <correspondencia *ngIf="isActive('Correspondencia')" [contratoKey]="contratoKey"></correspondencia>
+    <planTx *ngIf="isActive('Plan')" [contratoKey]="contratoKey"></planTx>
+    <empresaTx *ngIf="isActive('Empresa')"></empresaTx>
+    <titularTx *ngIf="isActive('Titular')"></titularTx>
+    <formaPago *ngIf="isActive('FormaPago')" [contratoKey]="contratoKey"></formaPago>
+    <pagoInteligente *ngIf="isActive('PagoInteligente')" [contratoKey]="contratoKey"></pagoInteligente>
+    <anulacion *ngIf="isActive('Anulacion')" [contratoKey]="contratoKey"></anulacion>
+    <aplicacionDescuento *ngIf="isActive('AplicacionDescuentos')" [contratoKey]="contratoKey"></aplicacionDescuento>
+    <desbloqueoMorosidad *ngIf="isActive('DesbloqueoMorosidad')" [contratoKey]="contratoKey"></desbloqueoMorosidad>
+    <facturacionManual *ngIf="isActive('FacturacionManual')" [contratoKey]="contratoKey"></facturacionManual>
+    <quitarCarencias *ngIf="isActive('QuitarCarencias')" [contratoKey]="contratoKey"></quitarCarencias>
+    <reactivacion *ngIf="isActive('Reactivacion')" [contratoKey]="contratoKey"></reactivacion>
+    <renovacion *ngIf="isActive('Renovacion')" [contratoKey]="contratoKey"></renovacion>
+    <mantenimientoOnservacion *ngIf="isActive('MantenimientoObservaciones')" [contratoKey]="contratoKey"></mantenimientoOnservacion>
+    <emisionTarjetas *ngIf="isActive('EmisionTarjetas')" [contratoKey]="contratoKey"></emisionTarjetas>
+    <maternidad *ngIf="isActive('Maternidad')" [contratoKey]="contratoKey"></maternidad>
+    <modBeneficiario *ngIf="isActive('ModificarBeneficiario')" [contratoKey]="contratoKey"></modBeneficiario>
+    <ingresoPreexistencias *ngIf="isActive('IngresoPreexistencias')" ></ingresoPreexistencias>
+    <transicion *ngIf="isActive('TransicionAnticipada')"></transicion>
+    <seguro *ngIf="isActive('SeguroDegravamen')"></seguro>
+    <modPrecioBeneficiario *ngIf="isActive('modPrecioBeneficiario')"></modPrecioBeneficiario>
+    <pendienteVigente *ngIf="isActive('PendienteVigente')" [contratoKey]="contratoKey"></pendienteVigente>
+    <reasignacion-cartera *ngIf="isActive('reasignacion-cartera')"  [contratoKey]="contratoKey"></reasignacion-cartera>
+    <app-individual *ngIf="isActive('app-individual')" [contratoKey]="contratoKey"></app-individual>
+</div>

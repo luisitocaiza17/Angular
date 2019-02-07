@@ -1,0 +1,277 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Asignar de Sobres</h5>
+        </div>
+        <div class="panel-body">
+            <form name="asignarSobresForm" role="form" #asignarSobresForm="ngForm">
+
+                <fieldset class="col-lg-12">
+                    <legend class="info">ANULACIÓN DE SOBRES</legend>
+
+                    <label class="col-lg-2 control-label" for="fechaDesde">Fecha Desde:</label>
+                    <div class="m-b col-lg-4">
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaDesde" name="fechaDesde"
+                            [(ngModel)]="sobreFilter.FechaDesde" [datepicker]="datepickerOpts"></datetime>
+                    </div>
+                    <label class="col-lg-2 control-label" for="fechaHasta">Fecha Hasta:</label>
+                    <div class="m-b col-lg-4">
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaHasta" name="fechaHasta"
+                            [(ngModel)]="sobreFilter.FechaHasta" [datepicker]="datepickerOpts"></datetime>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="accion">Sobre:</label>
+                    <div class="col-lg-4">
+                        <input type="text" placeholder="Número de Sobre" [(ngModel)]="sobreFilter.NumeroSobre" id="numeroSobre"
+                            name="numeroSobre" class="heigth25 form-control col-lg-12" />
+                    </div>
+
+                    <label class="col-lg-2 control-label">Estado:</label>
+                    <div class="col-lg-4">
+                        <select class="form-select-control m-b" id="slcEstado" name="slcEstado" [(ngModel)]="sobreFilter.IdEstado"
+                            #slcEstado="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let estado of estados" [value]="estado.Id">{{estado.Valor}}</option>
+                        </select>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+
+                    <label class="col-lg-2 control-label">Asignado a:</label>
+                    <div class="col-lg-4">
+                        <select class="form-select-control m-b" id="slcUsuarioAsignado" name="slcUsuarioAsignado"
+                            [(ngModel)]="sobreFilter.UsuarioAsignado" #slcUsuarioAsignado="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let consultor of consultores" [value]="consultor.Usuario">{{consultor.NombreConsultor}}</option>
+                        </select>
+                    </div>
+
+                    <label class="col-lg-2 control-label">Ingresado por:</label>
+                    <div class="col-lg-4">
+                        <select class="form-select-control m-b" id="slc" name="slcIngresadoPor" [(ngModel)]="sobreFilter.IngresadoPor"
+                            #slcIngresadoPor="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let consultor of consultores" [value]="consultor.Usuario">{{consultor.NombreConsultor}}</option>
+                        </select>
+                    </div>
+
+                </fieldset>
+
+                <div class="col-lg-12 m-b">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="loadSobres();">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
+                    <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">Limpiar</a>
+
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="seleccionarTodos();">
+                        <i class="fa fa-search"></i>Seleccionar Todos
+                    </button>
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="validarAnular();">
+                        <i class="fa fa-search"></i>Anular
+                    </button>
+                </div>
+
+                <div class="dataTables_info">{{sobreReembolsoService.paginationConstants.EncabezadoTabla}}</div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable">
+                        <thead>
+                            <tr>
+                                <th class="centerMiddle">Seleccionar</th>
+                                <th class="centerMiddle"></th>
+                                <th class="centerMiddle">Asignado A:</th>
+                                <th class="centerMiddle">Número Sobre</th>
+                                <th class="centerMiddle">Valor Presentado</th>
+                                <th class="centerMiddle">Estado Sobre</th>
+                                <th class="centerMiddle">Establecimiento</th>
+                                <th class="centerMiddle">Fecha Digitación</th>
+                                <th class="centerMiddle">Número Contrato</th>
+                                <th class="centerMiddle">Región</th>
+                                <th class="centerMiddle">Producto</th>
+                                <th class="centerMiddle">Persona Contacto</th>
+                                <th class="centerMiddle">Celular</th>
+                                <th class="centerMiddle">Fecha Recepción</th>
+                                <th class="centerMiddle">Fecha Sobre</th>
+
+                            </tr>
+                        </thead>
+                        <tbody class="no-borders selectableBodyTable" *ngFor="let sobre of listadoSobres | paginate: {id : 'sobresTable', itemsPerPage: sobreReembolsoService.paginationConstants.pageSize,currentPage: sobreReembolsoService.paginationConstants.pageNumber, totalItems: sobreReembolsoService.paginationConstants.total};">
+                            <tr title="{{!sobre.Selected ? 'Click para seleccionar' : ''}}" (click)="!sobre.Selected  && sobre.NombreEstadoSobre!='Anulado'|| sobre.Selected? seleccionar(sobre, true) : return;"
+                                [class.active]="sobre.Selected">
+                                <td>
+                                    <input type="checkbox" [checked]="sobre.Selected" />
+                                </td>
+                                <td class="centerMiddle">
+                                    <button class="btn btn-light fa fa-eye" (click)="abrirModalDetalles(sobre);"></button>
+                                </td>
+                                <td *ngIf="sobre.UsuarioAsignado == undefined">Sin Asignar</td>
+                                <td *ngIf="sobre.UsuarioAsignado != undefined">{{sobre.UsuarioAsignado}}</td>
+                                <td>{{sobre.NumeroSobre}}</td>
+                                <td>{{sobre.ValorPresentado}}</td>
+                                <td>{{sobre.NombreEstadoSobre}}</td>
+                                <td>{{sobre.NombreEstablecimiento}}</td>
+                                <td>{{sobre.FechaDigitacion | date: 'dd/MM/yyyy'}}</td>
+                                <td>{{sobre.NumeroContrato}}</td>
+                                <td>{{sobre.CodigoRegion}}</td>
+                                <td>{{sobre.CodigoProducto}}</td>
+                                <td>{{sobre.PersonaContacto}}</td>
+                                <td>{{sobre.Celular}}</td>
+                                <td>{{sobre.FechaRecepcion | date: 'dd/MM/yyyy'}}</td>
+                                <td>{{sobre.FechaSobre | date: 'dd/MM/yyyy'}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot *ngIf="sobreReembolsoService.paginationConstants.total == 0">
+                            <tr>
+                                <td colspan="13" style="text-align: center;">No existen resultados</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <pagination-controls id="sobresTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true"
+                        (pageChange)="sobreReembolsoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Nuevo Modal Detalles-->
+<div class="modal inmodal fade" id="ModalDetalles" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="col-lg-12">
+                <div class="panel panel-success">
+                    <ul class="nav nav-pills">
+                        <li *ngFor="let detalle of detallesSobres;">
+                            <a href="#{{i}}" data-toggle="tab" (click)="cambiarBeneficiario(i);">{{detalle.NombreBeneficiario}}</a>
+                        </li>
+                    </ul>
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Detalle del Sobre</h5>
+                    </div>
+                    <div class="panel-body panelDatos">
+                        <fieldset class="col-lg-12 m-b">
+                            <legend class="info">DETALLE DEL SOBRE</legend>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Código:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="descripcionEstado" name="descripcionEstado" class="heigth25 form-control col-lg-12"
+                                    [disabled]="true" [(ngModel)]="detalleSobreSelected.NumeroSolicitudDetalle" />
+                            </div>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Valor:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="valorPresentado" name="valorPresentado" [(ngModel)]="detalleSobreSelected.ValorPresentadoDetalle"
+                                    class="heigth25 form-control col-lg-12" [disabled]="true" />
+                            </div>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Estado:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="descripcionEstado" name="descripcionEstado" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionEstado" [disabled]="true" />
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Cobertura:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="descripcionTipoCobertura" name="descripcionTipoCobertura" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionTipoCobertura" [disabled]="true" />
+                            </div>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Novedad:</label>
+                            </div>
+                            <div class="col-lg-3">
+                                <input type="text" id="numeroSolicitudDetalle" name="numeroSolicitudDetalle" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionNovedad" [disabled]="true" />
+                            </div>
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label ">Número Qpra:</label>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <input type="text" id="numeroQpra" name="numeroQpra" class="heigth25 form-control col-lg-12"
+                                    [disabled]="true" />
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-1" style="padding-left:10px !important">
+                                <label class="control-label">Observaciones:</label>
+                            </div>
+                            <div class="col-lg-11" style="padding-left:33px !important">
+                                <input type="text" id="codigoSobrePersona" name="codigoSobrePersona" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.ObservacionesConsultor" [disabled]="true" />
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <legend class="info">DEVOLUCIÓN</legend>
+                            <div class="col-lg-2" style="padding-left:10px !important">
+                                <label class="control-label">Tipo de devolución:</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="text" id="descripcionTipoDevolucion" name="descripcionTipoDevolucion"
+                                    class="heigth25 form-control col-lg-12" [(ngModel)]="detalleSobreSelected.DescripcionTipoDevolucion"
+                                    [disabled]="true" />
+                            </div>
+                            <div class="col-lg-2" style="padding-left:10px !important">
+                                <label class="control-label">Tipo de Carta:</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="text" id="descripcionTipoCarta" name="descripcionTipoCarta" class="heigth25 form-control col-lg-12"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionTipoCarta" [disabled]="true" />
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-2" style="padding-left:10px !important">
+                                <label class="control-label">Motivo Devolucion:</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <textarea rows="3" id="descripcionMotivoDevolucion" name="descripcionMotivoDevolucion"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionMotivoDevolucion" class="form-control"
+                                    [disabled]="true"></textarea>
+                            </div>
+                            <div class="col-lg-2" style="padding-left:10px !important">
+                                <label class="control-label">Motivo Negativa:</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <textarea rows="3" id="descripcionMotivoGestion" name="descripcionMotivoGestion" class="form-control"
+                                    [(ngModel)]="detalleSobreSelected.DescripcionMotivoNegativa" [disabled]="true"></textarea>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-6" style="padding-left:10px !important">
+                                <legend class="info">DETALLE 1</legend>
+                                <textarea rows="5" placeholder="Detalle de devolución y cláusula del contrato." id="motivoDevolucion2"
+                                    [(ngModel)]="detalleSobreSelected.ClausulaDevolucion" name="motivoDevolucion2"
+                                    class="form-control" [disabled]="true">
+                                                </textarea>
+                            </div>
+
+                            <div class="col-lg-6" style="padding-left:10px !important">
+                                <legend class="info">DETALLE 2</legend>
+                                <textarea rows="5" placeholder="Detalle de la negativa y cláusula del contrato." id="observacionesSobre"
+                                    [(ngModel)]="detalleSobreSelected.ClausulaNegativa" name="observacionesSobre" class="form-control"
+                                    [disabled]="true">
+                                                </textarea>
+                            </div>
+                        </fieldset>
+                        <fieldset class="col-lg-12 m-b">
+                            <div class="col-lg-4"></div>
+                            <div class="col-lg-4" style="padding-left: 129px !important;">
+                                <button type="button" (click)="cerrarModal('ModalDetalles');" class="btn btn-danger">Cerrar</button>
+                            </div>
+                            <div class="col-lg-4"></div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

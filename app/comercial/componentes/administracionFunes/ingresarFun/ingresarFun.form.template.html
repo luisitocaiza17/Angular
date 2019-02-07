@@ -1,0 +1,425 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Ingresar Fun</h5>
+        </div>
+        <div class="panel-body">
+            <form name="asignarFunForm" role="form" #asignarFunForm="ngForm">
+                <div class="form-group col-lg-12 no-padding">
+
+                    <fieldset class="col-lg-12">
+                        <legend class="info">Filtros de Busqueda de la Serie</legend>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Numero Serie:</label>
+                        </div>
+                        <div class="col-lg-4">
+                            <input type="number" placeholder="Número de Serie" [(ngModel)]="serieFilter.Numero" id="numeroSerie"
+                                name="numeroSerie" class="heigth25 form-control col-lg-12" />
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Región:</label>
+                        </div>
+
+                        <div class="m-b col-lg-4">
+                            <select class="form-select-control m-b" id="slcRegionSerie" name="slcRegionSerie"
+                                [(ngModel)]="serieFilter.Region" #slcRegionSerie="ngModel">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let region of listaRegiones" [value]="region.Id">{{region.Nombre}}</option>
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Creado Desde:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaCreacionDesde"
+                                name="fechaCreacionDesde" [(ngModel)]="serieFilter.FechaCreacionDesde" [datepicker]="datepickerOpts"></datetime>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Creado Hasta:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaCreacionHasta"
+                                name="fechaCreacionHasta" [(ngModel)]="serieFilter.FechaCreacionHasta" [datepicker]="datepickerOpts"></datetime>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Usuario Emisor:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <p *ngIf="serieFilter.NombreUsuarioEmisor!=undefined">{{serieFilter.NombreUsuarioEmisor}}</p>
+                            <a (click)="abrirMolalUsuarios(constantesComercial.TIPO_SERIE_EMISOR);">
+                                <i class="fa fa-user-md"></i> {{serieFilter.AdUsuarioEmisor==undefined ? 'Seleccionar'
+                                : 'Cambiar'}}
+                            </a>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Usuario Receptor:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <p *ngIf="serieFilter.NombreUsuarioReceptor!=undefined">{{serieFilter.NombreUsuarioReceptor}}</p>
+                            <a (click)="abrirMolalUsuarios(constantesComercial.TIPO_SERIE_RECEPTOR);">
+                                <i class="fa fa-user-md"></i> {{serieFilter.AdUsuarioReceptor==undefined ?
+                                'Seleccionar' : 'Cambiar'}}
+                            </a>
+                        </div>
+                    </fieldset>
+
+                    <div class="col-lg-12 no-padding">
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="obtenerFunesCreadosEnProceso();">
+                            <i class="fa fa-search"></i> Buscar
+                        </button>
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="limpiar();">
+                            <i class="fa fa-trash"></i> Limpiar
+                        </button>
+                    </div>
+
+                    <div class="dataTables_info">{{funService.paginationConstants.EncabezadoTabla}}</div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle">Sel:</th>
+                                    <th class="centerMiddle">Número Serie</th>
+                                    <th class="centerMiddle">Fun Inicial</th>
+                                    <th class="centerMiddle">Fun Final</th>
+                                    <th class="centerMiddle">Región</th>
+                                    <th class="centerMiddle">Fecha Creación</th>
+                                    <th class="centerMiddle">Estado</th>
+                                    <th class="centerMiddle">Receptor</th>
+                                </tr>
+                            </thead>
+                            <tbody class="no-borders selectableBodyTable" *ngFor="let serie of listaSeries | paginate: {id : 'seriesTable', itemsPerPage: funService.paginationConstants.pageSize,currentPage: funService.paginationConstants.pageNumber, totalItems: funService.paginationConstants.total};">
+                                <tr>
+                                    <td class="centerMiddle clickableColumn">
+                                        <a title="Clic para ver los Funes">
+                                            <i class="fa fa-file-text" (click)="obtenerlistaFunes(serie.Numero)"></i>
+                                        </a>
+                                        <a title="Clic para anular la Serie">
+                                            <i class="fa fa-thumbs-o-down" (click)="abrirModalMotivos(serie)"></i>
+                                        </a>
+                                        <a title="Clic para cerrar la Serie">
+                                            <i class="fa fa-window-close-o" (click)="abrirModalFechaCierre(serie)"></i>
+                                        </a>
+                                    </td>
+                                    <td>{{serie.Numero}}</td>
+                                    <td>{{serie.NumeroInicialFun}}</td>
+                                    <td>{{serie.NumeroFinalFun}}</td>
+                                    <td>{{serie.Region}}</td>
+                                    <td>{{serie.FechaCreacion | date: 'dd/MM/yyyy'}}</td>
+                                    <td>{{serie.DescripcionEstado}}</td>
+                                    <td>{{serie.AdUsuarioReceptor}}</td>
+                                </tr>
+
+                            </tbody>
+                            <tfoot *ngIf="funService.paginationConstants.total == 0">
+                                <tr>
+                                    <td colspan="14" style="text-align: center;">No hay Funes</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <pagination-controls id="seriesTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true"
+                        (pageChange)="funService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+
+
+
+                    <fieldset class="col-lg-12">
+                        <legend class="info">Crear Funes</legend>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Región:</label>
+                        </div>
+
+                        <div class="m-b col-lg-4">
+                            <select required class="form-select-control m-b" id="slcRegion" name="slcRegion"
+                                [(ngModel)]="fun.Region" #slcRegion="ngModel">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let region of listaRegiones" [value]="region.Id">{{region.Nombre}}</option>
+                            </select>
+                            <div [hidden]="slcRegion.valid" class="error">
+                                <p *ngIf="slcRegion.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Sucursal:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <select required class="form-select-control m-b" id="slcSucursal" name="slcSucursal"
+                                [(ngModel)]="fun.CodigoSucursal" #slcSucursal="ngModel">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let sucursal of listaSucursales" [value]="sucursal.Codigo">{{sucursal.Nombre}}</option>
+                            </select>
+                            <div [hidden]="slcSucursal.valid" class="error">
+                                <p *ngIf="slcSucursal.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Fun Inicial:</label>
+                        </div>
+                        <div class="col-lg-4">
+                            <input type="number" placeholder="Número de Fun Inicial" [(ngModel)]="fun.FunInicial" id="funInicial"
+                                name="funInicial" class="heigth25 form-control col-lg-12" />
+                            <div class="" *ngIf="fun.FunInicial == undefined || fun.FunInicial ==0">
+                                <label class="col-md-12 no-padding " style="color: #ff0000;font-weight: normal;font-size: smaller;">Campo
+                                    Requerido</label>
+                            </div>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Fun Final:</label>
+                        </div>
+                        <div class="col-lg-4">
+                            <input type="number" placeholder="Número de Fun Final" [(ngModel)]="fun.FunFinal" id="funFinal"
+                                name="funFinal" class="heigth25 form-control col-lg-12" />
+                            <div class="" *ngIf="fun.FunFinal == undefined || fun.FunFinal ==0">
+                                <label class="col-md-12 no-padding " style="color: #ff0000;font-weight: normal;font-size: smaller;">Campo
+                                    Requerido</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Min. Porcentaje:</label>
+                        </div>
+                        <div class="col-lg-4">
+                            <input type="number" placeholder="Porcentaje" [(ngModel)]="fun.Porcentaje" id="funPorcentaje"
+                                name="funPorcentaje" class="heigth25 form-control col-lg-12" />
+                            <div class="" *ngIf="fun.Porcentaje == undefined || fun.Porcentaje ==0">
+                                <label class="col-md-12 no-padding " style="color: #ff0000;font-weight: normal;font-size: smaller;">Campo
+                                    Requerido</label>
+                            </div>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Receptor:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <p *ngIf="fun.Receptor!=undefined">{{fun.NombreReceptor}}</p>
+                            <a (click)="abrirMolalUsuarios(constantesComercial.TIPO_FUN_RECEPTOR);">
+                                <i class="fa fa-user-md"></i> {{fun.Receptor==undefined ? 'Seleccionar' : 'Cambiar'}}
+                            </a>
+                            <div [hidden]="fun.Receptor!=undefined" class="error">
+                                <p>Campo Requerido</p>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Observaciones:</label>
+                        </div>
+                        <div class="col-lg-10">
+                            <input type="text" placeholder="Observaciones" [(ngModel)]="fun.Observaciones" id="funObservaciones"
+                                name="funObservaciones" class="heigth25 form-control col-lg-12" />
+                            <div class="" *ngIf="fun.Observaciones == undefined || fun.Observaciones ==''">
+                                <label class="col-md-12 no-padding " style="color: #ff0000;font-weight: normal;font-size: smaller;">Campo
+                                    Requerido</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Fecha Entrega:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaEntrega" name="fechaEntrega"
+                                [(ngModel)]="fun.FechaEntrega" [datepicker]="datepickerOpts"></datetime>
+                        </div>
+                    </fieldset>
+
+                    <div class="col-lg-12 no-padding">
+                        <button class="btn btn-w-m btn-success btn-sm" (click)="crearFun();">
+                            <i class="fa fa-plus"></i> Crear
+                        </button>
+                    </div>
+
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal listado de Funes -->
+<div class="modal inmodal fade" id="myModalListaFunes" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="col-lg-12 m-t-sm no-padding">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Listado de Funes</h5>
+                    </div>
+                    <div class="panel-body panelDatos">
+                        <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                            <div class="dataTables_info">{{funService.paginationConstants.EncabezadoTabla}}</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Número Fun</th>
+                                            <th class="centerMiddle">Número Serie</th>
+                                            <th class="centerMiddle">Usuario Emisor</th>
+                                            <th class="centerMiddle">Fecha Creacion</th>
+                                            <th class="centerMiddle">Estado</th>
+                                            <th class="centerMiddle">Receptor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-borders selectableBodyTable" *ngFor="let fun of listaFunes | paginate: {id : 'funTable', itemsPerPage: funService.paginationConstants.pageSize,currentPage: funService.paginationConstants.pageNumber, totalItems: funService.paginationConstants.total};">
+                                        <tr>
+                                            <td>{{fun.NumeroFun}}</td>
+                                            <td>{{fun.NumeroSerie}}</td>
+                                            <td>{{fun.AdUsuarioEmisor}}</td>
+                                            <td>{{fun.FechaCreacion | date: 'dd/MM/yyyy'}}</td>
+                                            <td>{{fun.DescripcionEstado}}</td>
+                                            <td>{{fun.NombreVendedor}}</td>
+                                        </tr>
+
+                                    </tbody>
+                                    <tfoot *ngIf="funService.paginationConstants.total == 0">
+                                        <tr>
+                                            <td colspan="14" style="text-align: center;">No hay Funes</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <pagination-controls id="funTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true"
+                                (pageChange)="funService.paginationConstants.pageNumber=$event;pageFunChanged();"></pagination-controls>
+                        </div>
+                        <div class="col-lg-12 no-padding">
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="salirModalFun();">
+                                <i class="fa fa-plus"></i> Salir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Fecha de Cierre -->
+<div class="modal inmodal fade" id="myModalFechaCierre" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="col-lg-12 m-t-sm no-padding">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Fecha de Cierre</h5>
+                    </div>
+                    <div class="panel-body panelDatos">
+                        <fieldset class="col-lg-12">
+                            <div class="m-b col-lg-2">
+                                <label class="control-label no-padding-left">Fecha de Cierre:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaCierre"
+                                    name="fechaCierre" [(ngModel)]="fechaCierre" [datepicker]="datepickerOpts"></datetime>
+                            </div>
+                        </fieldset>
+
+                        <div class="col-lg-12 no-padding">
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="cerrarSerie();">
+                                <i class="fa fa-window-close-o"></i> Cerrar Serie
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal listado de Personas -->
+<div id="consultorModalDiv">
+    <div class="modal inmodal fade" id="myModalListadoPersonas" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Listado de Personas</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaMotivos" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Nombre Completo
+                                                <input [(ngModel)]="nombrePersona" (input)="filtrarPersona($event.target.value)" type="text" placeholder="Buscar..." id="buscarMotivo" name="buscarMotivo"
+                                                    class="form-control heigth25">
+                                            </th>
+                                            <th class="centerMiddle">Usuario</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyMotivo" class="no-borders selectableBodyTable">
+                                        <tr id="persona{{i}}" [class.active]="persona.Selected" title="{{!persona.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!persona.Selected ? seleccionarPersona(persona) : return;" *ngFor="let persona of personasFiltradas; let i = index">
+                                            <td class="centerMiddle">{{persona.NombreCompleto}}</td>
+                                            <td class="centerMiddle">{{persona.Usuario}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal listado de Motivos Anulación -->
+<div id="consultorModalDiv">
+    <div class="modal inmodal fade" id="myModalListadoMotivos" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Listado de Motivos de Anulación</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaMotivos" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Número</th>
+                                            <th class="centerMiddle">Descripción
+                                                <input type="text" (input)="filtarMotivo($event.target.value)"
+                                                    placeholder="Buscar..." id="tabMoti" name="tabMoti" class="form-control heigth25">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyMotivo" class="no-borders selectableBodyTable">
+                                        <tr id="motivo{{i}}" [class.active]="motivo.Selected" title="{{!motivo.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!motivo.Selected ? seleccionarMotivo(motivo) : return;" *ngFor="let motivo of listaMotivosAnulacion; let i = index">
+                                            <td class="centerMiddle">{{motivo.NumeroMotivo}}</td>
+                                            <td class="centerMiddle">{{motivo.Descripcion}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

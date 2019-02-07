@@ -1,0 +1,11 @@
+.bg-large{
+    width: 100%; 
+    height: auto;
+}
+
+@media only screen and (max-width: 1350px) {
+    .bg-large{
+        width: auto; 
+        height: 100%;
+    }    
+}

@@ -1,0 +1,371 @@
+<div style="min-height: 70px;">
+    <div class="col-xs-12 no-padding m-t-xs m-b-sm">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h5 class="panel-title" *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_ACTUALIZAR">Actualizar
+                    Director</h5>
+                <h5 class="panel-title" *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_INGRESAR">Ingresar
+                    Director</h5>
+            </div>
+            <div class="panel-body">
+                <form name="directoresForm" role="form" #directoresForm="ngForm">
+
+                    <fieldset class="col-lg-12">
+                        <legend *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_ACTUALIZAR"
+                            class="info">Actualizar Director {{director.Nombre}} - {{director.Codigo}}</legend>
+                        <legend *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_INGRESAR" class="info">Agregar
+                            Nuevo Director</legend>
+                        <div class="col-md-12 alignCenter" *ngIf="director.Estado == constCom.INACTIVO">
+                            <label class="col-md-12 no-padding m-t-sm" style="color: #ff0000">El Director se encuentra
+                                anulado</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12" *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_ACTUALIZAR && director.NumeroEmpresa!=undefined && director.NumeroEmpresa != 0 && director.NumeroEmpresa != null">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Razón Social:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <span>{{director.RazonSocialBroker}}</span>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Ruc:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <span>{{director.RucBroker}}</span>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12" *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_ACTUALIZAR && persona.NumeroPersona!=undefined && persona.NumeroPersona != 0 && persona.NumeroPersona != null">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Nombres:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <span>{{persona.NombresCompletos}}</span>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Cédula:</label>
+                            
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <span>{{persona.CedulaPersona}}</span>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12" *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_ACTUALIZAR && persona.NumeroPersona!=undefined && persona.NumeroPersona != 0 && persona.NumeroPersona != null">
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Estado Civil:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <span>{{persona.PersonaEstadoCivil}}</span>
+                        </div>
+
+                        <div class="m-b col-lg-2">
+                            <label class="control-label no-padding-left">Teléfonos:</label>
+                        </div>
+                        <div class="m-b col-lg-4">
+                            <span>{{persona.DomicilioTelefono1}} {{persona.TrabajoTelefono1}}</span>
+                        </div>
+
+                    </fieldset>
+                    
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-2" *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_INGRESAR && director.CodigoTipo != constCom.CODIGO_TIPO_BROKER">
+                            <label class="control-label no-padding-left">Persona:</label>
+                        </div>
+                        <div class="m-b col-lg-4" *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_INGRESAR && director.CodigoTipo != constCom.CODIGO_TIPO_BROKER">
+                            <p *ngIf="director.Nombre!=undefined">{{director.Nombre}}</p>
+                            <a (click)="modalBusquedaPersonas();">
+                                <i class="fa fa-user-md"></i> {{director.NumeroPersona==undefined ? 'Seleccionar' :
+                                'Cambiar'}}
+                            </a>
+                            <div [hidden]="director.NumeroPersona!=undefined" class="error">
+                                <p>Campo Requerido</p>
+                            </div>
+                        </div>
+
+                        <div class="m-b col-lg-2" *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_INGRESAR && director.CodigoTipo == constCom.CODIGO_TIPO_BROKER">
+                            <label class="control-label no-padding-left">Empresa:</label>
+                        </div>
+                        <div class="m-b col-lg-4" *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_INGRESAR && director.CodigoTipo == constCom.CODIGO_TIPO_BROKER">
+                            <p *ngIf="director.RazonSocialBroker!=undefined">{{director.RazonSocialBroker}}</p>
+                            <a (click)="modalBusquedaEmpresa();">
+                                <i class="fa fa-user-md"></i> {{director.NumeroEmpresa==undefined? 'Seleccionar' :
+                                'Cambiar'}}
+                            </a>
+                            <div [hidden]="director.NumeroEmpresa!=undefined" class="error">
+                                <p>Campo Requerido</p>
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                    <fieldset class="col-lg-12">
+                        <div class="m-b col-lg-1">
+                            <label class="control-label no-padding-left">Región:</label>
+                        </div>
+
+                        <div class="m-b col-lg-3">
+                            <select required class="form-select-control m-b" id="slcRegion" name="slcRegion" (change)="cargarSucursal()"
+                                [(ngModel)]="director.Region" #slcRegion="ngModel" [disabled]="director.Estado == constCom.INACTIVO">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let region of listaRegiones" [value]="region.Nombre">{{region.Nombre}}</option>
+                            </select>
+                            <div [hidden]="slcRegion.valid" class="error">
+                                <p *ngIf="slcRegion.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+
+                        <div class="m-b col-lg-1">
+                            <label class="control-label no-padding-left">Sucursal:</label>
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <select required class="form-select-control m-b" id="slcSucursal" name="slcSucursal"
+                                [(ngModel)]="director.CodigoSucursal" #slcSucursal="ngModel" [disabled]="director.Estado == constCom.INACTIVO"
+                                (change)="loadSalas()">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let sucursal of listaSucursales" [value]="sucursal.CodigoSucursal">{{sucursal.NombreSucursal}}</option>
+                            </select>
+                            <div [hidden]="slcSucursal.valid" class="error">
+                                <p *ngIf="slcSucursal.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+
+                        <div class="m-b col-lg-1">
+                            <label class="control-label no-padding-left">Sala:</label>
+                        </div>
+                        <div class="m-b col-lg-3">
+                            <select required class="form-select-control m-b" id="slcSala" name="slcSala" [(ngModel)]="director.CodigoSala"
+                                #slcSala="ngModel" [disabled]="director.Estado == constCom.INACTIVO">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let sala of listaSalas" [value]="sala.Codigo">{{sala.Nombre}}</option>
+                            </select>
+                            <div [hidden]="slcSala.valid" class="error">
+                                <p *ngIf="slcSala.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">
+
+                        <div class="m-b col-lg-1">
+                            <label class="control-label no-padding-left">Tipo:</label>
+                        </div>
+
+                        <div class="m-b col-lg-3">
+                            <select required class="form-select-control m-b" id="slcTipo" name="slcTipo" [(ngModel)]="director.CodigoTipo"
+                                #slcTipo="ngModel" [disabled]="director.Estado == constCom.INACTIVO" (change)="loadSubtipos()">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let tipo of listaTipo" [value]="tipo.Codigo">{{tipo.Nombre}}</option>
+                            </select>
+                            <div [hidden]="slcTipo.valid" class="error">
+                                <p *ngIf="slcTipo.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+
+                        <div class="m-b col-lg-1">
+                            <label class="control-label no-padding-left">Subtipo:</label>
+                        </div>
+
+                        <div class="m-b col-lg-3">
+                            <select required class="form-select-control m-b" id="slcSubtipo" name="slcSubtipo"
+                                [(ngModel)]="director.CodigoSubtipo" #slcSubtipo="ngModel" [disabled]="director.Estado == constCom.INACTIVO">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let subtipo of listaSubtipo" [value]="subtipo.Codigo">{{subtipo.Nombre}}</option>
+                            </select>
+                            <div [hidden]="slcSubtipo.valid" class="error">
+                                <p *ngIf="slcSubtipo.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+
+                        <label class="col-lg-1 control-label" for="fechaIngreso">Fecha ingreso:</label>
+                        <div class="m-b col-lg-3">
+                            <datetime required id="slcFechaIngreso" name="slcFechaIngreso" #slcFechaIngreso="ngModel" [timepicker]="false" class="heigth25" id="fechaIngreso" name="fechaIngreso" [(ngModel)]="director.FechaIngreso" [datepicker]="datepickerOpts"></datetime>                           
+                            <div [hidden]="slcFechaIngreso.valid" class="error">
+                                <p *ngIf="slcFechaIngreso.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="col-lg-12">           
+                        <label class="col-lg-1 control-label" for="fechaProduccionAgente">Fecha Producción:</label>
+                        <div class="m-b col-lg-3">
+                            <datetime required id="slcFechaProduccionAgente" name="slcFechaProduccionAgente" #slcFechaProduccionAgente="ngModel" [timepicker]="false" class="heigth25" id="fechaProduccionAgente" name="fechaProduccionAgente" [(ngModel)]="director.FechaProduccionAgente" [datepicker]="datepickerOpts"></datetime>                           
+                            <div [hidden]="slcFechaProduccionAgente.valid" class="error">
+                                <p *ngIf="slcFechaProduccionAgente.errors?.required">Campo Requerido</p>
+                            </div>
+                        </div>
+                        <div class="m-b col-lg-1">
+                            <label class="control-label no-padding-left">Login:</label>
+                        </div>
+                        <div class="col-lg-3">
+                            <input type="text" placeholder="Login del Usuario" [(ngModel)]="director.LoginUsuario" id="loginUsuario"
+                                name="loginUsuario" class="heigth25 form-control col-lg-12" [disabled]="director.Estado == constCom.INACTIVO" />
+                        </div>
+                    </fieldset>
+
+                    <div class="col-lg-12 no-padding text-center">
+                        <button *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_INGRESAR" class="btn btn-w-m btn-success btn-sm"
+                            (click)="verificarSiSalaTieneDirector();" [disabled]="!directoresForm.form.valid || director.Estado == constCom.INACTIVO">
+                            <i class="fa fa-plus"></i> Nuevo
+                        </button>
+
+                        <button *ngIf="director.TipoTransaccion == constCom.TIPO_TRANSACCION_ACTUALIZAR"
+                            class="btn btn-w-m btn-success btn-sm text-center" [disabled]="!directoresForm.form.valid || director.Estado == constCom.INACTIVO"
+                            (click)="verificarSiSalaTieneDirector();">
+                            <i class="fa fa-edit"></i> Actualizar
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Busqueda de Personas -->
+<div id="busquedaPersonasModalDiv">
+    <div class="modal inmodal fade" id="myModalBusquedaPersonas" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Busqueda de Personas</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+
+                            <legend class="info">Filtros de Busqueda</legend>
+
+                            <div class="m-b col-lg-2">
+                                <label class="control-label">Apellidos:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <input type="text" [(ngModel)]="filterPersona.Apellidos" id="apellidosPrestador" name="apellidosPrestador"
+                                    class="heigth25 form-control col-lg-12" #apellidoPersona="ngModel" minlength="3"
+                                    maxlength="50" [required]="nombrePersona.touched && filterPersona.Nombres != undefined && filterPersona.Nombres.length >0
+                                                                        && ( filterPersona.Apellidos == undefined || filterPersona.Apellidos.length <= 0 )" />
+                                <div [hidden]="(apellidoPersona.valid || apellidoPersona.pristine) && !nombrePersona.touched"
+                                    class="error">
+                                    <p *ngIf="apellidoPersona.errors?.minlength">Minimo 3 caracteres</p>
+                                    <p *ngIf="apellidoPersona.errors?.maxlength">Maximo 50 caracteres</p>
+                                    <p *ngIf="apellidoPersona.errors?.required">Requerido</p>
+                                </div>
+                            </div>
+
+                            <div class="m-b col-lg-2">
+                                <label class="control-label">Nombres:</label>
+                            </div>
+                            <div class="m-b col-lg-4">
+                                <input type="text" [(ngModel)]="filterPersona.Nombres" id="nombresPrestador" name="nombresPrestador"
+                                    class="heigth25 form-control col-lg-12" #nombrePersona="ngModel" minlength="3"
+                                    maxlength="50" [required]="apellidoPersona.touched && filterPersona.Apellidos != undefined && filterPersona.Apellidos.length >0
+                                        && (filterPersona.Nombres == undefined || filterPersona.Nombres.length <= 0) " />
+                                <div [hidden]="(nombrePersona.valid || nombrePersona.pristine) && !apellidoPersona.touched"
+                                    class="error">
+                                    <p *ngIf="nombrePersona.errors?.minlength">Minimo 3 caracteres</p>
+                                    <p *ngIf="nombrePersona.errors?.maxlength">Maximo 50 caracteres</p>
+                                    <p *ngIf="nombrePersona.errors?.required">Requerido</p>
+                                </div>
+                            </div>
+
+                            <div class="m-b col-lg-2">
+                                <label class="control-label">Cédula:</label>
+                            </div>
+
+                            <div class="m-b col-lg-4">
+                                <input type="text" [(ngModel)]="filterPersona.Cedula" id="cedulaPrestador" name="cedulaPrestador"
+                                    class="heigth25 form-control col-lg-12" pattern="\d*" maxlength="13" #cedula="ngModel" />
+                                <div [hidden]="cedula.valid || cedula.pristine" class="error ">
+                                    <p *ngIf="cedula.errors?.pattern">Solo se admiten dígitos</p>
+                                    <p *ngIf="cedula.errors?.maxlength">Maximo 13 dígitos</p>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 no-padding">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="buscarPersonaNuevo();">
+                                    <i class="fa fa-search"></i> Buscar</button>
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="salirModalBusquedaPersonas();">
+                                    <i class="fa fa-plus"></i> Salir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal listado de Personas -->
+<div id="consultorModalDiv">
+    <div class="modal inmodal fade" id="myModalListadoPersonas" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Listado de Personas</h5>
+                        </div>
+                        <div class="panel-body panelDatos">
+                            <div class="table-responsive" style="overflow-y: auto;max-height: 350px;">
+                                <table id="tablaMotivos" class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Número</th>
+                                            <th class="centerMiddle">Nombres
+                                                <input type="text" placeholder="Buscar..." id="buscarMotivo" name="buscarMotivo"
+                                                    class="form-control heigth25">
+                                            </th>
+                                            <th class="centerMiddle">Sexo</th>
+                                            <th class="centerMiddle">Cédula</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bodyMotivo" class="no-borders selectableBodyTable">
+                                        <tr id="persona{{i}}" [class.active]="persona.Selected" title="{{!persona.Selected ? 'Click para seleccionar' : ''}}"
+                                            (click)="!persona.Selected ? seleccionarPersona(persona) : return;" *ngFor="let persona of listaPersonas; let i = index">
+                                            <td class="centerMiddle">{{persona.NumeroPersona}}</td>
+                                            <td class="centerMiddle">{{persona.NombresCompletos}}</td>
+                                            <td class="centerMiddle">{{persona.DescripcionSexo}}</td>
+                                            <td class="centerMiddle">{{persona.CedulaPersona}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Despacha Director-->
+<div id="myModalAnularDiv">
+    <div class="modal inmodal fade" id="modalDespachaDirector" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="col-lg-12 m-t-sm no-padding">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title"> Sala tiene asigando un Director</h5>
+                        </div>
+
+                        <div class="panel-body panelDatos">
+                            <div class="m-b col-lg-12 text-center">
+                                <h3> La sala seleccionada tiene un Director asigando, desea anular al director {{directorSiSalaLoTiene.Nombre}}, para asignar la sala al director {{director.Nombre}}</h3>
+                            </div>
+
+                            <div class="col-lg-12 no-padding text-center">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="DecideSiEsActualizacionOCreacion();"><i class="fa fa-search"></i> Si </button>
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="salirDespacharDirectorModal()"><i class="fa fa-plus"></i> No </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

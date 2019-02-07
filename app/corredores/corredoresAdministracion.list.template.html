@@ -1,0 +1,481 @@
+<!-- NAVEGACIÓN SUPERIOR -->
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Broker</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Brokers</li>
+            <li class="breadcrumb-item active">Broker</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<!-- PANEL BUSCADOR -->
+<div class="wrapper wrapper-content" *ngIf="!showEditor">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+        <!-- GRILLA DE RESULTADO DE BÚSQUEDA -->
+            <legend>Criterios de Búsqueda</legend>
+            <div class="row container-fluid">
+                <div class="col-md-1">
+                    <label class="control-label">Nombre:</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" placeholder="Nombre del Broker"
+                           [(ngModel)]="filtro.nombre"  class="form-control" />
+                </div>
+                <div class="col-md-1">
+                    <label class="control-label">Código:</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" placeholder="Código del Broker"
+                           [(ngModel)]="filtro.codigo" class="form-control" />
+                </div>
+                <div class="col-md-1">
+                    <label class="control-label">Ruc:</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" placeholder="Ruc del Broker"
+                           [(ngModel)]="filtro.ruc" class="form-control" />
+                </div>
+            </div>
+            <br>
+            <!--Botones-->
+            <div class="form-group col-lg-12 no-padding">
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="nuevo()">
+                    <i class="fa fa-plus"></i> Nuevo
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="traerFiltros()">
+                    <i class="fa fa-search"></i> Traer Por Filtros
+                </button>
+            </div>
+            <br>
+            <br>
+            <br>
+        </div>
+        <br>
+        <!--GRILLA CON RESULTADOS DE BUSQUEDA-->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+        <div class="dataTables_info">Mostrando  registros</div>
+        <div class="table-responsive">
+                <table id="tablaListado" class="table table-striped table-bordered table-hover dataTable">
+                    <tbody id="bodyListado" class="no-borders">
+                    <tr>
+                        <th class="centerMiddle">
+                            Sel
+                        </th>
+                        <th class="centerMiddle">
+                            Código
+                        </th>
+                        <th class="centerMiddle">
+                            Ruc
+                        </th>
+                        <th class="centerMiddle">
+                            Nombre
+                        </th>
+                        <th class="centerMiddle">
+                            Razón Social
+                        </th>
+                        <th class="centerMiddle">
+                            Región
+                        </th>
+                    </tr>
+                    <tr *ngFor="let corredoresItem of corredoresList">
+                        <td class="centerMiddle general-column">
+                            <a (click)="abrirEdicion(corredoresItem)" title="Clic para editar">
+                                <i class="fa fa-file-text"></i>
+                            </a>
+                        </td>
+                        <td class="centerMiddle">
+                            {{corredoresItem.Codigo}}
+                        </td>
+                        <td class="centerMiddle">
+                            {{corredoresItem.RucBroker}}
+                        </td>
+                        <td class="centerMiddle">
+                            {{corredoresItem.Nombre}}
+                        </td>
+                        <td class="centerMiddle">
+                            {{corredoresItem.RazonSocialBroker}}
+                        </td>
+                        <td class="centerMiddle">
+                            {{corredoresItem.Region}}
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="corredoresList.length == 0">
+                        <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PANEL EDITOR -->
+<div class="wrapper wrapper-content" *ngIf="showEditor">
+    <div class="ibox float-e-margins">
+        <!-- FORMULARIO DE EDICIÓN -->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+            <legend>Formulario de Edición</legend>
+            <div *ngIf="!esNuevo">
+                <div class="row">
+                    <div class="col-lg-2"> <h5> Código del Broker: <b>{{corredor.Codigo}}</b></h5></div>
+                    <div class="col-lg-2"><h5>Código del Agente: <b>{{corredor.CodigoVendedor}}</b></h5></div>
+                </div>
+                <br>
+            </div>
+            <!--Datos Broker-->
+            <div class="panel panel-success" style="margin-bottom: 0px;" >
+                <div class="panel-heading" style="height: 40px;">
+                    <h5 class="panel-title">Datos Broker</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="row container-fluid">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="inpTipoContribuyente">Tipo Contribuyente</label>
+                                <select id="inpTipoContribuyente"  [(ngModel)]="corredor.TipoContribuyente" class="form-control" >
+                                    <option [value]="undefined" selected>Seleccione....</option>
+                                    <option *ngFor="let r of tipoContribuyenteList" [value]="r.id" >{{r.nombre}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="inpRepresentanteLegal">Representante Legal</label>
+                                <input type="text" class="form-control" id="inpRepresentanteLegal" [(ngModel)]="corredor.representante_legal" placeholder="Representante Legal">
+                            </div>
+                            <div class="form-group">
+                                <label for="inpEstado">Estado</label>
+                                <select id="inpEstado" class="form-control" [disabled]="esNuevo" [(ngModel)]="corredor.CodigoEstadoAgente">
+                                    <option *ngFor="let r of estadoList" [value]="r.id" >{{r.nombre}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group" *ngIf="corredor.CodigoEstadoAgente==2" >
+                                <label for="inpFechaSalida">Fecha de Salida</label>
+                                <datetime required name="inpFechaSalida" [(ngModel)]="corredor.FechaSalida" class="form-control col-lg-12 no-padding" [timepicker]="false" id="inpFechaSalida" [datepicker]="datepickerOpts"></datetime>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="inpRuc">Ruc</label>
+                                <input type="text" style="text-transform: uppercase;" placeholder="Ruc" id="inpRuc" [(ngModel)]="corredor.RucBroker"
+                                       name="inpRuc" class="form-control" #inpRuc="ngModel" pattern="\d*" minlength="0"
+                                       />
+                                <div [hidden]="inpRuc.valid || inpRuc.pristine" class="error">
+                                    <p *ngIf="inpRuc.errors?.pattern">Solo se admiten dígitos</p>
+                                    <p *ngIf="inpRuc.errors?.maxlength">Maximo 120 dígitos</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inpNombreComercial">Nombre Comercial</label>
+                                <input type="text" class="form-control" id="inpNombreComercial" [(ngModel)]="corredor.Nombre"  placeholder="Nombre Comercial">
+                            </div>
+                            <div class="form-group">
+                                <label for="inpFechaIngreso">Fecha de Ingreso</label>
+                                <datetime required name="inpFechaIngreso" class="form-control no-padding" [(ngModel)]="corredor.FechaIngreso" [timepicker]="false" id="inpFechaIngreso"
+                                          [datepicker]="datepickerOpts"></datetime>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="inpRazonSocial">Razón Social</label>
+                                <input type="text" class="form-control" [(ngModel)]="corredor.RazonSocialBroker" id="inpRazonSocial" placeholder="Razón Social">
+                            </div>
+                            <div class="form-group">
+                                <label for="inpSucursal">Sucursal</label>
+                                <select id="inpSucursal" class="form-control" [(ngModel)]="corredor.CodigoSucursal">
+                                    <option *ngFor="let r of sucursalesList" [value]="r.Codigo" >{{r.Nombre}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="inpRegion">Región</label>
+                                <select id="inpRegion" [(ngModel)]="corredor.Region" class="form-control">
+                                    <option *ngFor="let r of regionList" [value]="r.id">{{r.nombre}}</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="inpGrupo">Grupo</label>
+                                <select id="inpGrupo" [(ngModel)]="corredor.CodigoGrupoAgentes" class="form-control">
+                                    <option value="0">Ninguno</option>
+                                    <option *ngFor="let r of grupoList" [value]="r.codigo_grupo_agentes">
+                                        {{r.nombre_grupo_agentes}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <!--Contacto Broker-->
+            <div class="panel panel-success" style="margin-bottom: 0px;" >
+                <div class="panel-heading" style="height: 40px;">
+                    <h5 class="panel-title">Contacto Broker</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="row container-fluid">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="EmailComunicacion">E-mail Comunicación</label>
+                                <input type="text" placeholder="EMAIL" id="EmailComunicacion" [(ngModel)]="corredor.comunicacionesEmail" name="EmailComunicacion" class="form-control" #EmailComunicacion="ngModel"
+                                       minlength="0" maxlength="100" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                                />
+                                <div [hidden]="EmailComunicacion.valid || EmailComunicacion.pristine" class="error">
+                                    <p *ngIf="EmailComunicacion.errors?.pattern">Introduzca un formato de email válido</p>
+                                    <p *ngIf="EmailComunicacion.errors?.maxlength">Máximo 100 dígitos</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inpContactoNombre">Contacto Nombre</label>
+                                <input type="text" class="form-control" id="inpContactoNombre" [(ngModel)]="corredor.contacto_nombre" placeholder="Contacto Nombre">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="EmailBroker">E-mail Broker</label>
+                                <input type="text" placeholder="EMAIL" id="EmailBroker" [(ngModel)]="corredor.EmailBroker" name="EmailBroker" class="form-control" #EmailBroker="ngModel"
+                                       minlength="0" maxlength="100" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                                />
+                                <div [hidden]="EmailBroker.valid || EmailBroker.pristine" class="error">
+                                    <p *ngIf="EmailBroker.errors?.pattern">Introduzca un formato de email válido</p>
+                                    <p *ngIf="EmailBroker.errors?.maxlength">Máximo 100 dígitos</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="EmailRenovacion">E-mail Renovación</label>
+                                <input type="text" placeholder="EMAIL" id="EmailRenovacion" [(ngModel)]="corredor.EmailRenovacion" name="EmailRenovacion" class="form-control" #EmailRenovacion="ngModel"
+                                       minlength="0" maxlength="100" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                                />
+                                <div [hidden]="EmailRenovacion.valid || EmailRenovacion.pristine" class="error">
+                                    <p *ngIf="EmailRenovacion.errors?.pattern">Introduzca un formato de email válido</p>
+                                    <p *ngIf="EmailRenovacion.errors?.maxlength">Máximo 100 dígitos</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <!--Contrato de Agenciamiento-->
+            <div class="panel panel-success" style="margin-bottom: 0px;" >
+                <div class="panel-heading" style="height: 40px;">
+                    <h5 class="panel-title">Contrato de Agenciamiento Broker</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="row container-fluid">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">Contrato de Agenciamiento</label>
+                                <input type="file" (change)="fileEvent($event)" >
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label >Descargar el Contrato de Agenciamiento</label><br>
+                                <button class="btn btn-w-m btn-success btn-circle" [disabled]="esNuevo || corredor.contratoAgenciamiento==null || corredor.contratoAgenciamiento==''|| corredor.contratoAgenciamiento=='undefined'" (click)="download()">Descargar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <!--Datos Administrador-->
+            <div class="panel panel-success" style="margin-bottom: 0px;" >
+                <div class="panel-heading" style="height: 40px;">
+                    <h5 class="panel-title">Datos Administrador</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="row container-fluid">
+                        <div class="col-md-1">
+                            <label class="control-label">Tipo de Documento:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" [(ngModel)]="usuario.TipoDocumento"  (ngModelChange)="verificarPasaporte($event)"  >
+                                <option *ngFor="let r of tiposDocumento" [value]="r" >{{r}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="control-label">Cédula / pasaporte:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" style="text-transform: uppercase;" placeholder="Cédula / pasaporte" (keyup)="onKeyUsuario($event)"
+                                   [(ngModel)]="usuario.Cedula" name="Cedula" class="form-control" #Cedula="ngModel"
+                                   minlength="3" maxlength="22" id="CedulaUsuario" />
+                            <div [hidden]="Cedula.valid || Cedula.pristine" class="error">
+                                <p *ngIf="Cedula.errors?.pattern">Solo se admiten dígitos</p>
+                                <p *ngIf="Cedula.errors?.maxlength">Máximo 22 carácteres</p>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="control-label" for="NombreApellido">Nombres y Apellidos:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" style="text-transform: uppercase;" placeholder="Nombres y Apellidos" id="NombreApellido" [(ngModel)]="usuario.NombreApellido"
+                                   [disabled]="actCedula" name="Nombre" class="form-control" #NombreApellido="ngModel" minlength="0" maxlength="100"
+                            />
+                            <div [hidden]="NombreApellido.valid || NombreApellido.pristine" class="error">
+                                <p *ngIf="NombreApellido.errors?.maxlength">Máximo 100 dígitos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row container-fluid">
+                        <div class="col-md-1">
+                            <label class="control-label" for="Email">E-mail:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" placeholder="EMAIL" id="Email" [(ngModel)]="usuario.Email" name="Email" class="form-control" #Email="ngModel"
+                                   minlength="0" maxlength="100" pattern="^[a-z A-Z 0-9_.+-]+@[a-z A-Z 0-9-]+.[a-z A-Z 0-9-.]+$"
+                            />
+                            <div [hidden]="Email.valid || Email.pristine" class="error">
+                                <p *ngIf="Email.errors?.pattern">Introduzca un formato de email válido</p>
+                                <p *ngIf="Email.errors?.maxlength">Máximo 100 dígitos</p>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <label class=" control-label" for="Telefono">Celular:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" style="text-transform: uppercase;" placeholder="Celular" id="Telefono" [(ngModel)]="usuario.Telefono"
+                                   name="Telefono" class="form-control" #Telefono="ngModel" pattern="\d*" minlength="0"
+                                   maxlength="10" />
+                            <div [hidden]="Telefono.valid || Telefono.pristine" class="error">
+                                <p *ngIf="Telefono.errors?.pattern">Solo se admiten dígitos</p>
+                                <p *ngIf="Telefono.errors?.maxlength">Maximo 120 dígitos</p>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <label class=" control-label" for="TelefonoFijo">Télefono Fijo:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" style="text-transform: uppercase;" placeholder="Télefono Fijo" id="TelefonoFijo" [(ngModel)]="usuario.TelefonoFijo"
+                                   name="TelefonoFijo" class="form-control" #TelefonoFijo="ngModel" pattern="\d*" minlength="0"
+                                   maxlength="9" />
+                            <div [hidden]="TelefonoFijo.valid || TelefonoFijo.pristine" class="error">
+                                <p *ngIf="TelefonoFijo.errors?.pattern">Solo se admiten dígitos</p>
+                                <p *ngIf="TelefonoFijo.errors?.maxlength">Maximo 120 dígitos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row container-fluid">
+                        <div class="col-md-1">
+                            <label class="control-label" for="Extension">Extensión Telf:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" style="text-transform: uppercase;" placeholder="Extensión" id="Extension" [(ngModel)]="usuario.Extension"
+                                   name="Extension" class="form-control" #Extension="ngModel" pattern="\d*" minlength="0"
+                                   maxlength="120" />
+                        </div>
+                        <div class="col-md-1">
+                            <label class="control-label">Perfil:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" [(ngModel)]="rolId">
+                                <option [value]=undefined selected>Seleccione perfil</option>
+                                <option *ngFor="let r of roles" [value]="r.Id">{{r.Nombre}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="control-label" for="fechaNacimiento">Fecha Nacimiento:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <datetime required name="fechaNacimiento" class="form-control no-padding" [(ngModel)]="usuario.fechaNacimiento" [timepicker]="false" id="fechaNacimiento"
+                                      [readonly]="actCedula?true:null"   [datepicker]="datepickerOpts"></datetime>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row container-fluid">
+                        <div class="col-md-1">
+                            <button class="col-lg-offset-6 col-lg-1 btn btn-w-m btn-success btn-sm" type="button" [disabled]="!validarUsuario()" (click)="InsertarUsuarioTabla();">
+                                <i class="fa fa-save"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                    <!-- Tabla de usuarios agregados -->
+                    <div class="ibox-content ">
+                        <div class="dataTables_info"></div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                <tr>
+                                    <th>Cédula/pasaporte</th>
+                                    <th>Nombres y Apellidos</th>
+                                    <th>Email</th>
+                                    <th>Teléfono Celular</th>
+                                    <th>Teléfono Fijo</th>
+                                    <th>Extensión</th>
+                                    <!--<th> Perfil </th>-->
+                                    <th> Editar </th>
+                                    <th> Eliminar </th>
+                                </tr>
+                                </thead>
+                                <tbody class="no-borders">
+
+                                <tr *ngFor="let u of corredor.Usuarios">
+                                    <td>{{u.Cedula}}</td>
+                                    <td>{{u.NombreApellido}}</td>
+                                    <td>{{u.Email}}</td>
+                                    <td>{{u.Telefono}}</td>
+                                    <td>{{u.TelefonoFijo}}</td>
+                                    <td>{{u.Extension}}</td>
+                                    <!--<td>{{u.rol.Nombre}}</td>-->
+                                    <td class="centerMiddle general-column">
+                                        <a (click)="updateUsuario(u)" title="Editar">
+                                            <i class="fa fa-file-text"></i>
+                                        </a>
+                                    </td>
+                                    <td class="centerMiddle general-column">
+                                        <a (click)="eliminarUsuario(u)" title="Eliminar">
+                                            <i class="fa fa-eraser"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <pagination-controls id="tableContratos" maxSize="5" previousLabel="" nextLabel="" autoHide="true" (pageChange)="contratoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+
+                    </div>
+                </div>
+            </div>
+            <br>
+            <!--BOTONES-->
+            <div class="row container-fluid">
+                <div class="col-md-12">
+                    <div align="center">
+                        <button class="btn btn-w-m btn-success btn-sm"
+                                (click)="cancelar()">
+                            <i class="fa fa-close"></i> Cancelar
+                        </button>
+
+                        <button class="btn btn-w-m btn-success btn-sm"
+                                (click)="guardarCorredor()" [disabled]="estaEnEdicion">
+                            <i class="fa fa-save"></i> Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="ExisteError" class="alert alert-danger" role="alert">
+                <div  *ngFor="let su of mensajeError.split('-')">
+                    <p>{{su}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

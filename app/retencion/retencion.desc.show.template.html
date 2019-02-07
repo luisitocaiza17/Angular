@@ -1,0 +1,468 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-12">
+        <h2>Retención</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Retención</li>
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/retencion/descuento/list']">Identifica a tu cliente</a>
+            </li>
+            <li class="breadcrumb-item active">Detalle del cliente</li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <div class="row" *ngIf="retencion">
+        <div id="contenido" class="col-xs-12 col-md-8 col-lg-10">
+            <div class="panel panel-default panel-body">
+                <div class="row-flex" style="margin-right: -15px;">
+                    <div class="col-md-6">
+                        <label class="text-muted">Nombres y apellidos</label>
+                        <br>
+                        <span class="text-bold">{{ retencion ? retencion.NombrePersona : '' }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-muted">Contrato</label>
+                        <br>
+                        <b class="text-bold">{{ retencion.NumeroContrato }}</b>
+                    </div>
+                    <div class="col-md-2 retention-blue text-center" style="margin-top: -15px; margin-bottom: -15px;">
+                        <h3 class="no-margin">{{ retencion.categoriaCliente }}</h3>
+                        <hr class="no-margin">
+                        <small class="text-small" style="text-align: center;">SEGMENTO</small>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default panel-body" *ngIf="retencion">
+                <div class="row" class="flex-row">
+                    <div class="col-md-12">
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Región</label>
+                                <br>
+                                <span class="form-control">{{ retencion.CodigoRegion }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Fecha de fin de vigencia</label>
+                                <br>
+                                <span class="form-control">{{ contrato.FechaFin }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Código producto</label>
+                                <br>
+                                <span class="form-control">{{ retencion.CodigoPlan }}</span>
+                            </div>
+                        </div>
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Nombre del producto</label>
+                                <br>
+                                <span class="form-control">{{ retencion.NombrePlan }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Nivel</label>
+                                <br>
+                                <span class="form-control">{{ retencion.Nivel }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Siniestralidad acumulada</label>
+                                <br>
+                                <span class="form-control">{{ retencion.SiniestralidadNumber * 100 | number: '1.2-2' }}%</span>
+                            </div>
+                        </div>
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Estado de cobranza</label>
+                                <br>
+                                <span class="form-control">{{ contrato.EsMoroso ? "Activo" : "Inactivo" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default panel-body">
+                <div style="overflow-x: auto;">
+                    <table class="table table-striped table-bordered table-hover dataTable colors">
+                        <thead>
+                            <tr>
+                                <th style="vertical-align: middle; background-color: transparent;" colspan="6">
+                                    Ingresar Descuento
+                                </th>
+                                <th style="vertical-align: middle; background-color: transparent;" colspan="6">
+                                    <div class="col-md-11" style="display: flex; align-items: center;">
+
+                                    </div>
+                                    <div class="col-md-1 no-padding">
+                                        <div style="position: relative;">
+                                            <a (click)="toggleShowColumns()" style="display: block; margin-top: 5px; font-size: 1.5em; text-align: right;">
+                                                <span class="fa fa-ellipsis-v"></span>
+                                            </a>
+                                            <div *ngIf="showColumns" style="position: absolute; right: 0; top: 28px; width: 200px; padding: 10px; background: white; border: 1px solid gray;">
+                                                <div *ngFor="let key of keys(columns)">
+                                                    <input type="checkbox" [checked]="this.columns[key]" (change)="toggleColumn(key)"> {{ key }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th *ngIf="columns['Beneficiarios']" class="text-center text-primary col-xs-3" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('Beneficiarios')"></a>
+                                    Beneficiarios
+                                </th>
+                                <th *ngIf="columns['Edad']" class="text-center text-primary col-xs-1" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('Edad')"></a>
+                                    Edad
+                                </th>
+                                <th *ngIf="columns['PrecioBeneficiario']" class="text-center text-primary col-xs-1" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('PrecioBeneficiario')"></a>
+                                    Precio Beneficiario
+                                </th>
+                                <th *ngIf="columns['Descuento 2017']" class="text-center text-primary col-xs-2" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('Descuento 2017')"></a>
+                                    Descuento&nbsp;2017
+                                </th>
+                                <th *ngIf="columns['Descuento 2018']" class="text-center text-primary col-xs-2" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('Descuento 2018')"></a>
+                                    Descuento&nbsp;2018
+                                </th>
+                                <th *ngIf="columns['Descuento Aplica']" class="text-center text-primary col-xs-2" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('Descuento Aplica')"></a>
+                                    Descuento&nbsp;Aplica
+                                </th>
+                                <th *ngIf="columns['Descuento disponible']" class="text-center text-primary col-xs-1" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('Descuento disponible')"></a>
+                                    Descuento disponible
+                                </th>
+                                <th *ngIf="columns['Descuento %']" class="text-center text-primary col-xs-2" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('Descuento %')"></a>
+                                    Descuento&nbsp;%
+                                </th>
+                                <th *ngIf="columns['Descuento $']" class="text-center text-primary col-xs-2" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('Descuento $')"></a>
+                                    Descuento&nbsp;$
+                                </th>
+                                <th *ngIf="columns['SubTotal 2 Última Factura']" class="text-center text-primary col-xs-2" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('SubTotal 2 Última Factura')"></a>
+                                    SubTotal&nbsp;2 &Uacute;ltima&nbsp;Factura
+                                </th>
+                                <th *ngIf="columns['SubTotal 2 Última Factura con Descuento']" class="text-center text-primary" style="vertical-align: middle;">
+                                    <a class="fa fa-caret-down" (click)="orderBy('SubTotal 2 Última Factura con Descuento')"></a>
+                                    SubTotal&nbsp;2 &Uacute;ltima&nbsp;Factura con&nbsp;Descuento
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let beneficiario of beneficiariosOrdenados()">
+                                <td *ngIf="columns['Beneficiarios']" style="vertical-align: middle!important;">{{ beneficiario.NombrePersona }}</td>
+                                <td *ngIf="columns['Edad']" style="vertical-align: middle!important;">{{ beneficiario.Edad }}</td>
+                                <td *ngIf="columns['PrecioBeneficiario']" style="vertical-align: middle!important;">{{ beneficiario.MedicinaPrepagada }}</td>
+                                <td *ngIf="columns['Descuento 2017']" style="vertical-align: middle!important;" class="text-center">{{ beneficiario.PorcentajeDescAnterior + ' % - $ '}} {{ beneficiario.ValorDescuentoAnterior
+                                    | number:'1.2-2' }}</td>
+                                <td *ngIf="columns['Descuento 2018']" style="vertical-align: middle!important;" class="text-center">{{ beneficiario.PorcentajeDescCl63 + ' % - $ '}} {{ beneficiario.ValorDescuentoCl63 | number:'1.2-2'}}</td>
+                                <td *ngIf="columns['Descuento Aplica']" style="vertical-align: middle!important;" class="text-center">{{ beneficiario.PorcentajeDesc + ' % - $ '}} {{ beneficiario.ValorDescuento | number:'1.2-2'}}</td>
+                                <td *ngIf="columns['Descuento disponible']" style="vertical-align: middle!important;" class="text-right">{{ getTotalDescuentoDisponible(beneficiario) | number:'1.0'}} %</td>
+                                <td *ngIf="columns['Descuento %']" style="vertical-align: middle!important;">
+                                    <input type="text" class="text-right form-control" [(ngModel)]="beneficiario.PorcentajeDescNuevo" OnlyNumber="true" maxlength="5"
+                                        [disabled]="validarPermisoCalculo(beneficiario)" />
+                                </td>
+                                <td *ngIf="columns['Descuento $']" style="vertical-align: middle!important;" class="text-right">{{ getTotalValorDescuentoNuevo(beneficiario) | number:'1.2-2'}}</td>
+                                <td *ngIf="columns['SubTotal 2 Última Factura']" style="vertical-align: middle!important;" class="text-right">{{ getSubTotal1(beneficiario) | number:'1.2-2' }}</td>
+                                <td *ngIf="columns['SubTotal 2 Última Factura con Descuento']" style="vertical-align: middle!important;" class="text-right">{{ getSubTotal2ConDescuento(beneficiario) | number:'1.2-2'}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-right" style="border-top-color: steelblue; border-top-width: 3px; border-top-style: solid;">
+                                <td *ngIf="columns['Beneficiarios']" class="text-left">
+                                    <strong>TOTAL</strong>
+                                </td>
+                                <td *ngIf="columns['Edad']"></td>
+                                <td *ngIf="columns['PrecioBeneficiario']">{{getTotalMedicinaPrepagada() | number:'1.2-2'}}</td>
+                                <td *ngIf="columns['Descuento 2017']" class="text-center"></td>
+                                <td *ngIf="columns['Descuento 2018']" class="text-center"></td>
+                                <td *ngIf="columns['Descuento Aplica']" class="text-center"></td>
+                                <td *ngIf="columns['Descuento disponible']">{{getTotalDescuentoDisponible() | number:'1.2-2'}} %</td>
+                                <td *ngIf="columns['Descuento %']">{{getTotalPorcentajeDescNuevo(null) | number:'1.2-2'}} %</td>
+                                <td *ngIf="columns['Descuento $']">{{getTotalValorDescuentoNuevo(null) | number:'1.2-2'}}</td>
+                                <td *ngIf="columns['SubTotal 2 Última Factura']">{{getSubTotal1() | number:'1.2-2'}}</td>
+                                <td *ngIf="columns['SubTotal 2 Última Factura con Descuento']">{{getSubTotal2ConDescuento() | number:'1.2-2'}}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="ibox-content m-b">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <table class="table table-striped table-bordered table-hover dataTable colors discount">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">
+                                        <h3>Detalle última factura</h3>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Medicina prepagada</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getTotalMedicinaPrepagada() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Servicios adicionales</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getTotalServiciosAdicionales() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Subtotal 1</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getSubTotal1(null) | number:'1.2-2'}}" disabled>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Descuento</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getTotalValorDescuento() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Subtotal 2</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getSubTotal2() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Gasto administrativo</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getGastoAdministrativo() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Subtotal 3</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getSubTotal3() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SSC ({{parametroSSC}})</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getSSC() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{ (getSubTotal3() + getSSC())  | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5">
+                        <table class="table table-striped table-bordered table-hover dataTable colors discount">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">
+                                        <h3>Detalle de factura con descuento</h3>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Medicina prepagada</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getTotalMedicinaPrepagada() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Servicios adicionales</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getTotalServiciosAdicionales() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Subtotal 1</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getSubTotal1(null) | number:'1.2-2'}}" disabled>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Descuento</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getTotalValorDescuentoNuevo() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Subtotal 2</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getSubTotal2ConDescuento() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Gasto administrativo</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getGastoAdministrativo() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Subtotal 3</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getSubTotal3ConDescuento() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SSC ({{parametroSSC}})</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{getSSCConDescuento() | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>
+                                        <input type="text" class="text-right form-control" disabled value="{{ (getSubTotal3ConDescuento() + getSSCConDescuento())  | number:'1.2-2'}}">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+
+            <div class="ibox-content m-b" style="text-align: center;">
+                <a>
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="aplicarDescuento()" [disabled]="TienePermisosAplicarDescuento">
+                        Aplicar descuento
+                    </button>
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="cancelaDescuento()" *ngIf="this.descuentoPendiente.Id && this.descuentoPendiente.Estado == 3">
+                        Rechazar descuento
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div id="sub-menu" class="col-xs-12 col-md-4 col-lg-2 no-padding">
+            <h4>Modificar Contrato</h4>
+            <hr class="no-margin" style="border-color: black; border-width: 1px;">
+            <ul class="no-padding">
+                <li class="btn col-md-12" [routerLink]="['/retencion/show', key.Region, key.CodigoProducto, key.NumeroContrato]" style="text-align: left;">
+                    <i class="fa fa-circle-o"></i>
+                    <span class="text-primary">Regresar</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="modal inmodal fade" id="modalEnviar" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Solicitar Aprobación</h5>
+                        </div>
+                        <div class="panel-body">
+                            <fieldset class="col-lg-12 m-b">                                
+                                    <label class="col-lg-12 control-label">
+                                        Para aplicar este descuento se necesita autorización
+                                    </label>                               
+                            </fieldset>
+                            <br>
+                            <br>
+                            <div class="col-lg-12 no-padding">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="enviar('#modalEnviar');">
+                                    <i></i>Aceptar</button>
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="esconderModal('#modalEnviar')">
+                                    <i></i>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="modalEnviado" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Solicitar Aprobación</h5>
+                        </div>
+                        <div class="panel-body">
+                            <fieldset class="col-lg-12 m-b">                              
+                                    <label class="col-lg-12 control-label">
+                                        Tu solicitud de aprobación se enviara a su jefe inmediato superior.
+                                    </label>                               
+                            </fieldset>
+                            <br>
+                            <br>
+                            <div class="col-lg-12 no-padding">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="confirmar()">
+                                    <i></i>Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <!--
+        <div class="modal inmodal fade" id="modalEnviar" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md">
+                <div class="modal-dialog modal-sm">
+                    <div class="panel panel-success">
+                        <div class="panel-heading text-right" style="background-color: transparent; color: grey; border-color: white;">
+                            <h5 class="panel-title"></h5>
+                            <i class="fa fa-times-circle"></i>
+                        </div>
+                        <div class="panel-body" style="border-color: white;">
+                            Para aplicar este descuento se necesita autorización
+                            <br>
+                            <br>
+                            <div class="col-lg-12 no-padding text-center">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="enviar('#modalEnviar');">
+                                    Enviar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="modalEnviado" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md">
+                <div class="modal-dialog modal-md">
+                    <div class="panel panel-success">
+                        <div class="panel-heading text-right" style="background-color: transparent; color: grey; border-color: white;">
+                            <h5 class="panel-title"></h5>
+                            <i class="fa fa-times-circle"></i>
+                        </div>
+                        <div class="panel-body" style="border-color: white;">
+                            Tu solicitud de aprobación se ha enviado su jefe inmediato superior
+                            <br>
+                            <br>
+                            <div class="col-lg-12 no-padding text-center">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="confirmar()">
+                                    Ok
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+ -->
+
+    </div>
+
+</div>

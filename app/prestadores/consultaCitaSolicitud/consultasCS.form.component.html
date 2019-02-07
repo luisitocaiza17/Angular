@@ -1,0 +1,49 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Prestadores</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Consultas</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default panel-body no-padding">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+                        <i class="fa fa-bookmark"></i>
+                    </a>
+                </h5>
+            </div>
+            <div id="divConsultar" class="panel-collapse collapse in">
+                <div class="ibox float-e-margins">
+
+                    <div class="col-lg-12 no-padding">
+
+                        <ul id="ulMenuConsultas" class="nav nav-tabs" role="tablist">
+                            <li id="liConsultarSolicitud" class="nav-item" [ngClass]="{'active':opcion == 'ConsultarSolicitud'}">
+                                <a (click)="activar('ConsultarSolicitud')" id="menAgendarCita">Consultar Solicitud</a>
+                            </li>
+
+                            <li id="liConsultarCita" class="nav-item" [ngClass]="{'active':opcion == 'ConsultarCita'}">
+                                <a (click)="activar('ConsultarCita')" id="menAgendarCita">Consultar Cita</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="min-height: 70px;">
+                <consultarSolicitud *ngIf="isActive('ConsultarSolicitud')"></consultarSolicitud>
+                <consultarCita *ngIf="isActive('ConsultarCita')"></consultarCita>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,135 @@
+<div class="m-t-sm">
+    <div class="col-md-2 m-t-xs" *ngIf="autorizacion.isEditable">
+        <button (click)="nuevoProcedimiento()" [disabled]="disableNuevoButton" class="btn btn-w-m btn-success btn-sm"
+            title="Nuevo Procedimiento" type="button"><i class="fa fa-file-o"></i> Nuevo</button>
+    </div>
+    <label class="col-lg-1 control-label m-t-xs" for="planProcedimiento" *ngIf="autorizacion.isEditable">Plan:</label>
+    <div class="col-lg-4 m-t-xs" *ngIf="autorizacion.isEditable">
+        <select class="form-select-control" id="planProcedimiento" name="planProcedimiento" [(ngModel)]="planKeySelected" #planProcedimiento="ngModel"
+            (change)="onChangePlan()" [disabled]="disablePlanSelect">
+            <option [ngValue]="undefined" selected>Seleccione...</option>
+            <option *ngFor="let planProc of planes" [value]="planProc.Key">{{planProc.Value}}</option>
+        </select>
+        <div [hidden]="!showMsgPlanRequired" class="error">
+            <p>Debe seleccionar un plan</p>
+        </div>
+    </div>
+    <div class="col-md-12 no-padding m-t-md" *ngIf="autorizacion.isEditable">
+        <label class="col-lg-2 control-label">Procedimiento:</label>
+        <p class="col-lg-10" style="color: #ff0000;">{{nombreProcedimiento}}</p>
+    </div>
+    <div class="table-responsive col-md-12 m-t-sm">
+        <table id="tablaProcedimientosSeleccionados" class="table table-bordered dataTable ">
+            <thead>
+                <tr>
+                    <th class="centerMiddle">
+                        <p>Procedimiento</p>
+                    </th>
+                    <th class="centerMiddle">
+                        <p>Puntaje</p>
+                    </th>
+                    <th class="centerMiddle no-left-border">
+                        <p>Función</p>
+                    </th>
+                    <th class="centerMiddle">
+                        <p>Porcentaje</p>
+                    </th>
+                    <th class="centerMiddle">
+                        <p>Cant</p>
+                    </th>
+                    <th class="centerMiddle">
+                        <p>Prestador</p>
+                    </th>
+                    <th class="centerMiddle">
+                        <p>Convenio</p>
+                    </th>
+                    <th class="centerMiddle">
+                        <p>VPP</p>
+                    </th>
+                    <th class="centerMiddle">
+                        <p>Valor Unitario</p>
+                    </th>
+                    <th class="centerMiddle" *ngIf="false">
+                        <p>Facturar Tratante</p>
+                    </th>
+                    <th class="centerMiddle">
+                        <p>Valor a Pagar</p>
+                    </th>
+                    <th class="centerMiddle columnW70" *ngIf="autorizacion.isEditable">
+                        <p>ACC</p>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="bodyProcedimientosSeleccionados" class="no-borders ">
+                <tr *ngFor="let p of autorizacion.DetallesProcedimientos; let i = index" [ngClass]="{active: p.Nuevo || p.Edicion}">
+                    <td class="centerMiddle">
+                        <div *ngIf="p.Nuevo || p.Edicion">
+                            <div class="col-lg-10 no-padding">
+                                <input type="text" id="codProcedimiento" name="codProcedimiento" class="no-padding heigth25 form-control" pattern="\d*" [(ngModel)]="p.CodigoProcedimiento"
+                                    #codProcedimiento="ngModel" maxlength="10" />
+                            </div>
+                            <button (click)="buscarProcedimiento(p)" class="no-padding btn btn-link confirm btn-xs no-margin-bottom" type="button" [disabled]="p.CodigoPlan==undefined || p.CodigoVersion==undefined">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                        <p *ngIf="!p.Nuevo && !p.Edicion">{{p.CodigoProcedimiento}}</p>
+                    </td>
+                    <td class="centerMiddle">
+                        <p>{{p.Puntaje}}</p>
+                    </td>
+                    <td class="col-md-2 centerMiddle">
+                        <select *ngIf="p.Nuevo || p.Edicion" class="no-padding heigth25 form-select-control" (change)="onChangeFuncion(p)"
+                            id="funcion" name="funcion" [(ngModel)]="p.Funcion" #funcion="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let funcion of funciones" [value]="funcion.Nombre">{{funcion.Nombre}}</option>
+                        </select>
+                        <p *ngIf="!p.Nuevo && !p.Edicion">{{p.Funcion}}</p>
+                    </td>
+                    <td class="centerMiddle">
+                        <p>{{p.Porcentaje}}</p>
+                    </td>
+                    <td class="col-md-1 centerMiddle">
+                        <input *ngIf="p.Nuevo || p.Edicion" type="number" placeholder="00" id="cantProc" name="cantProc" class="heigth25 form-control inputNumberInline"
+                            number [min]="1" [max]="1000" [(ngModel)]="p.Cantidad" #cantProc="ngModel" (change)="calcularValoresProcedimiento(p)"
+                        />
+                        <p *ngIf="!p.Nuevo && !p.Edicion">{{p.Cantidad}}</p>
+                    </td>
+                    <td class="centerMiddle">
+                        <p>{{p.NombrePrestador}}</p>
+                    </td>
+                    <td class="centerMiddle">
+                        <p>{{p.CodigoPrestador}}</p>
+                    </td>
+                    <td class="centerMiddle">
+                        <p>{{p.ValorPorPuntos | number : '1.2-2'}}</p>
+                    </td>
+                    <td class="centerMiddle">
+                        <p>{{p.ValorUnitario | number : '1.2-2'}}</p>
+                    </td>
+                    <td class="centerMiddle" *ngIf="false">
+                        <p>{{p.ValorAFacturar | number : '1.2-2'}}</p>
+                    </td>
+                    <td class="centerMiddle">
+                        <p>{{p.ValorAPagar | number : '1.2-2'}}</p>
+                    </td>
+                    <td class="col-md-1 centerMiddle" *ngIf="autorizacion.isEditable">
+                        <button *ngIf="p.Nuevo || p.Edicion" (click)="aplicarCambios(p)" class="btn btn-link confirm btn-xs no-margin-bottom no-padding"
+                            title="Aplicar Cambios" type="button" [disabled]="!p.AplicarCambios"><i class="fa fa-check-square-o"></i></button>
+
+                        <button *ngIf="p.Nuevo || p.Edicion" (click)="cancelar(i,p)" class="btn btn-link confirm btn-xs no-margin-bottom no-padding"
+                            title="Cancelar" type="button"><i class="fa fa-ban" aria-hidden="true"></i></button>
+
+                        <button *ngIf="!p.Nuevo && !p.Edicion" (click)="prepararEdicion(p, i)" class="btn btn-link confirm btn-xs no-margin-bottom no-padding"
+                            title="Editar" type="button" [disabled]="p.Deshabilitado"><i class="fa fa-pencil-square-o"></i></button>
+
+                        <button *ngIf="!p.Nuevo && !p.Edicion" (click)="eliminar(p.Id, i)" class="btn btn-link confirm btn-xs no-margin-bottom no-padding"
+                            title="Eliminar" type="button" [disabled]="p.Deshabilitado"><i class="fa fa-trash-o"></i></button>
+                    </td>
+                </tr>
+                <tr *ngIf="autorizacion.DetallesProcedimientos.length == 0">
+                    <td colspan="12" style="text-align: center;width:532px;">No existen resultados</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

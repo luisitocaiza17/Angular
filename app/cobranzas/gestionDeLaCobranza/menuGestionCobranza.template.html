@@ -1,0 +1,35 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Cobranzas</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a [routerLink]="['generarInformacion']">Home</a></li>
+            <li class="breadcrumb-item">Gestión de la Cobranza</li>
+        </ol>
+    </div>
+
+    <div class="col-lg-10">
+        <br>
+        <br>
+    </div>
+
+    <div class="col-lg-12">
+        <ul id="ulMenuConsultas" class="nav nav-tabs" role="tablist">
+            <li class="nav-item" routerLinkActive="active">
+                <a [routerLink]="['busquedaContratos']"> Agendar Citas </a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+                <a [routerLink]="['busquedaCitasClientes']"> Reportes y Acciones: Citas</a>
+            </li>
+        </ul>    
+    </div>
+
+    <div class="col-lg-12">
+        <p></p>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="tab-content">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

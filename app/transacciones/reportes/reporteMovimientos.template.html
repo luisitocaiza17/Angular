@@ -1,0 +1,131 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Transacciones</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Transacciones</li>
+            <li class="breadcrumb-item active">Reporte de Movimientos</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-32">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" id="auditorias">
+                    <div class="row">
+
+                        <label class="col-lg-1 control-label" for="fechaDesde">Fecha Desde:</label>
+                        <div class="col-lg-3">
+                            <datetime [timepicker]="false" id="fechaDesde" [(ngModel)]="movimientoFilter.FechaMovimientoDesde" [datepicker]="datepickerOpts"></datetime>
+                        </div>
+
+                        <label class="col-lg-1 control-label" for="fechaHasta">Fecha Hasta:</label>
+                        <div class="col-lg-3">
+                            <datetime [timepicker]="false" id="fechaHasta" [(ngModel)]="movimientoFilter.FechaMovimientoHasta" [datepicker]="datepickerOpts"></datetime>
+                        </div>
+
+                        <label class="col-lg-1 control-label" for="region">Región:</label>
+                        <div class="col-lg-3">
+                            <select class="form-control m-b" [(ngModel)]="movimientoFilter.Region" name="region" id="region" #region="ngModel">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let r of regiones" [ngValue]="r.Codigo">{{r.Nombre}}</option>
+                            </select>
+                        </div>
+                        
+                        <label class="col-lg-1 control-label" for="codigoProducto">Producto:</label>
+                        <div class="col-lg-3">
+                            <input type="text" placeholder="Código Producto" id="codigoProducto" [(ngModel)]="movimientoFilter.CodigoProducto" name="codigoProducto"
+                                class="form-control" #codigoProducto="ngModel" minlength="3" maxlength="5" />
+                            <div [hidden]="codigoProducto.valid || codigoProducto.pristine" class="error">
+                                <p *ngIf="codigoProducto.errors?.minlength">Minimo 3 caracteres</p>
+                                <p *ngIf="codigoProducto.errors?.maxlength">Maximo 5 caracteres</p>
+                            </div>
+                        </div>
+
+                        <label class="col-lg-1 control-label" for="numeroContrato">Contrato:</label>
+                        <div class="col-lg-3">
+                            <input type="text" placeholder="Número Contrato" id="numeroContrato" [(ngModel)]="movimientoFilter.ContratoNumero" name="numeroContrato"
+                                class="form-control" #numeroContrato="ngModel" pattern="\d*" minlength="2" maxlength="20" />
+                            <div [hidden]="numeroContrato.valid || numeroContrato.pristine" class="error">
+                                <p *ngIf="numeroContrato.errors?.pattern">Solo se admiten dígitos</p>
+                                <p *ngIf="numeroContrato.errors?.minlength">Minimo 2 dígitos</p>
+                                <p *ngIf="numeroContrato.errors?.maxlength">Maximo 20 dígitos</p>
+                            </div>
+                        </div>
+
+                        <label class="col-lg-1 control-label" for="numeroContrato">Digitador:</label>
+                        <div class="col-lg-3">
+                            <input type="text" placeholder="Digitador" id="digitadorId" [(ngModel)]="movimientoFilter.Digitador" name="digitadorId" class="form-control"
+                                #numeroContrato="ngModel" />
+                        </div>
+
+                        <label class="col-lg-1 control-label" for="region">Tipo Movimiento:</label>
+                        <div class="col-lg-3">
+                            <select class="form-control m-b" [(ngModel)]="movimientoFilter.CodigoTransaccion" name="tipMov" id="tipMov" #tipMov="ngModel">
+                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                <option *ngFor="let r of tipoMovimientos" [ngValue]="r.CodigoTransaccion">{{r.NombreTransaccion}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-12 m-t-md">
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="buscar();" [disabled]="(movimientoFilter.FechaMovimientoDesde == undefined || movimientoFilter.FechaMovimientoHasta == undefined)" >
+                                <i class="fa fa-search"></i> Buscar
+                            </button>
+
+                            <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">Limpiar</a>
+
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="generarReporte();" [disabled]="(movimientoFilter.FechaMovimientoDesde == undefined || movimientoFilter.FechaMovimientoHasta == undefined)" >
+                                <i class="fa fa-file-excel-o"></i> Generar Reporte
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="dataTables_info">{{movimientoService.paginationConstants.EncabezadoTabla}}</div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="centerMiddle">Titular</th>
+                                    <th class="centerMiddle">Contrato</th>
+                                    <th class="centerMiddle">Transacción</th>
+                                    <th class="centerMiddle">Digitador</th>
+                                    <th class="centerMiddle">Fecha Movimiento</th>
+                                    <th class="centerMiddle">Fecha Efecto</th>
+                                    <th class="centerMiddle">Producto</th>
+                                    <th class="centerMiddle">Region</th>
+                                    <th class="centerMiddle">Beneficiario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let mov of movimientos |paginate: {id : 'movimientosTable', itemsPerPage: movimientoService.paginationConstants.pageSize,currentPage: movimientoService.paginationConstants.pageNumber, totalItems: movimientoService.paginationConstants.total};">
+                                    <td class="centerMiddle">{{mov.Titular}}</td>
+                                    <td class="centerMiddle">{{mov.ContratoNumero}}</td>
+                                    <td class="centerMiddle">{{mov.NombreTransaccion}}</td>
+                                    <td class="centerMiddle">{{mov.Digitador}}</td>
+                                    <td class="centerMiddle">{{mov.FechaMovimiento}}</td>
+                                    <td class="centerMiddle">{{mov.FechaEfectoMovimiento}}</td>
+                                    <td class="centerMiddle">{{mov.CodigoProducto}}</td>
+                                    <td class="centerMiddle">{{mov.Region}}</td>
+                                    <td class="centerMiddle">{{mov.Beneficiario}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot *ngIf="movimientoService.paginationConstants.total == 0">
+                                <tr>
+                                    <td colspan="9" style="text-align: center;">No existen resultados</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <pagination-controls id="movimientosTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true" (pageChange)="movimientoService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

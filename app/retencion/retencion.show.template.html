@@ -1,0 +1,388 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-12">
+        <h2>Retención</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Retención</li>
+            <li class="breadcrumb-item">
+                <a [routerLink]="['/retencion/list']">Identifica a tu cliente</a>
+            </li>
+            <li class="breadcrumb-item active">Detalle del cliente</li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-xs-12 col-sm-9 col-md-10" id="accordion">
+            <div class="panel panel-default panel-body">
+                <div class="row-flex" style="margin-right: -15px;">
+                    <div class="col-md-6">
+                        <label class="text-muted">Nombres y apellidos</label>
+                        <br>
+                        <span class="text-bold">{{ retencion.NombrePersona }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-muted">Contrato</label>
+                        <br>
+                        <b class="text-bold">{{ retencion.NumeroContrato }}</b>
+                    </div>
+                    <div class="col-md-2 retention-blue text-center" style="margin-top: -15px; margin-bottom: -15px;">
+                        <h3 class="no-margin">{{ retencion.categoriaCliente }}</h3>
+                        <hr class="no-margin">
+                        <small class="text-small" style="text-align: center;">SEGMENTO</small>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default panel-body" *ngIf="retencion">
+                <div class="row" class="flex-row">
+                    <div class="col-md-12">
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Región</label>
+                                <br>
+                                <span class="form-control">{{ retencion.CodigoRegion }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Fecha de fin de vigencia</label>
+                                <br>
+                                <span class="form-control">{{ retencion.FechaFin }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Código producto</label>
+                                <br>
+                                <span class="form-control">{{ retencion.CodigoPlan }}</span>
+                            </div>
+                        </div>
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Nombre del producto</label>
+                                <br>
+                                <span class="form-control">{{ retencion.NombrePlan }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Nivel</label>
+                                <br>
+                                <span class="form-control">{{ retencion.Nivel }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-primary">Siniestralidad acumulada</label>
+                                <br>
+                                <span class="form-control">{{ retencion.SiniestralidadNumber * 100 | number: '1.2-2' }}%</span>
+                            </div>
+                        </div>
+                        <div class="row m-b">
+                            <div class="col-md-4">
+                                <label class="text-primary">Estado de cobranza</label>
+                                <br>
+                                <span class="form-control">{{ retencion.EsMoroso ? "Moroso" : "Activo" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default panel-body" *ngIf="retencion">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <div class="pricecard">
+                            <strong>PRECIO ANTERIOR
+                                <span style="color: #FFFFFF; pointer-events: none;">0000000</span>
+                            </strong>
+                            <h1>
+                                <span class="dollar">$</span>
+                                <span style="color: #15A4FC;">
+                                    {{ entero(retencion.ValorAnterior) }}
+                                </span>
+                                <sup style="color: #15A4FC;">.{{ decimales(retencion.ValorAnterior) | number: '2.0-0' }}</sup>
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="pricecard">
+                            <strong>PRECIO CON INCREMENTO</strong>
+                            <h1>
+                                <span class="dollar">$</span>
+                                <span style="color: #005BBB">
+                                    {{ entero(retencion.ValorActual) }}
+                                </span>
+                                <sup style="color: #005BBB;">.{{ decimales(retencion.ValorActual) | number: '2.0-0' }}</sup>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-content" *ngIf="!retencion">
+                No encontrado
+            </div>
+
+            <div class="ibox-content">
+                <a class="btn btn-w-m btn-success btn-sm" (click)="descargarContrato();">
+                    <i class="fa fa-file-pdf-o"></i> Contrato</a>
+                <a class="btn btn-w-m btn-success btn-sm" (click)="descargarCarta();">
+                    <i class="fa fa-envelope-o"></i> Carta</a>
+            </div>
+
+            <div class="panel panel-default panel-body">
+                <div style="overflow-x: auto;">
+                    <table class="table table-striped table-bordered table-hover dataTable colors">
+                        <thead>
+                            <tr>
+                                <th class="white" colspan="3"></th>
+                                <th class="dark" *ngIf="expandidoAnterior" colspan="6">Precio anterior</th>
+                                <th class="white"></th>
+                                <th class="dark" *ngIf="expandidoIncremento" colspan="6">Precio incremento</th>
+                                <th class="white" colspan="7"></th>
+                            </tr>
+                            <tr>
+                                <th class="text-primary">Relación</th>
+                                <th class="text-primary">Nombre</th>
+                                <th class="text-primary">Edad</th>
+
+                                <th class="red" *ngIf="expandidoAnterior">Medicina prepagada</th>
+                                <th class="yellow" *ngIf="expandidoAnterior">Servicios adicionales</th>
+                                <th class="blue" *ngIf="expandidoAnterior">Descuento</th>
+                                <th class="dark-cyan" *ngIf="expandidoAnterior">Subtotal</th>
+                                <th class="light-cyan" *ngIf="expandidoAnterior">Gasto Adm</th>
+                                <th class="gray" *ngIf="expandidoAnterior">SSC</th>
+                                <th class="text-primary">
+                                    Precio anterior beneficiario
+                                    <span class="fa icon-blue" [ngClass]="{ 'fa-minus': expandidoAnterior, 'fa-plus': !expandidoAnterior }" (click)="alternarExpandidoAnterior()">
+                                    </span>
+                                </th>
+
+                                <th class="red" *ngIf="expandidoIncremento">Medicina prepagada</th>
+                                <th class="yellow" *ngIf="expandidoIncremento">Servicios adicionales</th>
+                                <th class="blue" *ngIf="expandidoIncremento">Descuento</th>
+                                <th class="dark-cyan" *ngIf="expandidoIncremento">Subtotal</th>
+                                <th class="light-cyan" *ngIf="expandidoIncremento">Gasto Adm</th>
+                                <th class="gray" *ngIf="expandidoIncremento">SSC</th>
+                                <th class="text-primary">
+                                    Precio incremento beneficiario
+                                    <span class="fa icon-blue" [ngClass]="{ 'fa-minus': expandidoIncremento, 'fa-plus': !expandidoIncremento }" (click)="alternarExpandidoIncremento()">
+                                    </span>
+                                </th>
+
+                                <th class="text-primary">Valor incremento ($)</th>
+                                <th class="text-primary">Porcentaje incremento (%)</th>
+                                <th class="text-primary">Siniestralidad último periódo</th>
+                                <th class="text-primary">Log cambios</th>
+                                <th class="text-primary">Rango mínimo</th>
+                                <th class="text-primary">Rango máximo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let beneficiario of beneficiarios">
+                                <td>{{ beneficiario.NombreRelacion }}</td>
+                                <td>{{ beneficiario.Nombres }} {{ beneficiario.Apellidos }}</td>
+                                <td>{{ beneficiario.Edad }}</td>
+
+                                <td class="red" *ngIf="expandidoAnterior">${{ beneficiario.ValorMedicinaPrepagadaAnterior | number: '1.2-2' }}</td>
+                                <td class="yellow" *ngIf="expandidoAnterior">
+                                    ${{ beneficiario.PrecioServiciosAnterior | number: '1.2-2' }}
+                                    <span class="fa fa-plus icon-blue" (click)="mostrarServicios(beneficiario)"></span>
+                                </td>
+                                <td class="blue" *ngIf="expandidoAnterior">${{ beneficiario.ValorDescuentoAnterior | number: '1.2-2' }}</td>
+                                <td class="dark-cyan" *ngIf="expandidoAnterior">${{ beneficiario.SubtotalPrecioAnterior | number: '1.2-2' }}</td>
+                                <td class="light-cyan" *ngIf="expandidoAnterior"></td>
+                                <td class="gray" *ngIf="expandidoAnterior"></td>
+                                <td>${{ beneficiario.SubtotalPrecioAnterior | number: '1.2-2' }}</td>
+
+                                <td class="red" *ngIf="expandidoIncremento">${{ beneficiario.ValorMedicinaPrepagadaActual | number: '1.2-2' }}</td>
+                                <td class="yellow" *ngIf="expandidoIncremento">
+                                    ${{ beneficiario.PrecioServicios | number: '1.2-2' }}
+                                    <span class="fa fa-plus icon-blue" (click)="mostrarServicios(beneficiario)"></span>
+                                </td>
+                                <td class="blue" *ngIf="expandidoIncremento">${{ beneficiario.ValorDescuento | number: '1.2-2' }}</td>
+                                <td class="dark-cyan" *ngIf="expandidoIncremento">${{ beneficiario.SubtotalPrecioIncremento | number: '1.2-2' }}</td>
+                                <td class="light-cyan" *ngIf="expandidoIncremento"></td>
+                                <td class="gray" *ngIf="expandidoIncremento"></td>
+                                <td>${{ beneficiario.SubtotalPrecioIncremento | number: '1.2-2' }}</td>
+
+                                <td>${{ beneficiario.IncrementoDolares | number: '1.2-2' }}</td>
+                                <td>{{ beneficiario.IncrementoPorcentaje | number: '1.2-2' }}%</td>
+                                <td>{{ beneficiario.Siniestralidad * 100 | number: '1.2-2' }}%</td>
+                                <td class="log-detail">
+                                    {{ beneficiario.LogCambios }}
+                                    <span class="fa icon-blue" [ngClass]="{ 'fa-minus': beneficiario.MostrarLog, 'fa-plus': !beneficiario.MostrarLog }" (click)="alternarLog(beneficiario)">
+                                    </span>
+                                    <div *ngIf="beneficiario.MostrarLog" class="detail">
+                                        <div class="header">
+                                            DETALLE LOG CAMBIOS
+                                        </div>
+                                        <div class="body">
+                                            {{ beneficiario.DetalleLog }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ beneficiario.ValorMinimo | number: '1.2-2' }}</td>
+                                <td>{{ beneficiario.ValorMaximo | number: '1.2-2' }}</td>
+                            </tr>
+                            <tr *ngIf="total" style="border-top-color: steelblue; border-top-width: 3px; border-top-style: solid;">
+                                <td colspan="3">TOTAL VALORES CONTRATO</td>
+
+                                <td class="red" *ngIf="expandidoAnterior">${{ total.ValorMedicinaPrepagadaAnterior | number: '1.2-2' }}</td>
+                                <td class="yellow" *ngIf="expandidoAnterior">${{ total.PrecioServiciosAnterior | number: '1.2-2' }}</td>
+                                <td class="blue" *ngIf="expandidoAnterior">${{ total.ValorDescuentoAnterior | number: '1.2-2' }}</td>
+                                <td class="dark-cyan" *ngIf="expandidoAnterior">${{ total.SubtotalPrecioAnterior | number: '1.2-2' }}</td>
+                                <td class="light-cyan" *ngIf="expandidoAnterior">${{ total.ValorGastoAdministrativo | number: '1.2-2' }}</td>
+                                <td class="gray" *ngIf="expandidoAnterior">${{ total.SubtotalPrecioAnterior * 0.005 | number: '1.2-2' }}</td>
+                                <td>${{ total.SubtotalPrecioAnterior * 1.005 + total.ValorGastoAdministrativo | number: '1.2-2'
+                                    }}
+                                </td>
+
+                                <td class="red" *ngIf="expandidoIncremento">${{ total.ValorMedicinaPrepagadaActual | number: '1.2-2' }}</td>
+                                <td class="yellow" *ngIf="expandidoIncremento">${{ total.PrecioServicios | number: '1.2-2' }}</td>
+                                <td class="blue" *ngIf="expandidoIncremento">${{ total.ValorDescuento | number: '1.2-2' }}</td>
+                                <td class="dark-cyan" *ngIf="expandidoIncremento">${{ total.SubtotalPrecioIncremento | number: '1.2-2' }}</td>
+                                <td class="light-cyan" *ngIf="expandidoIncremento">${{ total.ValorGastoAdministrativo | number: '1.2-2' }}</td>
+                                <td class="gray" *ngIf="expandidoIncremento">${{ total.SubtotalPrecioIncremento * parametroSSC | number: '1.2-2' }}</td>
+                                <td>${{ total.SubtotalPrecioIncremento + (total.SubtotalPrecioIncremento * parametroSSC) + total.ValorGastoAdministrativo | number:
+                                    '1.2-2' }}
+                                </td>
+
+                                <td>${{ total.IncrementoDolares | number: '1.2-2' }}</td>
+                                <td>{{ total.IncrementoPorcentaje | number: '1.2-2' }}%</td>
+                                <td>{{ total.Siniestralidad * 100 | number: '1.2-2' }}%</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel panel-default panel-body">
+                <div>
+                    <fieldset class="col-lg-12">
+                        <legend class="info">Comentarios y Gestión</legend>
+
+                        <div style="margin-bottom: 10px;" *ngFor="let comentario of comentarios">
+                            <div class="row">
+                                <div class="col-md-1 avatar">
+                                    <img src="./assets/img/user.png" alt="Avatar">
+                                    <span>{{ comentario.NombreUsuario }}</span>
+                                </div>
+                                <div class="col-md-11">
+                                    <div style="padding: 20px; background-color: #E0E7F0;">
+                                        <div style="font-size: 0.8em;">
+                                            {{ comentario.FechaComentarioString }}
+                                        </div>
+                                        {{ comentario.Comentario }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div>
+                    <a [routerLink]="['/retencion/comentario', key.Region, key.CodigoProducto, key.NumeroContrato]">
+                        <button class="btn btn-primary">Finalizar gestión</button>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal inmodal fade" id="myModalServicios" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+            data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h5 class="panel-title">Detalle de Servicios Adicionales</h5>
+                        </div>
+                        <div class="panel-body">
+
+                            <table class="table table-striped table-bordered table-hover dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Estado</th>
+                                        <th>Nombre estado</th>
+                                        <th>Código</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha Inicio</th>
+                                        <th>Fecha Fin</th>
+                                        <th>Precio Anterior</th>
+                                        <th>Precio Actual</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="no-borders">
+                                    <tr *ngFor="let servicio of servicios">
+                                        <td>{{ servicio.EstadoServicio }}</td>
+                                        <td>{{ servicio.NombreEstadoServicio }}</td>
+                                        <td>{{ servicio.CodigoServicio }}</td>
+                                        <td>{{ servicio.DescripcionServicio }}</td>
+                                        <td>{{ servicio.FechaInicioServicio | date: 'dd/MM/yyyy'}}</td>
+                                        <td>{{ servicio.FechaFinServicio | date: 'dd/MM/yyyy'}}</td>
+                                        <td>{{ servicio.PrecioAnterior }}</td>
+                                        <td>{{ servicio.PrecioActual }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="col-lg-12 no-padding">
+                                <button class="btn btn-w-m btn-success btn-sm" (click)="cerrarServicios();">
+                                    <i class="fa fa-sign-out"></i>Salir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="sub-menu" class="col-xs-12 col-md-4 col-lg-2 no-padding">
+            <br>
+            <h4>Modificar Contrato</h4>
+            <hr class="no-margin submenu">
+            <ul class="no-padding">
+                <li class="btn col-md-12 align-left" *ngIf="tieneDescuento" [routerLink]="['/retencion/descuento/show', key.Region, key.CodigoProducto, key.NumeroContrato]">
+                    <i class="fa fa-circle-o"></i>
+                    <span class="text-primary">Aplicar Descuento</span>
+                </li>
+                <li class="btn col-md-12 align-left" *ngIf="!tieneDescuento" (click)="mostrarPanelDescuentoNo();">
+                    <i class="fa fa-circle-o"></i>
+                    <span class="text-primary">Aplicar Descuento</span>
+                </li>
+
+                <li class="btn col-md-12 align-left" [routerLink]="['/retencion/cambio/plan', key.Region, key.CodigoProducto, key.NumeroContrato]">
+                    <i class="fa fa-circle-o"></i>
+                    <span class="text-primary">Cambio Producto</span>
+                </li>
+
+                <li class="btn col-md-12 align-left" routerLink="/retencion/modificarBeneficiarios/{{key.Region}}/{{key.CodigoProducto}}/{{key.NumeroContrato}}">
+                    <i class="fa fa-circle-o"></i>
+                    <span class="text-primary">Modificar Beneficiarios</span>
+                </li>
+
+                <li class="btn col-md-12 align-left" [routerLink]="['/retencion/anular/producto', key.Region, key.CodigoProducto, key.NumeroContrato]">
+                    <i class="fa fa-circle-o"></i>
+                    <span class="text-primary">Anular Producto</span>
+                </li>
+
+                
+                <li class="btn col-md-12" style="text-align: left;"[routerLink]="['/retencion/formaPago', key.Region, key.CodigoProducto, key.NumeroContrato]">
+                <i class="fa fa-circle-o"></i>
+                <span class="text-primary">Forma Pago</span>
+            </li>
+	    <!--
+            <li class="btn col-md-12" style="text-align: left;">
+                <i class="fa fa-circle-o"></i>
+                <span class="text-primary">Reactivar Contrato</span>
+            </li>
+            <li class="btn col-md-12" style="text-align: left;">
+                <i class="fa fa-circle-o"></i>
+                <span class="text-primary">Actualizaci&oacute;n de Datos</span>
+            </li>
+            <li class="btn col-md-12" style="text-align: left;">
+                <i class="fa fa-circle-o"></i>
+                <span class="text-primary">Anular Contrato</span>
+            </li>-->
+
+            </ul>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</div>

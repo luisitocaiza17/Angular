@@ -1,0 +1,122 @@
+<div id="divConsultar" class="panel-collapse collapse in" *ngIf="!isDesplegar">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title" id="prestadoresVeris" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+                <form (ngSubmit)="buscar();" #consultaPrestadoresVeris="ngForm">
+                    <div class="form-group col-lg-12 no-padding">
+
+                        <div class=" col-lg-12 no-padding">
+                            <label class="col-md-2">Número Contrato:</label>
+                            <span class="col-md-4">{{filter.NumeroContrato}}</span>
+                            <label class="col-md-2">Nivel Plan:</label>
+                            <span class="col-md-4">{{contratoKey.NivelReferencia}}</span>
+                        </div>
+
+                        <div class="col-md-12 m-t-sm m-b-md">
+                            <div style="border-bottom: 1px solid #d1d5d9;"></div>
+                        </div>
+
+                        <div class=" col-lg-12">
+                            <label class="col-lg-1 control-label no-padding-left" for="slcBeneficiario">Paciente:</label>
+                            <div class="col-lg-3">
+                                <select required class="form-control" id="slcBeneficiario" name="slcBeneficiario" [(ngModel)]="filter.NumeroCedula" #slcBeneficiario="ngModel">
+                                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                                    <option *ngFor="let beneficiario of beneficiarios" [value]="beneficiario.NumeroCedula">{{beneficiario.NombreCompleto}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 m-t-sm m-b-md">
+                            <div style="border-bottom: 1px solid #d1d5d9;"></div>
+                        </div>
+
+                        <div class=" col-lg-12">
+                            <label class="col-lg-1 control-label no-padding-left">Especialidad:</label>
+                            <div class="col-lg-3">
+                                <select required class="form-control" id="slcEspecialidad" name="slcEspecialidad" [(ngModel)]="filter.CodigoEspecialidad"
+                                    #slcEspecialidad="ngModel">
+                                                <option [ngValue]="undefined" selected>Seleccione...</option>
+                                                <option *ngFor="let e of especialidades" [ngValue]="e.CodigoProgress">{{e.Valor}}</option>
+                                            </select>
+                            </div>
+
+                            <label class="col-lg-1 control-label" for="codigoCiudad">Ciudad:</label>
+                            <div class="m-b col-lg-2">
+                                <select required class="form-control" [(ngModel)]="filter.CodigoCiudad" id="codigoCiudad" name="codigoCiudad" #codigoCiudad="ngModel"
+                                    (ngModelChange)="loadCentrosMedicos()">
+                                                <option [value]="0" selected>Seleccione..</option>
+                                                <option *ngFor="let c of ciudades" [value]="c.Codigo">{{c.Nombre}}</option>
+                                            </select>
+                            </div>
+
+                            <label class="col-lg-1 control-label" for="codigoCentroMedico">Centro Médico:</label>
+                            <div class="m-b col-lg-4">
+                                <select class="form-control" [(ngModel)]="filter.CodigoCentroMedico" id="codigoCentroMedico" name="codigoCentroMedico" #codigoCentroMedico="ngModel">
+                                                <option [value]="undefined" selected>Seleccione..</option>
+                                                <option *ngFor="let c of centrosMedicos" [value]="c.IdCentroMedico">{{c.Nombre}}</option>
+                                            </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!consultaPrestadoresVeris.form.valid"><i class="fa fa-search" ></i> Buscar</button>
+                        <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm"><i class="fa fa-eraser" ></i> Limpiar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="divResultadoBusquedaPrestadores" class="ibox-content" style="border-width:1px 0px 0px 0px;">
+            <div class="dataTables_info"></div>
+            <div class="table-responsive">
+                <table id="tablaPrestadores" class="table table-bordered dataTable">
+                    <thead>
+                        <tr>
+                            <th class="centerMiddle">Sel</th>
+                            <th class="centerMiddle no-left-border">Nombre</th>
+                            <th class="centerMiddle">Ciudad</th>
+                            <th class="centerMiddle">Sector</th>
+                            <th class="centerMiddle">Centro Medico</th>
+                            <th class="centerMiddle">Valor a Pagar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyPrestadores" class="no-borders ">
+                        <tr *ngFor="let prestador of prestadores">
+                            <td class="centerMiddle clickableColumn" (click)="inicializarPanelPrestador(prestador)"><i class="fa fa-file-text"></i></td>
+                            <td class="centerMiddle no-left-border">{{prestador.PrimerApellido+" "+prestador.SegundoApellido+" "+prestador.PrimerNombre+" "+prestador.SegundoNombre}}</td>
+                            <td class="centerMiddle second-column">{{prestador.Ciudad}}</td>
+                            <td class="centerMiddle">{{prestador.Sector}}</td>
+                            <td class="centerMiddle">{{prestador.CentralMedical}}</td>
+                            <td class="centerMiddle">&#36;4.50</td>
+                        </tr>
+                    </tbody>
+                    <tfoot *ngIf="prestadores.length == 0">
+                        <tr>
+                            <td colspan="10" style="text-align: center;">No existen resultados</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default" *ngIf="isDesplegar">
+    <div id="divPanelAgendarCita" class="panel-collapse collapse">
+        <div class="panel-body" style="padding-top:0px">
+            <div id="panelAgendarCita">
+                <div class="row">
+                    <div class="col-lg-12 no-padding">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">Detalles Medico Veris</h5>
+                            </div>
+                            <div class="panel-body">
+                                <agendarCitaForm></agendarCitaForm>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

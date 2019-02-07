@@ -1,0 +1,35 @@
+<div id="liberarBaseModalDiv">
+    <div id="liberarBaseViewModal" [ngClass]="{'modal':true, 'inmodal':true, 'fade':true, 'show':animate}"
+         [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': animate ? 1 : 0}" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="col-lg-4 m-t-sm no-padding">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <span class="h5 panel-title">Liberar base</span>
+                        <i class="fa fa-times-circle fa-lg" style="float:right;" (click)="hide();"></i>
+                    </div>
+                    <div class="panel-body">
+                        <form id="observacionesFrm" name="observacionesFrm" #observacionesFrm="ngForm">
+                            <div class="form-group" *ngIf="base !== null && base.Movimientos !== base.GAP">
+                                <h4 class="centerMiddle">Esta base contiene errores &iquest;est&aacute; seguro de
+                                    liberar al
+                                    proveedor?</h4>
+                                <label class="control-label" for="observacionesTxt">Observaciones:</label>
+                                <textarea id="observacionesTxt" name="observacionesTxt" class="form-control"
+                                          required="required"
+                                          [(ngModel)]="observaciones"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer centerMiddle" *ngIf="base !== null">
+                        <button id="liberarBtn" class="btn btn-primary" (click)="liberar();"
+                                [disabled]="!observacionesFrm.form.valid">Liberar
+                        </button>
+                        <button id="cancelarBtn" class="btn btn-primary" (click)="cancelar();">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

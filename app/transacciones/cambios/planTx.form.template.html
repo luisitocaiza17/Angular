@@ -1,0 +1,347 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Informativo</h5>
+        </div>
+        <div class="panel-body">
+            <div>
+                <div class="panel-success col-md-6 m-t-sm" style="width:50%">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">Listado de Beneficiarios</h5>
+                    </div>
+                    <div>
+                        <div id="divResultadoBusquedaBeneficiarios">
+                            <div class="dataTables_info">{{beneficiarioService.paginationConstants.EncabezadoTabla}}</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="centerMiddle">Nombre Completo</th>
+                                            <th class="centerMiddle">Relación</th>
+                                            <th class="centerMiddle">Fecha Inclusión</th>
+                                            <th class="centerMiddle">Fecha Exclusión</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-borders selectableBodyTable">
+                                        <tr title="{{!beneficiario.Selected ? 'Click para seleccionar' : ''}}" (click)="!beneficiario.Selected ? seleccionar(beneficiario) : return;"
+                                            [class.active]="beneficiario.Selected" *ngFor="let beneficiario of beneficiarios | paginate: {id : 'beneficiariosTable', itemsPerPage: beneficiarioService.paginationConstants.pageSize,currentPage: beneficiarioService.paginationConstants.pageNumber, totalItems: beneficiarioService.paginationConstants.total};">
+                                            <td>{{beneficiario.NombreCompleto}}</td>
+                                            <td>{{beneficiario.RelacionDependiente}}</td>
+                                            <td class="centerMiddle">{{beneficiario.FechaInclusion}}</td>
+                                            <td class="centerMiddle">{{beneficiario.FechaExclusion}}</td>
+
+                                        </tr>
+                                    </tbody>
+                                    <tfoot *ngIf="beneficiarioService.paginationConstants.total == 0">
+                                        <tr>
+                                            <td colspan="9" style="text-align: center;">No existen resultados</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <pagination-controls id="beneficiariosTable" maxSize="4" previousLabel="" nextLabel=""
+                                autoHide="true" (pageChange)="beneficiarioService.paginationConstants.pageNumber=$event;"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-success col-md-6 m-t-sm" style="width:50%">
+                    <div class="panel-body panelDatos">
+                        <div id="divResultadoBusquedaBeneficiarios">
+                            <a>
+                                <i title="Los valores presentados corresponden al periodo mensual, tomar en cuenta el periodo de pago del contrato para el calculo respectivo."
+                                    class="fa fa-info-circle"></i>
+                            </a>
+                            <div class="table-responsive">
+                                <table class="table  table-hover dataTable">
+                                    <tbody class="fixedBodyHeight300">
+                                        <tr *ngFor="let p of planesCP">
+                                            <td style="font-size:10px;height:10px;width:70%;">{{p.NombrePlan}}</td>
+                                            <td>
+                                                <div class="progress-bar progress-bar-success" [ngStyle]="{'height': getheight(), 'width' : concatenar(p.PrecioBase)  }"></div>&nbsp;{{p.PrecioBase
+                                                | number:'1.2-2'}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h5 class="panel-title">Cambio de Plan</h5>
+        </div>
+        <div class="panel-body">
+            <form name="planForm" role="form" #planForm="ngForm">
+
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-12">
+                        <legend class="info">DATOS DEL PLAN</legend>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="slcPlan">Nuevo Plan:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control m-b" id="slcPlan" name="slcPlan" [(ngModel)]="planKeySelected"
+                            #slcPlan="ngModel" (change)="onChangePlan()" [disabled]="habilitar">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let plan of planes" [value]="plan.CodigoPlan">{{plan.CodigoPlan +'
+                                '+plan.VersionPlan}}</option>
+                        </select>
+                        <div [hidden]="slcPlan.valid" class="error">
+                            <p *ngIf="slcPlan.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Retroactivo:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control m-b" name="slcRetroactivo" (change)="onChangeRetroactivo()"
+                            [(ngModel)]="_contratoKey.Retroactivo" #slcRetroactivo="ngModel" [disabled]="habilitar">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">SI</option>
+                            <option [ngValue]="2">NO</option>
+                        </select>
+                        <div [hidden]="slcRetroactivo.valid" class="error">
+                            <p *ngIf="slcRetroactivo.errors?.required">Campo Requerido</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset class="col-lg-12">
+
+                    <div class="col-lg-2">
+                        <label class="control-label no-padding-left">Fecha Inicio Nuevo Plan:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4" *ngIf="habilitarFechaInicioNuevoPlan" >
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" [(ngModel)]="_contratoKey.FechaHasta" 
+                            [ngModelOptions]="{standalone: true}" [datepicker]="datepickerOpts" (ngModelChange)="onChangeFechaMaxima()"></datetime>
+                    </div>
+
+                    <div class="m-b col-lg-4" *ngIf="!habilitarFechaInicioNuevoPlan" >
+                        {{_contratoKey.FechaHasta | date: 'dd/MM/yyyy'}}
+                     </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="slcTipoCuenta">Seleccione una Ciudad:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control" [(ngModel)]="_contratoKey.Ciudad" id="slcCiudad"
+                            name="slcCiudad" #slcTipoCuenta="ngModel">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">Quito</option>
+                            <option [ngValue]="2">Guayaquil</option>
+                            <option [ngValue]="3">Cuenca</option>
+                        </select>
+                        <div [hidden]="slcTipoCuenta.valid" class="error">
+                            <p *ngIf="slcTipoCuenta.errors?.required">Campo requerido</p>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Nombre:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        {{planSeleccionado.NombrePlan}}
+                    </div>
+
+                    <div class="m-b col-lg-1">
+                        <label class="control-label no-padding-left">Versión:</label>
+                    </div>
+                    <div class="m-b col-lg-1">
+                        {{planSeleccionado.VersionPlan}}
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left">Fecha Máxima Retroactivo:</label>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        {{fechaMaxima | date: 'dd/MM/yyyy' }}
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-12">
+                        <legend class="success">FORMA DE PAGO</legend>
+                    </div>
+                    <div class="m-b col-lg-12">
+                        <legend class="info">DATOS DE PAGO</legend>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="slcformaPago">Forma de Pago:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control" [(ngModel)]="_contratoKey.FormaPago" id="slcformaPago"
+                            name="slcformaPago" (change)="changeFormaPago()" #slcformaPago="ngModel" [disabled]="habilitar">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">Débito</option>
+                            <option [ngValue]="2">Pago Directo</option>
+                        </select>
+                        <div [hidden]="slcformaPago.valid" class="error">
+                            <p *ngIf="slcformaPago.errors?.required">Campo requerido</p>
+                        </div>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label" for="slcPeriodoPago">Periodo del Pago:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control" [(ngModel)]="_contratoKey.PeriodoPago" id="slcPeriodoPago"
+                            name="slcPeriodoPago" [disabled]="habilitar" #slcPeriodoPago="ngModel" (change)="changePeriodoPago()"
+                            [disabled]="habilitar">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">Mensual</option>
+                            <option [ngValue]="2">Bimestral</option>
+                            <option [ngValue]="3"> Trimestral</option>
+                            <option [ngValue]="4">Semestral</option>
+                            <option [ngValue]="5"> Anual</option>
+                            <option [ngValue]="6">Cuatrimestral</option>
+                        </select>
+                        <div [hidden]="slcPeriodoPago.valid" class="error">
+                            <p *ngIf="slcPeriodoPago.errors?.required">Campo requerido</p>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-12">
+                        <legend class="info">DATOS DEL BANCO Y CUENTA</legend>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="codigoBanco">Código Banco:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.CodigoBanco" id="codigoBanco" name="codigoBanco"
+                            class="heigth25 form-control col-lg-12" [disabled]="true" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="slcBanco">Banco:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control" [(ngModel)]="_contratoKey.CodigoBanco" id="slcBanco"
+                            name="slcBanco" [disabled]="habilitar" #slcBanco="ngModel" [disabled]="habilitar">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option *ngFor="let banco of bancos" [ngValue]="banco.CodigoBanco">{{banco.NombreBanco}}</option>
+                        </select>
+                        <div [hidden]="slcBanco.valid" class="error">
+                            <p *ngIf="slcBanco.errors?.required">Campo requerido</p>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-lg-12">
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="slcTipoCuenta">Tipo de Cuenta:</label>
+                    </div>
+
+                    <div class="m-b col-lg-4">
+                        <select required class="form-select-control" [(ngModel)]="_contratoKey.TipoCuenta" id="slcTipoCuenta"
+                            name="slcTipoCuenta" [disabled]="habilitar" #slcTipoCuenta="ngModel" (change)="changeTipoCuenta()">
+                            <option [ngValue]="undefined" selected>Seleccione...</option>
+                            <option [ngValue]="1">Cuenta Corriente</option>
+                            <option [ngValue]="2">Cuenta Ahorro</option>
+                            <option [ngValue]="3">Tarjeta</option>
+                            <option [ngValue]="4">Pago Directo</option>
+                        </select>
+                        <div [hidden]="slcTipoCuenta.valid" class="error">
+                            <p *ngIf="slcTipoCuenta.errors?.required">Campo requerido</p>
+                        </div>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="numeroCuenta">Número de Cuenta:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.NumeroCuenta" id="numeroCuenta" name="numeroCuenta"
+                            class="heigth25 form-control col-lg-12" [disabled]="habilitar" />
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-lg-12">
+                    <div class="m-b col-lg-12">
+                        <legend class="info">DATOS DEL CLIENTE</legend>
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="txtRuc">R.U.C:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.FacturarRuc" id="txtRuc" name="txtRuc" class="heigth25 form-control"
+                            [disabled]="habilitar" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="txtPasaporte">Pasaporte:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.FacturarPasaporte" id="txtPasaporte" name="txtPasaporte"
+                            class="heigth25 form-control" [disabled]="habilitar" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left" for="txtCedula">Cédula:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.FacturarCedula" id="txtCedula" name="txtCedula"
+                            class="heigth25 form-control" [disabled]="habilitar" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="txtNombreApellido">Nombre Completo:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <input type="text" [(ngModel)]="_contratoKey.NombreDuenioCuenta" id="txtNombreApellido" name="txtNombreApellido"
+                            class="heigth25 form-control" [disabled]="habilitar" />
+                    </div>
+
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-left clearInfo" for="txtExpiracion">Fecha Cad Tarjeta:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <datetime class="heigth25 col-lg-12 no-padding" [timepicker]="false" id="fechaFinTarjeta"
+                            [(ngModel)]="fechaFinTarjeta" [ngModelOptions]="{standalone: true}" [datepicker]="datepickerOpts"
+                            *ngIf="desabilitar==true;"></datetime>
+                    </div>
+                    <div class="m-b col-lg-2">
+                        <label class="control-label no-padding-rigth" for="txtDescuento">Descuento:</label>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        {{this._contratoKey.PorcentajeDescuento + ' %'}}
+                    </div>
+                </fieldset>
+
+                <div class="col-lg-12 m-t-md">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="guardarCambioPlan();" [disabled]="!planForm.form.valid">
+                        <i class="fa fa-save"></i>Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

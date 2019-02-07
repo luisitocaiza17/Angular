@@ -1,0 +1,248 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+        <div class="col-lg-10">
+            <h2>Transacciones</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a [routerLink]="['']">Home</a>
+                </li>
+                <li class="breadcrumb-item">Transacciones</li>
+                <li class="breadcrumb-item active">Transacción</li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+    
+    <div class="wrapper wrapper-content">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default panel-body no-padding">
+                <div class="panel-heading" (click)="colapsarTab()">
+                    <h5 class="panel-title">
+                        <a data-toggle="collapse" title="Consultar" data-parent="#accordion" href="#divConsultar">
+                            <i class="fa fa-bookmark"></i>
+                        </a>
+                    </h5>
+                </div>
+                <div id="divConsultar" class="panel-collapse collapse in">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+                            <div class="row">
+                                <form (ngSubmit)="buscar();" #consultaContratoForm="ngForm">
+                                    <div class="form-group col-lg-12 no-padding">
+                                        <div class=" col-lg-12">
+    
+                                            <label class="col-lg-1 control-label" for="numeroCedula">Cédula:</label>
+                                            <div class="col-lg-3" [ngClass]="{'has-error':numeroCedula.invalid}">
+                                                <input type="text" placeholder="Cédula" id="numeroCedula" [(ngModel)]="filter.NumeroCedula"
+                                                    name="numeroCedula" class="form-control" #numeroCedula="ngModel"
+                                                    pattern="\d*" minlength="10" maxlength="10" />
+                                                <div [hidden]="numeroCedula.valid || numeroCedula.pristine" class="error">
+                                                    <p *ngIf="numeroCedula.errors?.pattern">Solo se admiten dígitos</p>
+                                                    <p *ngIf="numeroCedula.errors?.minlength">Minimo 10 dígitos</p>
+                                                    <p *ngIf="numeroCedula.errors?.maxlength">Maximo 10 dígitos</p>
+                                                </div>
+                                            </div>
+    
+                                            <label class="col-lg-1 control-label" for="codigoRegion">Región:</label>
+                                            <div class="m-b col-lg-3">
+                                                <select class="form-control" [(ngModel)]="filter.CodigoRegion" id="codigoRegion"
+                                                    name="codigoRegion" #codigoRegion="ngModel">
+                                                    <option [value]="undefined" selected>Seleccione región</option>
+                                                    <option *ngFor="let r of regiones" [value]="r.Codigo">{{r.Nombre}}</option>
+                                                </select>
+                                            </div>
+    
+    
+                                            <label class="col-lg-1 control-label" for="codigoProducto">Producto:</label>
+                                            <div class="m-b col-lg-3">
+                                                <input type="text" placeholder="Código Producto" id="codigoProducto"
+                                                    [(ngModel)]="filter.CodigoProducto" name="codigoProducto" class="form-control"
+                                                    #codigoProducto="ngModel" minlength="3" maxlength="5" />
+                                                <div [hidden]="codigoProducto.valid || codigoProducto.pristine" class="error">
+                                                    <p *ngIf="codigoProducto.errors?.minlength">Minimo 3 caracteres</p>
+                                                    <p *ngIf="codigoProducto.errors?.maxlength">Maximo 5 caracteres</p>
+                                                </div>
+                                            </div>
+    
+                                        </div>
+                                        <div class=" col-lg-12">
+    
+    
+                                            <label class="col-lg-1 control-label" for="nombrePersona">Nombres:</label>
+                                            <div class="m-b col-lg-3">
+                                                <input type="text" placeholder="Nombres" id="nombrePersona" [(ngModel)]="filter.NombrePersona"
+                                                    name="nombrePersona" class="form-control" #nombrePersona="ngModel"
+                                                    minlength="3" maxlength="50" [required]="apellidoPersona.touched && filter.ApellidoPersona != undefined && filter.ApellidoPersona.length >0
+                                                                && (filter.NombrePersona == undefined || filter.NombrePersona.length <= 0) " />
+                                                <div [hidden]="(nombrePersona.valid || nombrePersona.pristine) && !apellidoPersona.touched"
+                                                    class="error">
+                                                    <p *ngIf="nombrePersona.errors?.minlength">Minimo 3 caracteres</p>
+                                                    <p *ngIf="nombrePersona.errors?.maxlength">Maximo 50 caracteres</p>
+                                                    <p *ngIf="nombrePersona.errors?.required">Requerido</p>
+                                                </div>
+                                            </div>
+    
+                                            <label class="col-lg-1 control-label" for="numeroContrato">Contrato:</label>
+                                            <div class="m-b col-lg-3">
+                                                <input type="text" placeholder="Número Contrato" id="numeroContrato"
+                                                    [(ngModel)]="filter.NumeroContrato" name="numeroContrato" class="form-control"
+                                                    #numeroContrato="ngModel" pattern="\d*" minlength="2" maxlength="20" />
+                                                <div [hidden]="numeroContrato.valid || numeroContrato.pristine" class="error">
+                                                    <p *ngIf="numeroContrato.errors?.pattern">Solo se admiten dígitos</p>
+                                                    <p *ngIf="numeroContrato.errors?.minlength">Minimo 2 dígitos</p>
+                                                    <p *ngIf="numeroContrato.errors?.maxlength">Maximo 20 dígitos</p>
+                                                </div>
+                                            </div>
+    
+                                            <label class="col-lg-1 control-label" for="pasaporte">Pasaporte:</label>
+                                            <div class="col-lg-3">
+                                                <input type="text" placeholder="Pasaporte" id="pasaporte" [(ngModel)]="filter.Pasaporte"
+                                                    name="pasaporte" class="form-control" #pasaporte="ngModel" minlength="5"
+                                                    maxlength="15" />
+                                                <div [hidden]="pasaporte.valid || pasaporte.pristine" class="error">
+                                                    <p *ngIf="pasaporte.errors?.minlength">Minimo 5 caracteres</p>
+                                                    <p *ngIf="pasaporte.errors?.maxlength">Maximo 15 caracteres</p>
+                                                </div>
+                                            </div>
+    
+                                        </div>
+                                        <div class=" col-lg-12">
+                                            <label class="col-lg-1 control-label" for="apellidoPersona">Apellidos:</label>
+                                            <div class="m-b col-lg-3">
+                                                <input type="text" placeholder="Apellidos" id="apellidoPersona" [(ngModel)]="filter.ApellidoPersona"
+                                                    name="apellidoPersona" class="form-control" #apellidoPersona="ngModel"
+                                                    minlength="3" maxlength="50" [required]="nombrePersona.touched && filter.NombrePersona != undefined && filter.NombrePersona.length >0
+                                                                    && ( filter.ApellidoPersona == undefined || filter.ApellidoPersona.length <= 0 )" />
+                                                <div [hidden]="(apellidoPersona.valid || apellidoPersona.pristine) && !nombrePersona.touched"
+                                                    class="error">
+                                                    <p *ngIf="apellidoPersona.errors?.minlength">Minimo 3 caracteres</p>
+                                                    <p *ngIf="apellidoPersona.errors?.maxlength">Maximo 50 caracteres</p>
+                                                    <p *ngIf="apellidoPersona.errors?.required">Requerido</p>
+                                                </div>
+                                            </div>
+    
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!consultaContratoForm.form.valid">
+                                            <i class="fa fa-search"></i> Buscar</button>
+                                        <a (click)="limpiar()" class="btn btn-w-m btn-success btn-sm">
+                                            <i class="fa fa-eraser"></i> Limpiar</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="divResultadoBusquedaContratos" class="ibox-content" style="border-width:1px 0px 0px 0px;">
+                            <div class="dataTables_info">{{transaccionService.paginationConstants.EncabezadoTabla}}</div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Sel</th>
+                                            <th>Región</th>
+                                            <th>Código Producto</th>
+                                            <th>Número Contrato</th>
+                                            <th>Código Plan</th>
+                                            <th>Versión</th>
+                                            <th>Estado</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Fecha Fin</th>
+                                            <th>Fecha Facturado</th>
+                                            <th>Es Moroso</th>
+                                            <th>Nro. Cuenta Débito</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="no-borders" *ngFor="let contrato of contratos | paginate: {id : 'contratosTable', itemsPerPage: transaccionService.paginationConstants.pageSize,currentPage: transaccionService.paginationConstants.pageNumber, totalItems: transaccionService.paginationConstants.total};">
+                                        <tr>
+                                            <td rowspan="4" class="centerMiddle clickableColumn" (click)="inicializarPanelTransacciones(contrato)">
+                                                <i class="fa fa-file-text"></i>
+                                            </td>
+                                        </tr>
+                                        <tr [ngClass]="{'encabezadoNested':contrato.EstadoContrato=='Activo','encabezadoNestedClear':contrato.EstadoContrato!='Activo'}">
+                                            <td>{{contrato.CodigoRegion}}</td>
+                                            <td>{{contrato.CodigoProducto}}</td>
+                                            <td class="alignR">{{contrato.NumeroContrato}}</td>
+                                            <td>{{contrato.CodigoPlan}}</td>
+                                            <td>{{contrato.VersionPlan}}</td>
+                                            <td>{{contrato.EstadoContrato}}</td>
+                                            <td>{{contrato.FechaInicio}}</td>
+                                            <td>{{contrato.FechaFin}}</td>
+                                            <td>{{contrato.FechaFin}}</td>
+                                            <td [ngClass]="{'positive' : contrato.EsMoroso == true} ">{{contrato.EsMoroso ? 'SI' : 'NO'}}</td>
+                                            <td class="alignR">{{contrato.NumeroCuenta}}</td>
+                                        </tr>
+                                        <tr *ngIf="contrato.Cedula!=undefined">
+                                            <td colspan="11">
+                                                <h4>Titular</h4>
+                                                <div class="col-lg-12">
+                                                    <label class="col-lg-2 no-padding">Nombres y Apellidos:</label>
+                                                    <span class="col-lg-4">{{contrato.NombresApellidos}}</span>
+    
+                                                    <label class="col-lg-1 no-padding">Cédula:</label>
+                                                    <span class="col-lg-2">{{contrato.Cedula}}</span>
+    
+                                                    <label class="col-lg-2 no-padding">Número Persona:</label>
+                                                    <span class="col-lg-1">{{contrato.NumeroPersona}}</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="contrato.NumeroEmpresa!=undefined">
+                                            <td colspan="11">
+                                                <h4>Empresa</h4>
+                                                <div class="col-lg-12">
+                                                    <label class="col-lg-2 no-padding">Razón Social:</label>
+                                                    <span class="col-lg-4">{{contrato.RazonSocial}}</span>
+                                                    <label class="col-lg-2 no-padding">Ciudad:</label>
+                                                    <span class="col-lg-4">{{contrato.CiudadEmpresa}}</span>
+    
+                                                    <label class="col-lg-2 no-padding clearInfo">Número Empresa:</label>
+                                                    <span class="col-lg-4">{{contrato.NumeroEmpresa}}</span>
+                                                    <label class="col-lg-2 no-padding">Sucursal:</label>
+                                                    <span class="col-lg-4">{{contrato.Sucursal}}</span>
+    
+                                                    <label class="col-lg-2 no-padding clearInfo" *ngIf="filter.filterByEmpresa">RUC:</label>
+                                                    <span class="col-lg-4" *ngIf="filter.filterByEmpresa">{{contrato.RucEmpresa}}</span>
+                                                    <label class="col-lg-2 no-padding" *ngIf="filter.filterByEmpresa">Número
+                                                        Sucursal:</label>
+                                                    <span class="col-lg-4" *ngIf="filter.filterByEmpresa">{{contrato.NumeroSucursal}}</span>
+    
+                                                    <label class="col-lg-2 no-padding clearInfo" *ngIf="filter.filterByEmpresa">Tipo
+                                                        Sociedad:</label>
+                                                    <span class="col-lg-4" *ngIf="filter.filterByEmpresa">{{contrato.TipoSociedad}}</span>
+                                                    <label class="col-lg-2 no-padding" *ngIf="filter.filterByEmpresa">Grupo:</label>
+                                                    <span class="col-lg-4" *ngIf="filter.filterByEmpresa">{{contrato.GrupoEmpresa}}</span>
+    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot *ngIf="transaccionService.paginationConstants.total == 0">
+                                        <tr>
+                                            <td colspan="12" style="text-align: center;">No existen resultados</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <pagination-controls id="contratosTable" maxSize="4" previousLabel="" nextLabel="" autoHide="true"
+                                (pageChange)="transaccionService.paginationConstants.pageNumber=$event;pageChanged();"></pagination-controls>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="" *ngIf="isDesplegar">
+                    <div id="divPanelTransacciones" class="panel-collapse collapse">
+                        <div class="panel-body" style="padding-top:0px">
+                            <div id="panelTransaccion">
+                                <div class="row">
+                                    <div class="col-lg-12 no-padding">
+                                        <transaccionesForm></transaccionesForm>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

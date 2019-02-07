@@ -1,0 +1,483 @@
+<div class="col-xs-12 no-padding m-t-xs m-b-sm">
+
+    <form name="upateCorrespondencia" role="form" #upateCorrespondencia="ngForm">
+
+        <fieldset class="col-lg-12 m-b">
+            <legend *ngIf="_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#informacionPersonal"
+                (click)="Editar();">INFORMACIÓN PERSONAL</legend>
+            <legend *ngIf="!_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#informacionPersonal">INFORMACIÓN
+                PERSONAL</legend>
+        </fieldset>
+
+        <div id="informacionPersonal" class="collapse">
+            <fieldset class="col-lg-12">
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">* Tipo Documento:</label>
+                </div>
+                <div class="m-b col-lg-4">
+                    <select required class="form-select-control m-b" name="slcTipoDocumento" [(ngModel)]="tipoDocumento"
+                        #slcTipoDocumento="ngModel">
+                        <option [ngValue]="1">Cédula</option>
+                        <option [ngValue]="2">Pasaporte</option>
+                        <option [ngValue]="3">Sin Documento</option>
+                    </select>
+                </div>
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left" for="documento">* Documento:</label>
+                </div>
+                <div class="m-b col-lg-4" *ngIf="tipoDocumento == 1 || tipoDocumento == 3">
+                    <input type="number" [(ngModel)]="persona.Cedula" id="cedula" name="cedula" class="heigth25 form-control col-lg-12" />
+                </div>
+                <div class="m-b col-lg-4" *ngIf="tipoDocumento == 2">
+                    <input type="text" [(ngModel)]="persona.Pasaporte" id="pasaporte" name="pasaporte" class="heigth25 form-control col-lg-12" />
+                </div>
+            </fieldset>
+            <fieldset class="col-lg-12">
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">* Apellido Paterno:</label>
+                </div>
+
+                <div class="m-b col-lg-4 ">
+                    <input type="text" [(ngModel)]="persona.ApellidoPaterno" id="apellidoPaterno" name="apellidoPaterno"
+                        class="heigth25 form-control col-lg-12 uperCase" />
+                </div>
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">Apellido Materno:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="text" [(ngModel)]="persona.ApellidoMaterno" id="apellidoMaterno" name="apellidoMaterno"
+                        class="heigth25 form-control col-lg-12 uperCase" />
+                </div>
+
+            </fieldset>
+            <fieldset class="col-lg-12">
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">* Nombres:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="text" [(ngModel)]="persona.Nombres" id="nombres" name="nombres" class="heigth25 form-control col-lg-12 uperCase" />
+                </div>
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">* Fecha de Nacimiento:</label>
+                </div>
+
+                <div class=" m-b col-lg-4">
+                    <datetime id="fechaNacimiento" name="fechaNacimiento" required class="heigth25 col-lg-12 no-padding"
+                        [datepicker]="datepickerOpts" [timepicker]="false" [(ngModel)]="persona.FechaNacimiento"></datetime>
+                </div>
+            </fieldset>
+            <fieldset class="col-lg-12">
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">* Sexo:</label>
+                </div>
+                <div class="m-b col-lg-4">
+                    <select required class="form-select-control m-b" name="slcSexo" [(ngModel)]="sexo" #slcSexo="ngModel">
+                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                        <option [ngValue]="1">Hombre</option>
+                        <option [ngValue]="2">Mujer</option>
+                    </select>
+                </div>
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">Nacionalidad:</label>
+                </div>
+                <div class="m-b col-lg-4">
+                    <input type="text" required class="form-select-control m-b uperCase" name="slcNacionalidad"
+                        [(ngModel)]="persona.Nacionalidad" />
+
+                </div>
+            </fieldset>
+            <fieldset class="col-lg-12">
+                <div class="m-b col-lg-4">
+
+                </div>
+                <div class="m-b col-lg-4">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="datosBeneficiarioTitular();">
+                        <i class="fa fa-angle-double-down"></i> Poner Datos del Titular</button>
+                </div>
+                <div class="m-b col-lg-4">
+
+                    </div>
+            </fieldset>
+            <fieldset class="col-lg-12">
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">* Email Personal:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="email" [(ngModel)]="persona.EmailPersonal" id="emailPersonal" name="emailPersonal"
+                        class="heigth25 form-control col-lg-12" #emailPersonal="ngModel" maxlength="50" [email]="true" />
+                    <div [hidden]="emailPersonal.valid || emailPersonal.pristine" class="error">
+                        <p *ngIf="emailPersonal.errors?.required">Campo requerido</p>
+                        <p *ngIf="emailPersonal.errors?.email">Formato correo incorrecto</p>
+                    </div>
+                </div>
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">* Celular:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="text" [(ngModel)]="persona.Celular" id="celular" name="celular" class="heigth25 form-control col-lg-12" />
+                </div>
+            </fieldset>
+            <fieldset class="col-lg-12">
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">Empresa Trabajo:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="text" [(ngModel)]="persona.EmpresaTrabajo" id="empresaTrabajo" name="empresaTrabajo"
+                        class="heigth25 form-control col-lg-12 uperCase" />
+                </div>
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">Email Trabajo:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="text" [(ngModel)]="persona.EmailTrabajo" id="emailTrabajo" name="emailTrabajo" class="heigth25 form-control col-lg-12" />
+                </div>
+
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">Teléfono Trabajo:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="number" [(ngModel)]="persona.TelefonoTrabajo" id="telefonoTrabajo" name="telefonoTrabajo"
+                        class="heigth25 form-control col-lg-12" />
+                </div>
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">* Teléfono Domicilio:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="number" [(ngModel)]="persona.TelefonoDomicilio" id="telefonoDomicilio" name="telefonoDomicilio"
+                        class="heigth25 form-control col-lg-12" />
+                </div>
+
+            </fieldset>
+            <fieldset class="col-lg-12">
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">Estado Civil:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <select required class="form-select-control m-b" name="slcEstadoCivil" [(ngModel)]="estadoCivil"
+                        #slcEstadoCivil="ngModel">
+                        <option [ngValue]="undefined" selected>Seleccione...</option>
+                        <option [ngValue]="1">Soltero/a</option>
+                        <option [ngValue]="2">Casado/a</option>
+                        <option [ngValue]="3">Divorciado/a</option>
+                        <option [ngValue]="4">Viudo/a</option>
+                        <option [ngValue]="5">Unión Libre</option>
+                    </select>
+                </div>
+            </fieldset>
+        </div>
+
+        <fieldset class="col-lg-12 m-b">
+            <legend *ngIf="_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#direccionDomicilio"
+                (click)="Editar();">DIRECCIÓN DE DOMICILIO</legend>
+            <legend *ngIf="!_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#direccionDomicilio">DIRECCIÓN
+                DE DOMICILIO</legend>
+        </fieldset>
+
+        <div id="direccionDomicilio" class="collapse">
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Provincia:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <select class="form-select-control heigth25" id="provinciaDomicilio" name="provinciaDomicilio"
+                    [(ngModel)]="persona.ProvinciaDomicilio" #provinciaDomicilio="ngModel">
+                    <option [value]="undefined" selected>Seleccione...</option>
+                    <option *ngFor="let c of provincias" [value]="c.nombre_provincia">{{c.nombre_provincia}}</option>
+                </select>
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Ciudad:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <select class="form-select-control heigth25" id="slcCiudadDomicilio" name="slcCiudadDomicilio"
+                    [(ngModel)]="persona.CiudadDomicilio" #slcCiudadDomicilio="ngModel">
+                    <option [value]="undefined" selected>Seleccione...</option>
+                    <option *ngFor="let c of ciudades" [value]="c.CodigoProgress">{{c.Valor}}</option>
+                </select>
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Calle Principal:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.CallePrincipalDomicilio" id="callePrincipalDomicilio" name="callePrincipalDomicilio"
+                    class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Calle Transversal:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.CalleTransversalDomicilio" id="calleTransversalDomicilio" name="calleTransversalDomicilio"
+                    class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Numeración:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.NumeracionDomicilio" id="numeracionDomicilio" name="numeracionDomicilio"
+                    class="heigth25 form-control col-lg-12" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Referencia:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.ReferenciaDomicilio" id="referenciaDomicilio" name="referenciaDomicilio"
+                    class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Barrio:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.BarrioDomicilio" id="barrioDomicilio" name="barrioDomicilio"
+                    class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+        </div>
+
+        <fieldset class="col-lg-12 m-b">
+            <legend *ngIf="_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#direccionTrabajo"
+                (click)="Editar();">DIRECCIÓN DE TRABAJO</legend>
+            <legend *ngIf="!_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#direccionTrabajo">DIRECCIÓN
+                DE TRABAJO</legend>
+        </fieldset>
+
+
+        <div id="direccionTrabajo" class="collapse">
+
+            <div class="col-lg-12 m-b">
+                <button class="btn btn-success btn-sm m-b" (click)="noTrabaja();">
+                    <i class="fa fa-pencil-square-o"></i>No Trabaja</button>
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Provincia:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <select class="form-select-control heigth25" id="provinciaTrabajo" name="provinciaTrabajo" [(ngModel)]="persona.ProvinciaTrabajo"
+                    #provinciaTrabajo="ngModel">
+                    <option [value]="undefined" selected>Seleccione...</option>
+                    <option *ngFor="let c of provincias" [value]="c.nombre_provincia">{{c.nombre_provincia}}</option>
+                </select>
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Ciudad:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <select class="form-select-control heigth25" id="slcCiudadTrabajo" name="slcCiudadTrabajo" [(ngModel)]="persona.CiudadTrabajo"
+                    #slcCiudadTrabajo="ngModel">
+                    <option [value]="undefined" selected>Seleccione...</option>
+                    <option *ngFor="let c of ciudades" [value]="c.CodigoProgress">{{c.Valor}}</option>
+                </select>
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Calle Principal:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.CallePrincipalTrabajo" id="callePrincipalTrabajo" name="callePrincipalTrabajo"
+                    class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Calle Transversal:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.CalleTransversalTrabajo" id="calleTransversalTrabajo" name="calleTransversalTrabajo"
+                    class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Numeración:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.NumeracionTrabajo" id="numeracionTrabajo" name="numeracionTrabajo"
+                    class="heigth25 form-control col-lg-12" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Referencia:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.ReferenciaTrabajo" id="referenciaTrabajo" name="referenciaTrabajo"
+                    class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Barrio:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.BarrioTrabajo" id="barrioTrabajo" name="barrioTrabajo" class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+        </div>
+
+        <fieldset class="col-lg-12 m-b">
+            <legend *ngIf="_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#correspondencia"
+                (click)="Editar();">ENVÍO CORRESPONDENCIA</legend>
+            <legend *ngIf="!_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#correspondencia">ENVÍO
+                CORRESPONDENCIA</legend>
+        </fieldset>
+
+        <div id="correspondencia" class="collapse">
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Correspondencia:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <select required class="form-select-control m-b" name="slcCorrespondencia" [(ngModel)]="correspondencia"
+                    #slcCorrespondencia="ngModel">
+                    <option [ngValue]="undefined" selected>Seleccione...</option>
+                    <option [ngValue]="1">Domicilio</option>
+                    <option [ngValue]="2">Trabajo</option>
+                </select>
+            </div>
+        </div>
+
+        <fieldset class="col-lg-12 m-b">
+            <legend *ngIf="_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#emergencia"
+                (click)="Editar();">EN CASO DE EMERGENCIA</legend>
+            <legend *ngIf="!_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#emergencia">EN
+                CASO DE EMERGENCIA</legend>
+        </fieldset>
+
+        <div id="emergencia" class="collapse">
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Nombre Contacto:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.NombreContacto" id="nombreContacto" name="nombreContacto" class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Teléfono Contacto:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="number" [(ngModel)]="persona.TelefonoContacto" id="telefonoContacto" name="telefonoContacto"
+                    class="heigth25 form-control col-lg-12" />
+            </div>
+        </div>
+
+        <fieldset class="col-lg-12 m-b">
+            <legend *ngIf="_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#infoOpcional"
+                (click)="Editar();">INFORMACIÓN OPCIONAL</legend>
+            <legend *ngIf="!_datosPantalla.Desabilitar" class="info" data-toggle="collapse" data-target="#infoOpcional">INFORMACIÓN
+                OPCIONAL</legend>
+        </fieldset>
+
+        <div id="infoOpcional" class="collapse">
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Rango Ingresos:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.RangoIngresos" id="rangoIngresos" name="rangoIngresos" class="heigth25 form-control col-lg-12" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Ocupación:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.Ocupacion" id="ocupacion" name="ocupacion" class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Profesión:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.Profesion" id="profesion" name="profesion" class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Vehículo:</label>
+            </div>
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.Vehiculo" id="vehiculo" name="vehiculo" class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+            <fieldset class="col-lg-12">
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">Condición Laboral:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="text" [(ngModel)]="persona.CondicionLaboral" id="condicionLaboral" name="condicionLaboral"
+                        class="heigth25 form-control col-lg-12 uperCase" />
+                </div>
+
+
+                <div class="m-b col-lg-2">
+                    <label class="control-label no-padding-left">Antigüedad Laboral:</label>
+                </div>
+
+                <div class="m-b col-lg-4">
+                    <input type="text" [(ngModel)]="persona.AntigueadLaboral" id="antigueadLaboral" name="antigueadLaboral"
+                        class="heigth25 form-control col-lg-12 uperCase" />
+                </div>
+            </fieldset>
+
+            <div class="m-b col-lg-2">
+                <label class="control-label no-padding-left">Hobby:</label>
+            </div>
+
+
+            <div class="m-b col-lg-4">
+                <input type="text" [(ngModel)]="persona.Hobby" id="hobby" name="hobby" class="heigth25 form-control col-lg-12 uperCase" />
+            </div>
+
+        </div>
+
+        <div class="col-lg-12 m-t-md" *ngIf="_datosPantalla.TipoPantalla == 2">
+            <button class="btn btn-w-m btn-success btn-sm" (click)="actualizar();" [disabled]="_datosPantalla.Desabilitar">
+                <i class="fa fa-pencil-square-o"></i>Actualizar</button>
+        </div>
+
+        <div class="col-lg-12 m-t-md" *ngIf="_datosPantalla.TipoPantalla == 1">
+            <button class="btn btn-w-m btn-success btn-sm" (click)="insertar();" [disabled]="_datosPantalla.Desabilitar">
+                <i class="fa fa-pencil-square-o"></i>Insertar</button>
+        </div>
+
+    </form>
+
+</div>

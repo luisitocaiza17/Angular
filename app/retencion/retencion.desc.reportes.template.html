@@ -1,0 +1,218 @@
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Retención</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Retención</li>
+            <li class="breadcrumb-item active">Reporte</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <form name="reporteRetencionForm" role="form" #reporteRetencionForm="ngForm" class="col-xs-12 col-md-12">
+            <div class="panel panel-default panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="text-primary">Contrato:</label>
+                        <br>
+                        <input class="form-control" type="text" name="Contrato" [(ngModel)]="filtro.NumeroContrato" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-primary">Seleccione una Oficina:</label>
+                        <br>
+                        <select required class="form-control form-select-control m-b" name="Oficina" id="Oficina" [(ngModel)]="filtro.IdOficina"
+                            #Oficina="ngModel">
+                            <option [ngValue]="undefined">Seleccione...</option>
+                            <option *ngFor="let oficina of listaOficinas" [value]="oficina.Id">{{oficina.Valor}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-primary">Fecha Desde:</label>
+                        <br>
+                        <datetime class="form-control col-lg-12 no-padding" name="FechaDesde" [timepicker]="false" [(ngModel)]="filtro.FechaDesde"
+                            [datepicker]="datepickerOpts"></datetime>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="text-primary">Estado:</label>
+                        <br>
+                        <select required class="form-control form-select-control m-b" name="Estado" id="Estado" [(ngModel)]="filtro.Estado">
+                            <option [ngValue]="undefined">Seleccione...</option>
+                            <option value="1">Pendiente</option>
+                            <option value="2">Aprobada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-primary">Región:</label>
+                        <br>
+                        <select required class="form-control form-select-control m-b" name="Region" id="Region" [(ngModel)]="filtro.Region" #Region="ngModel">
+                            <option [ngValue]="undefined">Seleccione...</option>
+                            <option value="Costa">Costa</option>
+                            <option value="Sierra">Sierra</option>
+                            <option value="Oriente">Oriente</option>
+                            <option value="Austro">Austro</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-primary">Fecha Hasta:</label>
+                        <br>
+                        <datetime class="form-control col-lg-12 no-padding" name="FechaHasta" [timepicker]="false" [(ngModel)]="filtro.FechaHasta"
+                            [datepicker]="datepickerOpts"></datetime>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 m-b">
+                    <button class="btn btn-w-m btn-success btn-sm" (click)="generarReporte();">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
+                    <a (click)="limpiar();" class="btn btn-w-m btn-success btn-sm">Limpiar</a>
+                    <!--<a (click)="descargarReporte();" class="btn btn-w-m btn-success btn-sm">
+                        <i class="fa fa-file-excel-o"></i>Generar Reporte</a>-->
+                </div>
+            </div>
+            <div class="dataTables_info">Mostrando todos los registros</div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover dataTable">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="centerMiddle text-primary">Oficina</th>
+                            <th class="centerMiddle text-primary">Región</th>
+                            <th class="centerMiddle text-primary">Fecha de gestión</th>
+                            <th class="centerMiddle text-primary">Contrato</th>
+                            <th class="centerMiddle text-primary">Titular</th>
+                            <th class="centerMiddle text-primary">Nombre Producto</th>
+                            <th class="centerMiddle text-primary">Código Producto</th>
+                            <th class="centerMiddle text-primary">Nivel</th>
+                            <th class="centerMiddle text-primary">Precio anterior</th>
+                            <th class="centerMiddle text-primary">Precio con descuento</th>
+                            <th class="centerMiddle text-primary">% de descuento</th>
+                            <th class="centerMiddle text-primary">Usuario gestión</th>
+                            <th class="centerMiddle text-primary">Tipo Movimiento</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="no-borders selectableBodyTable" *ngFor="let reporte of descuentosPendientes">
+                        <tr>
+                            <td>
+                                <div *ngIf="reporte.Estado == 1 || (reporte.Estado == 3 && authService.nombreUsuario == reporte.UsuarioAprobador)">
+                                    <button class="btn btn-xs" (click)="confirmarDescuento(reporte)">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-xs" (click)="cancelaDescuento(reporte)">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    
+                                    
+                                    <button *ngIf="reporte.TipoMovimiento == 'CAMBIO_PLAN'" class="btn btn-xs" (click)="verCambioPlan(reporte)">
+                                        <i class="fa fa-eye"></i>
+                                    </button>                                    
+                                    <a *ngIf="reporte.TipoMovimiento != 'CAMBIO_PLAN'" class="btn btn-xs" [routerLink]="['/retencion/descuento/show', reporte.CodigoRegion, reporte.CodigoProducto, reporte.NumeroContrato, reporte.Id]">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+
+                                </div>
+                                <div *ngIf="reporte.Estado == 2" style="color:green;">
+                                    Aprobado {{reporte.UsuarioAprobador}}
+                                </div>
+                                <div *ngIf="reporte.Estado == 3 && (authService.nombreUsuario != reporte.UsuarioAprobador)" style="color:red;">
+                                    Pendiente {{reporte.UsuarioAprobador}}
+                                </div>
+                            </td>
+                            <td>{{ reporte.NombreOficina }}</td>
+                            <td>{{ reporte.CodigoRegion }}</td>
+                            <td>{{ reporte.FechaGestion | date: 'dd/MM/yyyy'}}</td>
+                            <td>{{ reporte.NumeroContrato }}</td>
+
+                            <td *ngIf="reporte.TipoMovimiento != 'CAMBIO_PLAN'">{{ reporte.DescuentosRetencionCliente[0].NombrePersona }}</td>
+                            <td *ngIf="reporte.TipoMovimiento == 'CAMBIO_PLAN'"></td>
+
+                            <td *ngIf="reporte.TipoMovimiento != 'CAMBIO_PLAN'">{{ reporte.DescuentosRetencionCliente[0].NombreProducto }}</td>
+                            <td *ngIf="reporte.TipoMovimiento == 'CAMBIO_PLAN'"></td>
+                            
+                            <td *ngIf="reporte.TipoMovimiento != 'CAMBIO_PLAN'" >{{ reporte.CodigoProducto }}</td>
+                            <td *ngIf="reporte.TipoMovimiento == 'CAMBIO_PLAN'"></td>
+                            
+                            <td *ngIf="reporte.TipoMovimiento != 'CAMBIO_PLAN'">{{ reporte.DescuentosRetencionCliente[0].Nivel }}</td>
+                            <td *ngIf="reporte.TipoMovimiento == 'CAMBIO_PLAN'"></td>
+                            
+                            <td *ngIf="reporte.TipoMovimiento != 'CAMBIO_PLAN'">{{ getSubtotal(reporte) | number:'1.2-2'}}</td>
+                            <td *ngIf="reporte.TipoMovimiento == 'CAMBIO_PLAN'"></td>
+                            
+                            <td *ngIf="reporte.TipoMovimiento != 'CAMBIO_PLAN'">{{ getSubtotalConDescuento(reporte) | number:'1.2-2'}}</td>
+                            <td *ngIf="reporte.TipoMovimiento == 'CAMBIO_PLAN'"></td>
+                            
+                            <td *ngIf="reporte.TipoMovimiento != 'CAMBIO_PLAN'">{{ getTotalDescuento(reporte) | number:'1.2-2' }}</td>
+                            <td *ngIf="reporte.TipoMovimiento == 'CAMBIO_PLAN'"></td>
+                            
+                            <td>{{ reporte.UsuarioGestion }}</td>
+                            
+                            <td *ngIf="reporte.TipoMovimiento != 'CAMBIO_PLAN'">Aplicar Descuento</td>
+                            <td *ngIf="reporte.TipoMovimiento == 'CAMBIO_PLAN'">Cambio Producto</td>
+
+
+                        </tr>
+                    </tbody>
+                    <tfoot *ngIf="reportes.length == 0">
+                        <tr>
+                            <td colspan="14" style="text-align: center;">No existen resultados</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+    </div>
+
+
+
+
+    <div class="modal inmodal fade" id="modalEnviar" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-dialog modal-sm">
+                <div class="panel panel-success">
+                    <div class="panel-heading text-right" style="background-color: transparent; color: grey; border-color: white;">
+                        <h5 class="panel-title"></h5>
+                        <i class="fa fa-times-circle"></i>
+                    </div>
+                    <div class="panel-body" style="border-color: white;">
+                        Para aplicar este descuento se necesita autorización<br><br>
+                        <div class="col-lg-12 no-padding text-center">
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="enviar();">
+                                Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal fade" id="modalEnviado" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-dialog modal-md">
+                <div class="panel panel-success">
+                    <div class="panel-heading text-right" style="background-color: transparent; color: grey; border-color: white;">
+                        <h5 class="panel-title"></h5>
+                        <i class="fa fa-times-circle"></i>
+                    </div>
+                    <div class="panel-body" style="border-color: white;">
+                        Tu solicitud de aprobación se ha enviado a {{ usuarioJefe }}<br><br>
+                        <div class="col-lg-12 no-padding text-center">
+                            <button class="btn btn-w-m btn-success btn-sm" (click)="confirmar()">
+                                Ok
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

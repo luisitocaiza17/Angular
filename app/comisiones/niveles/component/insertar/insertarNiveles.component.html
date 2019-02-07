@@ -1,0 +1,54 @@
+<div class="wrapper wrapper-content">
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div id="divConsultar" class="panel-collapse collapse in">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title" id="autorizaciones" style="border-width:1px 0px 0px 0px;">
+            <div class="row">
+              <form #crearSalasForm="ngForm">
+                <div class="form-group col-lg-12 no-padding">
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="nombre">Nombre:</label>
+                    <div class="m-b col-lg-4">
+                      <input type="text" placeholder="Nombre" id="nombre" (keyup)="validacionNombre($event)" [(ngModel)]="niveles.Nombre" name="nombre" class="form-control" #nombre="ngModel" required/>
+                    </div>
+                    <div class="m-b col-lg-4">
+                        <label *ngIf="estadoNombre" class="text-danger">El nombre ya existe</label>
+                    </div>  
+                  </div>
+                  <div class="col-lg-12">
+                    <label class="col-lg-2 control-label" for="subtipo">Nivel Padre:</label>
+                    <div class="m-b col-lg-4">
+                      <select class="form-control" id="codigoNivel" [(ngModel)]="niveles.CodigoNivel" name="codigoNivel" class="form-control" #tipo="ngModel">
+                        <option [value]="undefined" selected>Seleccione Tipo</option>
+                        <option *ngFor="let e of nivel" [value]="e.Codigo">{{e.Nombre}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                      <label class="col-lg-2 control-label" for="obsevaciones">Observaciones:</label>
+                      <div>
+                          <textarea rows="5" placeholder="Observaciones. Hasta 255 Caracteres" id="observaciones" name="observaciones" #observaciones="ngModel"
+                          class="form-control" [(ngModel)]="niveles.Descripcion" style="resize: none;" maxlength="255"></textarea>
+                          <div [hidden]="observaciones.valid || observaciones.pristine" class="error">
+                            <p *ngIf="observaciones.errors?.maxlength">Máximo 255 caracteres</p>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 text-center">
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" [disabled]="!crearSalasForm.form.valid" (click)="crearNiveles();"  [disabled]="estadoNombre">
+                    <i class="fa fa-plus"></i> Crear
+                  </button>
+                  <button class="btn btn-w-m btn-success btn-sm" type="submit" (click)="salir()">
+                    <i class="fa fa-times"></i> Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

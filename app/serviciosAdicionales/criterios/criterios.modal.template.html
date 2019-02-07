@@ -1,0 +1,215 @@
+<div id="criteriosModalDiv">
+    <div id="criteriosViewModal" [ngClass]="{'modal':true, 'inmodal':true, 'fade':true, 'show':animate}"
+         [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': animate ? 1 : 0}" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="col-lg-12 m-t-sm no-padding">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <span class="h5 panel-title"
+                              *ngIf="poliza !== null">Criterios - Poliza {{poliza.NumeroPoliza}}</span>
+                        <i class="fa fa-times-circle fa-lg" style="float:right;" (click)="hide(false);"></i>
+                    </div>
+                    <div class="panel-body" *ngIf="criterio !== null">
+                        <form>
+                            <div class="row">
+                                <div class="col-lg-6 no-padding">
+                                    <div class="col-lg-1">
+                                        <app-toggle #rangoEdadToggle [size]="'small'"></app-toggle>
+                                    </div>
+                                    <div class="col-lg-3">Rango de edad:</div>
+                                    <div class="col-lg-4 form-group">
+                                        <input id="rangoEdadMin" name="rangoEdadMin"
+                                               class="form-control form-control-sm"
+                                               placeholder="M&iacute;nimo"
+                                               [disabled]="!rangoEdadToggle.on"
+                                               [(ngModel)]="criterio.EdadMin"/>
+                                    </div>
+                                    <div class="col-lg-4 form-group">
+                                        <input id="rangoEdadMax" name="rangoEdadMax"
+                                               class="form-control form-control-sm"
+                                               placeholder="M&aacute;ximo"
+                                               [disabled]="!rangoEdadToggle.on"
+                                               [(ngModel)]="criterio.EdadMax"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 no-padding">
+                                    <div class="col-lg-1">
+                                        <app-toggle #rangoCoberturaToggle [size]="'small'"></app-toggle>
+                                    </div>
+                                    <div class="col-lg-3">Rango cobertura:</div>
+                                    <div class="col-lg-4 form-group">
+                                        <input id="rangoCoberturaMin" name="rangoCoberturaMin"
+                                               class="form-control form-control-sm"
+                                               placeholder="M&iacute;nimo"
+                                               [disabled]="!rangoCoberturaToggle.on"
+                                               [(ngModel)]="criterio.CoberturaMin"/>
+                                    </div>
+                                    <div class="col-lg-4 form-group">
+                                        <input id="rangoCoberturaMax" name="rangoCoberturaMax"
+                                               class="form-control form-control-sm"
+                                               placeholder="M&aacute;ximo"
+                                               [disabled]="!rangoCoberturaToggle.on"
+                                               [(ngModel)]="criterio.CoberturaMax"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 no-padding">
+                                    <div class="col-lg-1">
+                                        <app-toggle #regionToggle [size]="'small'"></app-toggle>
+                                    </div>
+                                    <div class="col-lg-3">Regi&oacute;n:</div>
+                                    <div class="col-lg-8 form-group">
+                                        <select id="regionSelect" name="regionSelect" class="form-select-control"
+                                                [disabled]="!regionToggle.on"
+                                                [(ngModel)]="criterio.CatalogoRegionId">
+                                            <option *ngFor="let item of regiones" [ngValue]="item.Id">
+                                                {{item.Descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 no-padding">
+                                    <div class="col-lg-1">
+                                        <app-toggle #generoToggle [size]="'small'"></app-toggle>
+                                    </div>
+                                    <div class="col-lg-3">G&eacute;nero:</div>
+                                    <div class="col-lg-8 form-group">
+                                        <select id="generoSelect" name="generoSelect" class="form-select-control"
+                                                [disabled]="!generoToggle.on"
+                                                [(ngModel)]="criterio.CatalogoGeneroId">
+                                            <option *ngFor="let item of generos" [ngValue]="item.Id">
+                                                {{item.Descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 no-padding">
+                                    <div class="col-lg-1">
+                                        <app-toggle #relacionToggle [size]="'small'"></app-toggle>
+                                    </div>
+                                    <div class="col-lg-3">Relaci&oacute;n dependencia:</div>
+                                    <div class="col-lg-8 form-group">
+                                        <select id="relacionSelect" name="relacionSelect" class="form-select-control"
+                                                [disabled]="!relacionToggle.on"
+                                                [(ngModel)]="criterio.CatalogoRelacionId">
+                                            <option *ngFor="let item of relaciones" [ngValue]="item.Id">
+                                                {{item.Descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 no-padding">
+                                    <div class="col-lg-1">
+                                        <app-toggle #productoToggle [size]="'small'"></app-toggle>
+                                    </div>
+                                    <div class="col-lg-3">Producto:</div>
+                                    <div class="col-lg-8 form-group">
+                                        <select id="productoSelect" name="productoSelect" class="form-select-control"
+                                                [disabled]="!productoToggle.on"
+                                                [(ngModel)]="criterio.CatalogoProductoId">
+                                            <option *ngFor="let item of productos" [ngValue]="item.Id">
+                                                {{item.Descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 no-padding">
+                                    <div class="col-lg-1">
+                                        <app-toggle #titularToggle [size]="'small'"></app-toggle>
+                                    </div>
+                                    <div class="col-lg-3">Es titular:</div>
+                                    <div class="col-lg-5 form-group">
+                                        <select id="titularSelect" name="titularSelect" class="form-select-control"
+                                                [disabled]="!titularToggle.on"
+                                                [(ngModel)]="criterio.CatalogoEsTitularId">
+                                            <option *ngFor="let item of sino" [ngValue]="item.Id">{{item.Descripcion}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 no-padding">
+                                    <div class="col-lg-1">&nbsp;</div>
+                                    <div class="col-lg-3">M&eacute;todo de tarifar:</div>
+                                    <div class="col-lg-3 form-check">
+                                        <input id="metodoTarifarContrato" name="metodoTarifarRadio"
+                                               class="form-check-input" type="radio" [value]="true"
+                                               [(ngModel)]="criterio.TarifaPorContrato"/>
+                                        <label class="form-check-label" for="metodoTarifarContrato">
+                                            Contrato
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-3 form-check">
+                                        <input id="metodoTarifarBeneficiario" name="metodoTarifarRadio"
+                                               class="form-check-input" type="radio" [value]="false"
+                                               [(ngModel)]="criterio.TarifaPorContrato"/>
+                                        <label class="form-check-label" for="metodoTarifarBeneficiario">
+                                            Beneficiario
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-t-md">
+                                <div class="col-lg-4 form-group">
+                                    <label for="valorTipoSelect">Tipo</label>
+                                    <select id="valorTipoSelect" name="valorTipoSelect" class="form-control"
+                                            [(ngModel)]="valor.Tipo">
+                                        <option [ngValue]="1">Prima</option>
+                                        <option [ngValue]="2">Tasa</option>
+                                    </select>
+                                    <label for="valorDetalleTxt">Detalle</label>
+                                    <input id="valorDetalleTxt" name="valorDetalleTxt" type="text" class="form-control"
+                                           [(ngModel)]="valor.Descripcion"/>
+                                    <label for="valorValorTxt">Valor</label>
+                                    <input id="valorValorTxt" name="valorValorTxt" type="number" class="form-control"
+                                           [(ngModel)]="valor.Valor"/>
+                                    <button id="agregarValorBtn" class="btn btn-primary btn-block m-t-sm"
+                                            style="border-radius: 3px;" (click)="guardarValor();">Agregar / Guardar
+                                    </button>
+                                </div>
+                                <div class="col-lg-8">
+                                    <label>Valores</label>
+                                    <table class="table table-striped table-bordered table-hover dataTable">
+                                        <thead class="no-borders">
+                                        <tr>
+                                            <th class="centerMiddle">Detalle</th>
+                                            <th class="centerMiddle">Tipo</th>
+                                            <th class="centerMiddle">Valor</th>
+                                            <th class="centerMiddle"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="no-borders">
+                                        <tr *ngFor="let vl of criterio.Valores">
+                                            <td>{{vl.Descripcion}}</td>
+                                            <td>{{vl.Tipo === 1 ? 'Prima' : 'Tasa'}}</td>
+                                            <td>{{vl.Valor}}</td>
+                                            <td>
+                                                <a (click)="editarValor(vl);"><i class="fa fa-edit fa-lg"></i></a>
+                                                <a class="m-l-md" (click)="eliminarValor(vl);"><i
+                                                        class="fa fa-trash fa-lg"></i></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer" style="text-align: right;" *ngIf="criterio !== null">
+                        <button id="guardarCriterioBtn" class="btn btn-primary" style="border-radius: 3px;"
+                                (click)="guardar()">{{(criterio.Id === undefined || criterio.Id === null ? 'Agregar' :
+                            'Guardar')}}
+                        </button>
+                        <button id="cancelarCriterioBtn" class="btn btn-default" (click)="hide(false);">Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

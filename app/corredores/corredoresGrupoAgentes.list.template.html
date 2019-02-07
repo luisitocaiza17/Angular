@@ -1,0 +1,136 @@
+<!-- NAVEGACIÓN SUPERIOR -->
+<div class="row wrapper white-bg page-heading border-bottom">
+    <div class="col-lg-10">
+        <h2>Grupos Empresariales</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a [routerLink]="['']">Home</a>
+            </li>
+            <li class="breadcrumb-item">Brokers</li>
+            <li class="breadcrumb-item active">Grupos</li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<!-- PANEL BUSCADOR -->
+<div class="wrapper wrapper-content" *ngIf="!showEditor">
+    <div class="ibox float-e-margins">
+
+        <!-- CRITERIOS DE BÚSQUEDA -->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+
+            <fieldset>
+                <legend>Criterios de Búsqueda</legend>
+
+
+                <!-- CAMPOS DE CRITERIO DE BÚSQUEDA -->
+                <div class="form-group col-lg-4">
+                    <input type="text" placeholder="Buscar por Número"
+                           [(ngModel)]="searchItem.codigo_grupo_agentes" class="form-control"
+                           [style.border-bottom-color]="!searchItem.NumeroLleno()"/>
+
+                </div>
+
+            </fieldset>
+
+
+            <!-- BOTÓN DE BUSCAR -->
+            <div class="form-group col-lg-12 no-padding">
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="nuevo()">
+                    <i class="fa fa-plus"></i> Nuevo
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="limpiarBusqueda()">
+                    <i class="fa fa-eraser"></i> Limpiar
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="traerTodos()">
+                    <i class="fa fa-search"></i> Traer todos
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        [disabled]="!puedeBuscar()" (click)="buscar()">
+                    <i class="fa fa-search"></i> Filtrar
+                </button>
+            </div>
+
+        </div>
+
+        <!-- GRILLA DE RESULTADO DE BÚSQUEDA -->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+            <div class="dataTables_info">Mostrando {{list.length}} registros</div>
+            <div class="table-responsive">
+                <table id="tablaListado" class="table table-striped table-bordered table-hover dataTable">
+                    <tbody id="bodyListado" class="no-borders">
+                    <tr>
+                        <th class="centerMiddle">
+                            Sel
+                        </th>
+                        <th class="centerMiddle">
+                            Código
+                        </th>
+                        <th class="centerMiddle">
+                            Nombre
+                        </th>
+                    </tr>
+                    <tr *ngFor="let listItem of list">
+                        <td class="centerMiddle general-column">
+                            <a (click)="abrirEdicion(listItem)" title="Clic para editar">
+                                <i class="fa fa-file-text"></i>
+                            </a>
+                        </td>
+                        <td class="centerMiddle">
+                            {{listItem.codigo_grupo_agentes}}
+                        </td>
+                        <td class="centerMiddle">
+                            {{listItem.nombre_grupo_agentes}}
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="list.length == 0">
+                        <td colspan="10" style="text-align: center;width:943px;">No existen resultados</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PANEL EDITOR -->
+<div class="wrapper wrapper-content" *ngIf="showEditor">
+    <div class="ibox float-e-margins">
+        <h3>Formulario de Edición</h3>
+
+        <!-- FORMULARIO DE EDICIÓN -->
+        <div class="ibox-title" style="border-width:1px 0px 0px 0px;">
+
+            <!-- CAMPOS DEL FORMULARIO -->
+            <div class="form-group col-lg-12 no-padding">
+                <input type="text"
+                       placeholder="Nombre"
+                       [(ngModel)]="item.nombre_grupo_agentes" class="form-control"/>
+            </div>
+
+            <!-- BOTÓN DE BUSCAR -->
+            <div class="form-group col-lg-12 no-padding">
+                <button class="btn btn-w-m btn-success btn-sm" *ngIf="!this.esNuevo"
+                        (click)="eliminar()">
+                    <i class="fa fa-eraser"></i> Eliminar
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        (click)="cancelar()">
+                    <i class="fa fa-close"></i> Cancelar
+                </button>
+                <button class="btn btn-w-m btn-success btn-sm"
+                        [disabled]="!validarFormulario()" (click)="grabar()">
+                    <i class="fa fa-save"></i> Grabar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
